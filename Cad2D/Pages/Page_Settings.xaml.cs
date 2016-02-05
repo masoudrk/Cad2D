@@ -53,6 +53,7 @@ namespace Cad2D.Pages
 
             checkBox_showSpeedMenu.IsChecked = s.showSpeedMonitorInMainPanel;
             checkBox_showGuideCircles.IsChecked = s.showGuideCircles;
+            checkBox_captureModeInStart.IsChecked = s.captureModeWhenStart;
 
             textBox_startArrayOffset.Text = s.ArrayMemoryOffset.ToString();
             textBox_startVarsOffset.Text = s.VarMemoryOffset.ToString();
@@ -111,6 +112,7 @@ namespace Cad2D.Pages
                 BottomRightOffsetY = int.Parse(textBox_bottomRightY.Text.ToString()),
                 showSpeedMonitorInMainPanel = checkBox_showSpeedMenu.IsChecked.Value,
                 showGuideCircles = checkBox_showGuideCircles.IsChecked.Value,
+                captureModeWhenStart = checkBox_captureModeInStart.IsChecked.Value,
                 ArrayMemoryOffset = int.Parse(textBox_startArrayOffset.Text.ToString()),
                 VarMemoryOffset = int.Parse(textBox_startVarsOffset.Text.ToString())
 
@@ -143,7 +145,9 @@ namespace Cad2D.Pages
             cc2d.btn_sendToPlc_back.Visibility = Visibility.Collapsed;
 
             cc2d.pagesStack.Push(this);
-            cc2d.contentControl.Content = new CameraPage();
+            CameraPage cp = new CameraPage();
+            cc2d.contentControl.Content = cp;
+            cp.start();
         }
 
         public void setOffsets(Point[] points)

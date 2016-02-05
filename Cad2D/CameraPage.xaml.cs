@@ -19,6 +19,8 @@ namespace Cad2D
 {
     public partial class CameraPage : UserControl
     {
+        public EventHandler notConnectedHandler;
+        private static bool appStarting = true;
         public HikvisionController hv;
 
         public CameraPage()
@@ -33,6 +35,10 @@ namespace Cad2D
             hv.OnNewImageCaptured += Hv_OnNewImageCaptured;
             hv.OnStartCapturing += Hv_OnStartCapturing;
             hv.OnStopCapturing += Hv_OnStopCapturing;
+        }
+
+        public void start()
+        {
             hv.startCapturing();
         }
 
@@ -53,7 +59,15 @@ namespace Cad2D
 
         private void Hv_OnDeviceDisconnceted(object sender, EventArgs e)
         {
-            MessageBox.Show("device Disconnected");
+            if (appStarting)
+            {
+                notConnectedHandler?.Invoke(null, null);
+                return;
+            }
+
+            ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "دوربین به سیستم متصل نیست!");
+            
+            appStarting = false;
         }
 
         private void Hv_OnConnected(object sender, EventArgs e)

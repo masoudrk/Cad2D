@@ -145,6 +145,7 @@
                     <Label Margin="15,10,20,0" Content="تنظیمات دیگر" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
                     <CheckBox Margin="0,5,35,0" x:Name="checkBox_showSpeedMenu" Content="نمایش مانیتور سرعت در صفحه اصلی" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" />
                     <CheckBox Margin="0,5,35,0" x:Name="checkBox_showGuideCircles" Content="نمایش تصویر پردازش شده حین ارسال" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" />
+                    <CheckBox Margin="0,5,35,0" x:Name="checkBox_captureModeInStart" Content="نمایش تصویر در هنگام شروع برنامه" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" />
 
 
                 </StackPanel>

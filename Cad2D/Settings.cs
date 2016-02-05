@@ -38,6 +38,7 @@ public class PrimarySettings
     public int BottomRightOffsetY { get; set; }
     public bool showSpeedMonitorInMainPanel { get; set; }
     public bool showGuideCircles { get; set; }
+    public bool captureModeWhenStart { set; get; }
     public int VarMemoryOffset { get; set; }
     public int ArrayMemoryOffset { get; set; }
     public int ScanVerticalSlice { set; get; }

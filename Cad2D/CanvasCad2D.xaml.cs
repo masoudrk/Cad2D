@@ -123,7 +123,7 @@ namespace Cad2D
                 new Uri("pack://application:,,,/Cad2D;component/Resources/alarm_off.png",
                     UriKind.Absolute));
 
-            checkPrimarySettings();
+            PrimarySettings ps = checkPrimarySettings();
             getSensitiveAlarms();
 
             alarmThread = new Thread(checkAlarms) { IsBackground = true };
@@ -169,6 +169,9 @@ namespace Cad2D
             Thread.Sleep(1000);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
             plcInfoReaderTimer.Start();
+
+            if(ps.captureModeWhenStart)
+                CaptureMode();
         }
 
         private void PlcInfoReaderTimer_Elapsed()
@@ -797,7 +800,7 @@ namespace Cad2D
             button_back_ex_click(null, null);
         }
 
-        private void checkPrimarySettings()
+        private PrimarySettings checkPrimarySettings()
         {
             PrimarySettings ps = Extentions.FromXmlPrimary();
             if (ps.showSpeedMonitorInMainPanel)
@@ -814,6 +817,8 @@ namespace Cad2D
             cameraIp = ps.CameraIpAdress;
             if(lsConnection != null)
                 lsConnection.set(ip, portNumber);
+
+            return ps;
         }
 
         private void slider_x_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -906,6 +911,13 @@ namespace Cad2D
         #endregion
 
         #region Capture And Edit Mode
+
+
+        private void CameraNotConnected_Click(object sender, EventArgs e)
+        {
+            btn_sendToPlc_back_Click(null, null);
+        }
+
         private void CaptureMode()
         {
             //border_tools.Visibility = Visibility.Collapsed;
@@ -913,7 +925,10 @@ namespace Cad2D
             //border_setting.Visibility = Visibility.Collapsed;
             //border_monitors.Visibility = Visibility.Collapsed;
             pagesStack.Push(contentControl.Content);
-            contentControl.Content = new CameraPage();
+            CameraPage c = new CameraPage();
+            c.notConnectedHandler += CameraNotConnected_Click;
+            c.start();
+            contentControl.Content = c;
 
             setEnable(btn_sendToPlc_back, true);
             setEnable(button_about, false);
@@ -934,6 +949,8 @@ namespace Cad2D
                     new Uri("pack://application:,,,/Cad2D;component/Resources/tick.png",
                     UriKind.Absolute));
         }
+
+
         private void EditMode()
         {
             contentControl.Content = pagesStack.Pop();
