@@ -10,7 +10,6 @@ namespace Cad2D
 {
     public class Analyzer
     {
-        s
         private ArrayList mFisheyeCorrect;
         public int mFELimit = 1500;
         public double mScaleFESize = 0.9;
