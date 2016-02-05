@@ -1,0 +1,22 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cad2D.Pages"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="Cad2D.Pages.Page_SignIn"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <System:Double x:Key="labelWidth">160</System:Double>
+    </UserControl.Resources>
+    <Grid Background="White">
+        <PasswordBox VerticalAlignment="Center" HorizontalAlignment="Center" PasswordChar="•" x:Name="passBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Height="32" Width="155" Margin="17.5,0,0,0" KeyDown="passBox_KeyDown" />
+        <Button x:Name="button_save" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource MetroCircleButtonStyle}" FontFamily="Tahoma" FontSize="16"  Width="41" Height="41" Foreground="{DynamicResource MainColor}" FontWeight="Normal" Margin="141,131,319,129" Click="button_save_Click">
+            <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="/Cad2D;component/Resources/tick.png" />
+        </Button>
+
+        <Label Margin="339,131,101,137" Content="رمز عبور" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="32"/>
+
+    </Grid>
+</UserControl>

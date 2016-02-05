@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{08DB28AE-20C8-49E9-9F8C-DD9EF6DFB37A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cad2D</RootNamespace>
+    <AssemblyName>Cad2D</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BCrypt.Net">
+      <HintPath>..\..\..\..\..\Desktop\StructureSimulator\StructureSimulator\StructureSimulator\BCrypt.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro.SimpleChildWindow, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.SimpleChildWindow.1.2.0.0\lib\net45\MahApps.Metro.SimpleChildWindow.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls, Version=2015.3.930.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Controls.Data, Version=2015.3.930.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Controls.Input, Version=2015.3.930.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.Windows.Data, Version=2015.3.930.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Analyzer.cs" />
+    <Compile Include="LineGeometry.cs" />
+    <Compile Include="LS-Connection.cs" />
+    <Compile Include="MyPasswordDialog.xaml.cs">
+      <DependentUpon>MyPasswordDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyDialog.xaml.cs">
+      <DependentUpon>MyDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_About.xaml.cs">
+      <DependentUpon>Page_About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_Alarms.xaml.cs">
+      <DependentUpon>Page_Alarms.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_Help.xaml.cs">
+      <DependentUpon>Page_Help.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_SetOffsets.xaml.cs">
+      <DependentUpon>Page_SetOffsets.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_Tools.xaml.cs">
+      <DependentUpon>Page_Tools.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_Settings.xaml.cs">
+      <DependentUpon>Page_Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Page_SignIn.xaml.cs">
+      <DependentUpon>Page_SignIn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UserControl_MonitorVelocities.xaml.cs">
+      <DependentUpon>UserControl_MonitorVelocities.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PlcInformation.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="TouchBox\AlphaNumericEditBox.cs" />
+    <Compile Include="Utils.cs" />
+    <Page Include="CameraPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CanvasCad2D.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CameraPage.xaml.cs">
+      <DependentUpon>CameraPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CanvasAutoSize.cs" />
+    <Compile Include="CanvasCad2D.xaml.cs">
+      <DependentUpon>CanvasCad2D.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Circle.cs" />
+    <Compile Include="FileAssociation.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MyPasswordDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MyDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_Alarms.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_Help.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_SetOffsets.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_Tools.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Page_Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_SignIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\UserControl_MonitorVelocities.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TouchBox\TouchStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HikvisionController.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Metrics.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\alarm_off.png" />
+    <Resource Include="Resources\alarm_on.png" />
+    <Resource Include="Resources\Drag.png" />
+    <Resource Include="Resources\slab_stone_up.jpg" />
+    <Resource Include="Resources\tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Eraser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clear_all.png" />
+    <Resource Include="Resources\back.png" />
+    <Resource Include="Resources\saw.png" />
+    <Resource Include="Resources\camera.png" />
+    <Resource Include="Resources\add_path.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\about.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\saw_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\tools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\auto.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\manual.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\down_arrow.png" />
+    <Resource Include="Resources\up_arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\slab_stone_side.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

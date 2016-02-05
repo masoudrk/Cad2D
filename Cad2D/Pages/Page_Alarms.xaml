@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Cad2D.Pages.Page_Alarms"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cad2D.Pages"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignWidth="800"
+             Background="White" Unloaded="UserControl_Unloaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <system:Double x:Key="textBoxWidth">200</system:Double>
+            <system:Double x:Key="labelWidth">160</system:Double>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="350"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="600"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,0,0" Grid.ColumnSpan="2" Height="355" >
+            <Label Content="اعلان ها" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای قطع برق فرمان" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage1" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" ></Image>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای Emergency" HorizontalAlignment="Left" VerticalAlignment="Top" Width="196" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image  Name="alarmImage2" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" ></Image>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای آب" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage3" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای فشار باد" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage4" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای اینورتر محور X" HorizontalAlignment="Left" VerticalAlignment="Top" Width="177" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage5" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای اینورتز محور Y" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage6" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="129,42,0,-42">
+
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای انکودر محور X" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage7" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای انکودر محور Y" HorizontalAlignment="Left" VerticalAlignment="Top" Width="216" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image Name="alarmImage8" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای اتصال به PLC" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image x:Name="alarmImage9" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای اتصال به دوربین" HorizontalAlignment="Left" VerticalAlignment="Top" Width="226" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image x:Name="alarmImage10" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای بی متال موتور" HorizontalAlignment="Left" VerticalAlignment="Top" Width="207" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image x:Name="alarmImage11" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                <Label VerticalContentAlignment="Center" Margin="30 0 0 0" Content="خطای لقمه" HorizontalAlignment="Left" VerticalAlignment="Top" Width="190" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Height="46"/>
+                <Image x:Name="alarmImage12" RenderOptions.BitmapScalingMode="HighQuality"  Source="/Cad2D;component/Resources/alarm_off.png" Height="47" />
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Cad2D.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CameraIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.2</Value>
+    </Setting>
+    <Setting Name="CameraPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="PLCIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.10</Value>
+    </Setting>
+    <Setting Name="PLCPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DefaultPass" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1234</Value>
+    </Setting>
+    <Setting Name="AdminPass" Type="System.String" Scope="User">
+      <Value Profile="(Default)">$2a$10$a6QzlfnPGbrEf2iDd.Dn8.SbOiEOG8vev0RnrnpYf69nTpUtgTWTS</Value>
+    </Setting>
+    <Setting Name="VarMemoryOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="ArrayMemoryOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1200</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
