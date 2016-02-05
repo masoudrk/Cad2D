@@ -18,7 +18,7 @@
         Title="سیستم کنترل PLC" Height="710" Width="1024" WindowStartupLocation="CenterScreen"  
         Background="#FF2A3A56" Loaded="MetroWindow_Loaded" WindowTitleBrush="#FF41B1E1"
         BorderBrush="#FF41B1E1"
-    Closing="MetroWindow_Closing">
+    Closing="MetroWindow_Closing" WindowState="Maximized">
 
     <Controls:MetroWindow.TitleTemplate>
         <DataTemplate>
