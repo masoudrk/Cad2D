@@ -38,10 +38,10 @@
             <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="2" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
                 <StackPanel Orientation="Vertical">
                     <Button x:Name="btn_CreatePathTool" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" Click="toggle_PenTool_Checked" >
-                        <Image Source="Resources/add_path.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10"  />
+                        <Image Source="Resources/add_path.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="12"  />
                     </Button>
                     <Button IsEnabled="False" Opacity="0.5" x:Name="btn_clearPath" Style="{DynamicResource MetroCircleButtonStyle}" Width="{StaticResource LargeIconSize}" Click="btn_clear_path_Click" HorizontalAlignment="Left" >
-                        <Image Source="Resources/clear_all.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" />
+                        <Image Source="Resources/clear_all.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="12" />
                     </Button>
                 </StackPanel>
             </Border>
@@ -53,7 +53,7 @@
                         <Image Source="Resources/camera.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                     </Button>
                     <Button IsEnabled="False" Opacity="0.5" x:Name="btn_sendToPlc_back" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" Height="{StaticResource LargeIconSize}" Click="btn_sendToPlc_back_Click" >
-                        <Image Source="Resources/saw.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                        <Image Source="Resources/saw.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="8" />
                     </Button>
                 </StackPanel>
             </Border>
@@ -90,7 +90,7 @@
                         <Image Source="Resources/back.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" />
                     </Button>
                     <Button x:Name="button_tools" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_tools_click" >
-                        <Image Source="Resources/tools.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" />
+                        <Image Source="Resources/tools.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
                     </Button>
                     <Button Visibility="Collapsed" x:Name="btn_help1" Style="{DynamicResource MetroCircleButtonStyle}"  Click="btn_help_click" >
                         <Image Source="Resources/help.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" />
@@ -99,7 +99,7 @@
                         <Image Source="Resources/about.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="9" />
                     </Button>
                     <Button x:Name="button_setting" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_settings_click" >
-                        <Image Source="Resources/setting.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="10" />
+                        <Image Source="Resources/setting.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
                     </Button>
                 </StackPanel>
             </Border>
