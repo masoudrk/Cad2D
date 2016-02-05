@@ -56,6 +56,15 @@ namespace Cad2D.Pages
 
             textBox_startArrayOffset.Text = s.ArrayMemoryOffset.ToString();
             textBox_startVarsOffset.Text = s.VarMemoryOffset.ToString();
+
+            textBox_sv.Text = s.ScanVerticalSlice.ToString();
+            textBox_ev.Text = s.EdgeVerticalSlice.ToString();
+            textBox_sh.Text = s.ScanHorizontalSlice.ToString();
+            textBox_eh.Text = s.EdgeHorizontalSlice.ToString();
+
+            ScanAriaSegment.Text = s.ScanAriaSegment.ToString();
+            VerticalBoundrySegment.Text = s.VerticalBoundrySegment.ToString();
+            HorizonalBoundrySegment.Text = s.HorizonalBoundrySegment.ToString();
         }
 
         private void button_save_Click(object sender, RoutedEventArgs e)
@@ -106,6 +115,14 @@ namespace Cad2D.Pages
                 VarMemoryOffset = int.Parse(textBox_startVarsOffset.Text.ToString())
 
             };
+
+            s.ScanVerticalSlice = int.Parse(textBox_sv.Text);
+            s.EdgeVerticalSlice = int.Parse(textBox_ev.Text);
+            s.ScanHorizontalSlice = int.Parse(textBox_sh.Text);
+            s.EdgeHorizontalSlice = int.Parse(textBox_eh.Text);
+            s.ScanAriaSegment = int.Parse(ScanAriaSegment.Text);
+            s.VerticalBoundrySegment = int.Parse(VerticalBoundrySegment.Text);
+            s.HorizonalBoundrySegment = int.Parse(HorizonalBoundrySegment.Text);
 
             s.writeToXmlFile("_pss.ini");
 

@@ -54,6 +54,26 @@ namespace Cad2D.Pages
                 checkBox_alarm11.IsChecked = s.alarmBits[10];
                 checkBox_alarm12.IsChecked = s.alarmBits[11];
             }
+            if (s.bridgeTop != null)
+            {
+                textBox_TopValue.Value = s.bridgeTop.value ;
+                textBox_TopDelay.Value = s.bridgeTop.delay ;
+            }
+            if (s.bridgeBottom != null)
+            {
+                textBox_BottomValue.Value = s.bridgeBottom.value;
+                textBox_BottomDelay.Value = s.bridgeBottom.delay;
+            }
+            if (s.bridgeLeft != null)
+            {
+                textBox_LeftValue.Value = s.bridgeLeft.value;
+                textBox_LeftDelay.Value = s.bridgeLeft.delay;
+            }
+            if (s.bridgeRight != null)
+            {
+                textBox_RightValue.Value = s.bridgeRight.value;
+                textBox_RightDelay.Value = s.bridgeRight.delay;
+            }
 
             textBox_ClampAmount.Value = s.clampAmount;
             textBox_ClampTopLeft.Value = s.clampTopLeft;
@@ -130,6 +150,20 @@ namespace Cad2D.Pages
             s.clampTopRight = (int)textBox_ClampTopRight.Value;
             s.clampBottomRight = (int)textBox_ClampBottomRight.Value;
             s.clampBottomLeft = (int)textBox_ClampBottomLeft.Value;
+
+            s.bridgeTop = new Settings.Bridge();
+            s.bridgeBottom = new Settings.Bridge();
+            s.bridgeLeft = new Settings.Bridge();
+            s.bridgeRight = new Settings.Bridge();
+            s.bridgeTop.value = (int)(textBox_TopValue.Value);
+            s.bridgeTop.delay = (int)(textBox_TopDelay.Value);
+            s.bridgeBottom.value = (int)(textBox_BottomValue.Value);
+            s.bridgeBottom.delay = (int)(textBox_BottomDelay.Value);
+            s.bridgeLeft.value = (int)(textBox_LeftValue.Value);
+            s.bridgeLeft.delay = (int)(textBox_LeftDelay.Value);
+            s.bridgeRight.value = (int)(textBox_RightValue.Value);
+            s.bridgeRight.delay = (int)(textBox_RightDelay.Value);
+
 
             s.writeToXmlFile("options.ini");
 

@@ -8,12 +8,22 @@ using System.Xml.Serialization;
 
 public class Settings
 {
+    public class Bridge
+    {
+        public int value { get; set; }
+        public int delay { get; set; }
+    }
+
     public bool [] alarmBits;
     public int clampAmount { get; set; }
     public int clampTopLeft { get; set; }
     public int clampTopRight { get; set; }
     public int clampBottomRight { get; set; }
     public int clampBottomLeft { get; set; }
+    public Bridge bridgeTop { get; set; }
+    public Bridge bridgeRight { get; set; }
+    public Bridge bridgeLeft { get; set; }
+    public Bridge bridgeBottom { get; set; }
 }
 
 public class PrimarySettings
@@ -30,6 +40,13 @@ public class PrimarySettings
     public bool showGuideCircles { get; set; }
     public int VarMemoryOffset { get; set; }
     public int ArrayMemoryOffset { get; set; }
+    public int ScanVerticalSlice { set; get; }
+    public int EdgeVerticalSlice { set; get; }
+    public int ScanHorizontalSlice { set; get; }
+    public int EdgeHorizontalSlice { set; get; }
+    public int ScanAriaSegment { set; get; }
+    public int VerticalBoundrySegment { set; get; }
+    public int HorizonalBoundrySegment { set; get; }
 }
 
 public static class Extentions
@@ -92,7 +109,14 @@ public static class Extentions
                 PLCIpAdress = ds.PLCIP,
                 PLCPortNumber = ds.PLCPort,
                 VarMemoryOffset = ds.VarMemoryOffset,
-                ArrayMemoryOffset = ds.ArrayMemoryOffset
+                ArrayMemoryOffset = ds.ArrayMemoryOffset,
+                ScanVerticalSlice = ds.VerticalScan,
+                ScanHorizontalSlice = ds.HorizontalScan,
+                EdgeHorizontalSlice = ds.HorizontalEdge,
+                EdgeVerticalSlice = ds.HorizontalEdge,
+                ScanAriaSegment = ds.ScanAriaSegment,
+                VerticalBoundrySegment = ds.VerticalBoundrySegment,
+                HorizonalBoundrySegment = ds.HorizonalBoundrySegment
             };
             return s;
         }

@@ -61,7 +61,7 @@ namespace Cad2D.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2004")]
         public int PLCPort {
             get {
                 return ((int)(this["PLCPort"]));
@@ -116,6 +116,90 @@ namespace Cad2D.Properties {
             }
             set {
                 this["ArrayMemoryOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("140")]
+        public int VerticalScan {
+            get {
+                return ((int)(this["VerticalScan"]));
+            }
+            set {
+                this["VerticalScan"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("140")]
+        public int VerticalEdge {
+            get {
+                return ((int)(this["VerticalEdge"]));
+            }
+            set {
+                this["VerticalEdge"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int HorizontalScan {
+            get {
+                return ((int)(this["HorizontalScan"]));
+            }
+            set {
+                this["HorizontalScan"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int HorizontalEdge {
+            get {
+                return ((int)(this["HorizontalEdge"]));
+            }
+            set {
+                this["HorizontalEdge"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int ScanAriaSegment {
+            get {
+                return ((int)(this["ScanAriaSegment"]));
+            }
+            set {
+                this["ScanAriaSegment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public int VerticalBoundrySegment {
+            get {
+                return ((int)(this["VerticalBoundrySegment"]));
+            }
+            set {
+                this["VerticalBoundrySegment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public int HorizonalBoundrySegment {
+            get {
+                return ((int)(this["HorizonalBoundrySegment"]));
+            }
+            set {
+                this["HorizonalBoundrySegment"] = value;
             }
         }
     }

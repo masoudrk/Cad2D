@@ -12,7 +12,7 @@
       <Value Profile="(Default)">192.168.0.10</Value>
     </Setting>
     <Setting Name="PLCPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">2004</Value>
     </Setting>
     <Setting Name="DefaultPass" Type="System.String" Scope="User">
       <Value Profile="(Default)">1234</Value>
@@ -25,6 +25,27 @@
     </Setting>
     <Setting Name="ArrayMemoryOffset" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1200</Value>
+    </Setting>
+    <Setting Name="VerticalScan" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">140</Value>
+    </Setting>
+    <Setting Name="VerticalEdge" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">140</Value>
+    </Setting>
+    <Setting Name="HorizontalScan" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="HorizontalEdge" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="ScanAriaSegment" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="VerticalBoundrySegment" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="HorizonalBoundrySegment" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3000</Value>
     </Setting>
   </Settings>
 </SettingsFile>
