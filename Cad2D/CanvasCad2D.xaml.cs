@@ -222,7 +222,7 @@ namespace Cad2D
             if (plcInformation.PackestId.Exists(x => x == repi.order))
             {
                 plcInformation.parse(repi.continuousData);
-                OnGUIActions(() => changeUi());
+                OnGUIActions(() => changeMainUi());
                 if (plcInformation.shutdown.value != 0 && plcInformation.shutdown.value != 4)
                 {
                     shoutDownThePanelPC(plcInformation.shutdown.value);
@@ -234,7 +234,7 @@ namespace Cad2D
         {
             Dispatcher.Invoke(action);
         }
-        private void changeUi()
+        private void changeMainUi()
         {
 
             bool[] array = Convert.ToString(plcInformation.alert.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
@@ -345,8 +345,27 @@ namespace Cad2D
                 if (p.order == packet.order)
                 {
                     writingPackets.Remove(packet);
-                    stoneScanPacketCounter++;
-                    break;
+                    if (stoneScanPacketCounter < stoneScanPacketCount)
+                    {
+                        stoneScanPacketCounter++;
+                        break;
+                    }
+                    else
+                    {
+                        if (horizonalBoundryCounter < horizonalBoundryCount)
+                        {
+                            horizonalBoundryCounter++;
+                            break;
+                        }
+                        else
+                        {
+                            if (verticalBoundryCounter < verticalBoundryCount)
+                            {
+                                verticalBoundryCounter++;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -355,6 +374,24 @@ namespace Cad2D
                 sendPacketMutex.WaitOne();
                 lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                 sendPacketMutex.ReleaseMutex();
+            }
+            else
+            {
+                if(horizonalBoundryCounter < horizonalBoundryCount)
+                {
+                    sendPacketMutex.WaitOne();
+                    lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
+                    sendPacketMutex.ReleaseMutex();
+                }
+                else
+                {
+                    if(verticalBoundryCounter < verticalBoundryCount)
+                    {
+                        sendPacketMutex.WaitOne();
+                        lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
+                        sendPacketMutex.ReleaseMutex();
+                    }
+                }
             }
         }
 
@@ -775,6 +812,8 @@ namespace Cad2D
             ip = IPAddress.Parse(ps.PLCIpAdress);
             portNumber = ps.PLCPortNumber;
             cameraIp = ps.CameraIpAdress;
+            if(lsConnection != null)
+                lsConnection.set(ip, portNumber);
         }
 
         private void slider_x_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -983,6 +1022,8 @@ namespace Cad2D
                 verticalBoundryCount = stoneVerticalEdge.Length;
                 horizonalBoundryCount = stoneHorizontalEdge.Length;
                 stoneScanPacketCounter = 0;
+                horizonalBoundryCounter = 0;
+                verticalBoundryCounter = 0;
                 sendPacketMutex.WaitOne();
                 lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                 sendPacketMutex.ReleaseMutex();
