@@ -54,6 +54,12 @@ namespace Cad2D.Pages
                 checkBox_alarm11.IsChecked = s.alarmBits[10];
                 checkBox_alarm12.IsChecked = s.alarmBits[11];
             }
+
+            textBox_ClampAmount.Value = s.clampAmount;
+            textBox_ClampTopLeft.Value = s.clampTopLeft;
+            textBox_ClampTopRight.Value = s.clampTopRight;
+            textBox_ClampBottomRight.Value = s.clampBottomRight;
+            textBox_ClampBottomLeft.Value = s.clampBottomLeft;
         }
 
         private void button_save_Click(object sender, RoutedEventArgs e)
@@ -118,6 +124,12 @@ namespace Cad2D.Pages
             s.alarmBits[9] = checkBox_alarm10.IsChecked.Value;
             s.alarmBits[10] = checkBox_alarm11.IsChecked.Value;
             s.alarmBits[11] = checkBox_alarm12.IsChecked.Value;
+
+            s.clampAmount = (int)textBox_ClampAmount.Value;
+            s.clampTopLeft = (int)textBox_ClampTopLeft.Value;
+            s.clampTopRight = (int)textBox_ClampTopRight.Value;
+            s.clampBottomRight = (int)textBox_ClampBottomRight.Value;
+            s.clampBottomLeft = (int)textBox_ClampBottomLeft.Value;
 
             s.writeToXmlFile("options.ini");
 
