@@ -1,40 +1,35 @@
 ﻿using Cad2D.Pages;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Hikvision;
 using MahApps.Metro.Controls;
 using Brushes = System.Windows.Media.Brushes;
 using Image = System.Windows.Controls.Image;
-using PixelFormat = System.Windows.Media.PixelFormat;
 using Point = System.Windows.Point;
 
 namespace Cad2D
 {
     public partial class CanvasCad2D : UserControl
     {
+
+
+        [DllImport("PowrProf.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetSuspendState(bool hiberate, bool forceCritical, bool disableWakeEvent);
+
         public enum CadTool
         {
-            HAND, CREATE_PATH, ERASER , NON
+            HAND, CREATE_PATH, ERASER, NON
         }
         public enum State
         {
@@ -51,7 +46,7 @@ namespace Cad2D
         {
             public bool loop;
         }
-        
+
         public bool mouseEnteredInCircle;
         public bool canLoopPath;
 
@@ -82,15 +77,24 @@ namespace Cad2D
         Thread plcInfoReaderTimer;
         ////////////////
         //lsconnection
+        private Mutex sendPacketMutex = new Mutex();
         LS_Connection lsConnection;
         int stoneScanPacketCounter = 0;
+        int verticalBoundryCounter = 0;
+        int horizonalBoundryCounter = 0;
         private int stoneScanPacketCount;
-        IPAddress ip ;
-        int portNumber ;
+        private int verticalBoundryCount;
+        private int horizonalBoundryCount;
+        IPAddress ip;
+        int portNumber;
         private int countPackets;
         int maxAddress = 8000;
-        int arraySegmentPtr = 0; // startin memory for sending array 
+        int scanAriaSegment = 1000; // startin memory for sending array 
+        int verticalBoundrySegment = 2000; // startin memory for sending array 
+        int horizonalBoundrySegment = 3000; // startin memory for sending array 
         int[] stoneScan;
+        short[] stoneHorizontalEdge;
+        short[] stoneVerticalEdge;
         List<writingPacketInfo> writingPackets;
         int packetCounter = 0;
 
@@ -150,6 +154,8 @@ namespace Cad2D
             lsConnection.OnReadedContinuous += Ls_connection_OnReadedContinuous;
             lsConnection.Connected = false;
             stoneScanPacketCount = 0;
+            verticalBoundryCount = 0;
+            horizonalBoundryCount = 0;
             countPackets = 0;
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
@@ -169,8 +175,7 @@ namespace Cad2D
         {
             if (lsConnection.Connected)
             {
-                plcInformation.PackestId.Add(LS_Connection.order);
-                lsConnection.readFromPlcContinoues(plcInformation.alert.wordNumber * 2, plcInformation.manualOrAuto.wordNumber * 2 + 2);
+                lsConnection.readFromPlcContinoues(plcInformation.alert.wordNumber * 2, plcInformation.manualOrAuto.wordNumber * 2 + 2, ref plcInformation.PackestId);
             }
             else
             {
@@ -178,6 +183,7 @@ namespace Cad2D
                 if (ping)
                 {
                     lsConnection.connect(ip, portNumber);
+                    Thread.Sleep(2000);
                 }
             }
             Thread.Sleep(1000);
@@ -209,13 +215,114 @@ namespace Cad2D
                 alarm = alarm & 3583;
             }
         }
-        
+
         private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)
         {
             readingPacketCountinus repi = (readingPacketCountinus)sender;
-            if(plcInformation.PackestId.Exists(x => x == repi.order))
+            if (plcInformation.PackestId.Exists(x => x == repi.order))
             {
                 plcInformation.parse(repi.continuousData);
+                OnGUIActions(() => changeUi());
+                if (plcInformation.shutdown.value != 0 && plcInformation.shutdown.value != 4)
+                {
+                    shoutDownThePanelPC(plcInformation.shutdown.value);
+                }
+            }
+        }
+
+        private void OnGUIActions(Action action)
+        {
+            Dispatcher.Invoke(action);
+        }
+        private void changeUi()
+        {
+
+            bool[] array = Convert.ToString(plcInformation.alert.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
+            bool[] boolArray = createBoolArray(array);
+
+            for (int i = 0; i < 16; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        if (boolArray[i]) { alarm |= 1; } else { alarm &= 65534; }
+                        break;
+                    case 1:
+                        if (boolArray[i]) { alarm |= 2; } else { alarm &= 65533; }
+                        break;
+                    case 2:
+                        if (boolArray[i]) { alarm |= 4; } else { alarm &= 65531; }
+                        break;
+                    case 3:
+                        if (boolArray[i]) { alarm |= 8; } else { alarm &= 65527; }
+                        break;
+                    case 4:
+                        if (boolArray[i]) { alarm |= 16; } else { alarm &= 65519; }
+                        break;
+                    case 5:
+                        if (boolArray[i]) { alarm |= 32; } else { alarm &= 65503; }
+                        break;
+                    case 6:
+                        if (boolArray[i]) { alarm |= 64; } else { alarm &= 65471; }
+                        break;
+                    case 7:
+                        if (boolArray[i]) { alarm |= 128; } else { alarm &= 65407; }
+                        break;
+                    case 11:
+                        if (boolArray[i]) { alarm |= 2048; } else { alarm &= 63487; }
+                        break;
+                    case 10:
+                        if (boolArray[i]) { alarm |= 1024; } else { alarm &= 64511; }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            labelPosX.Content = plcInformation.positions.valueX;
+            labelPosY.Content = plcInformation.positions.valueY;
+            if (label_AutoOrManual.Content.Equals("اتوماتیک") && plcInformation.manualOrAuto.value == 0)
+            {
+                label_AutoOrManual.Content = "دستی";
+                image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/manual.png"));
+            }
+            if (label_AutoOrManual.Content.Equals("دستی") && plcInformation.manualOrAuto.value == 1)
+            {
+                label_AutoOrManual.Content = "اتوماتیک"; image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/auto.png"));
+            }
+
+        }
+
+        private bool[] createBoolArray(bool[] array)
+        {
+            bool[] newArray = new bool[16];
+            for (int i = 0; i < array.Length; i++)
+            {
+                newArray[i] = array[array.Length - i - 1];
+            }
+            return newArray;
+        }
+
+        private void shoutDownThePanelPC(ushort shut)
+        {
+            switch (shut)
+            {
+                case 1: //shutDown
+                    System.Diagnostics.Process.Start("shutdown.exe", "-s -t 0");
+                    break;
+                case 2: //reset
+                    System.Diagnostics.Process.Start("shutdown.exe", "-r -t 0");
+                    break;
+                case 3: // hibernate : set the 951 mw to 0 the go to case 4
+                    sendPacketMutex.WaitOne();
+                    lsConnection.writeToPlc(DataType.WORD, 0, 951, ref shutDownPacketId);
+                    sendPacketMutex.ReleaseMutex();
+                    break;
+                case 4: // end hibernate
+                    shutDownPacketId = null;
+                    SetSuspendState(true, true, true);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -227,6 +334,12 @@ namespace Cad2D
         private void Ls_connection_OnWritedSuccessfully(object sender, EventArgs e)
         {
             writingPacketInfo p = (writingPacketInfo)sender;
+            if (shutDownPacketId != null && shutDownPacketId.order == p.order)
+            {
+                shutDownPacketId = null;
+                shoutDownThePanelPC(4);
+                return;
+            }
             foreach (writingPacketInfo packet in writingPackets)
             {
                 if (p.order == packet.order)
@@ -239,28 +352,28 @@ namespace Cad2D
 
             if (stoneScanPacketCounter < stoneScanPacketCount)
             {
-                lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], arraySegmentPtr + stoneScanPacketCounter);
-                writingPacketInfo p1 = new writingPacketInfo(DataType.WORD, stoneScan[stoneScanPacketCounter], arraySegmentPtr, LS_Connection.order);
-                writingPackets.Add(p1);
+                sendPacketMutex.WaitOne();
+                lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
+                sendPacketMutex.ReleaseMutex();
             }
         }
 
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
-
+            alarm = alarm & 1048319;
         }
 
         private void Ls_connection_OnDisconnceted(object sender, EventArgs e)
         {
             alarm = alarm | 256;
         }
-#endregion
+        #endregion
         private void updateClock(object sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(
-                new Action(()=> label_clock.Content = DateTime.Now.ToString("HH:mm:ss")));
+                new Action(() => label_clock.Content = DateTime.Now.ToString("HH:mm:ss")));
         }
-        
+
         private void getSensitiveAlarms()
         {
             Settings s = Extentions.FromXml();
@@ -272,7 +385,7 @@ namespace Cad2D
                 {
                     sb = ((s.alarmBits[i]) ? "1" : "0") + sb;
                 }
-                sensitiveAlarms = Convert.ToInt32(sb.ToString(),2);
+                sensitiveAlarms = Convert.ToInt32(sb.ToString(), 2);
             }
             else
                 sensitiveAlarms = 64;
@@ -337,7 +450,7 @@ namespace Cad2D
             l.VerticalAlignment = VerticalAlignment.Center;
             return l;
         }
-        
+
         public static Circle cloneCircle()
         {
             Circle e = new Circle();
@@ -349,7 +462,7 @@ namespace Cad2D
 
             return e;
         }
-        
+
         #endregion
 
         #region Cad Tool Toggle Buttons
@@ -491,21 +604,23 @@ namespace Cad2D
         }
 
         private Bitmap bSrc;
+        private writingPacketInfo shutDownPacketId = null;
+
         private void button_switchToCamera_Click(object sender, RoutedEventArgs e)
         {
             Type t = contentControl.Content.GetType();
-            
-            if (t == typeof (CameraPage))
+
+            if (t == typeof(CameraPage))
             {
                 contentControl.Transition = TransitionType.RightReplace;
-                CameraPage cp = (CameraPage) contentControl.Content;
+                CameraPage cp = (CameraPage)contentControl.Content;
                 cp.hv.stopCapturing();
                 Image i = cp.image;
 
                 if (pagesStack.Count() < 2)
                 {
                     Analyzer a = new Analyzer();
-                    BitmapSource bs = (BitmapSource) i.Source;
+                    BitmapSource bs = (BitmapSource)i.Source;
                     if (bs != null)
                     {
                         bSrc = Utils.BitmapFromSource(bs);
@@ -523,7 +638,7 @@ namespace Cad2D
                     contentControl.Content = pso;
                 }
             }
-            else if (t == typeof (Page_SetOffsets))
+            else if (t == typeof(Page_SetOffsets))
             {
                 Page_SetOffsets pso = (Page_SetOffsets)contentControl.Content;
                 Point[] pns = pso.points;
@@ -532,7 +647,7 @@ namespace Cad2D
                     ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "حتما بایستی 2 نقطه بالا چپ و پایین راست میز تعیین شود.");
                     return;
                 }
-                Page_Settings ps = (Page_Settings) pagesStack.Pop();
+                Page_Settings ps = (Page_Settings)pagesStack.Pop();
                 ps.setOffsets(pns);
 
                 contentControl.Content = ps;
@@ -638,9 +753,9 @@ namespace Cad2D
 
         public void backFromPage(object sender, EventArgs e)
         {
-            if(sender.Equals("OPTIONS"))
+            if (sender.Equals("OPTIONS"))
                 checkPrimarySettings();
-            else if(sender.Equals("TOOLS"))
+            else if (sender.Equals("TOOLS"))
                 getSensitiveAlarms();
             button_back_ex_click(null, null);
         }
@@ -661,7 +776,7 @@ namespace Cad2D
             portNumber = ps.PLCPortNumber;
             cameraIp = ps.CameraIpAdress;
         }
-        
+
         private void slider_x_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (label_x != null)
@@ -673,7 +788,7 @@ namespace Cad2D
             if (label_y != null)
                 label_y.Content = string.Format("{0}x", arg0: slider_y.Value.ToString("F0"));
         }
-        
+
         private void btn_help_click(object sender, RoutedEventArgs e)
         {
             if (!canPushPage(typeof(Page_Help)))
@@ -692,7 +807,7 @@ namespace Cad2D
         private void button_back_ex_click(object sender, RoutedEventArgs e)
         {
             contentControl.Content = pagesStack.Pop();
-            if (contentControl.Content.GetType() == typeof (Page_Settings))
+            if (contentControl.Content.GetType() == typeof(Page_Settings))
             {
                 border_tools2.Visibility = Visibility.Collapsed;
             }
@@ -710,7 +825,7 @@ namespace Cad2D
 
         private void button_alarm_click(object sender, RoutedEventArgs e)
         {
-            if (canPushPage(typeof (Page_Alarms)))
+            if (canPushPage(typeof(Page_Alarms)))
             {
                 contentControl.Content = new Page_Alarms();
                 //btn_help.Visibility = Visibility.Collapsed;
@@ -739,7 +854,7 @@ namespace Cad2D
         {
             border_tools1.Visibility = border_tools2.Visibility =
                 (en) ? Visibility.Visible : Visibility.Collapsed;
-            
+
             button_back_from_down.Visibility = (!en) ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -787,7 +902,7 @@ namespace Cad2D
             border_setting.Visibility = Visibility.Visible;
             //border_monitors.Visibility = Visibility.Visible;
 
-           /// setEnable(btn_help, true);
+            /// setEnable(btn_help, true);
             setEnable(button_about, true);
             setEnable(button_setting, true);
             setEnable(button_tools, true);
@@ -803,7 +918,7 @@ namespace Cad2D
             ((Image)button_switchToCamera.Content).Source =
                 new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/camera.png", UriKind.Absolute));
         }
-        
+
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
         }
@@ -845,11 +960,11 @@ namespace Cad2D
             // 1500 + (2 * vertical slice) = y
             double[] array1;
             array1 = calCulateVerticalPoints();
-            short[] stoneVerticalEdge = calculateStoneVerticalPoints(array1);
+            stoneVerticalEdge = calculateStoneVerticalPoints(array1);
             // y + (2 * horizontal slice) = z
             double[] array2;
             array2 = calCulateHorizontalPoints();
-            short[] stoneHorizontalEdge = calculateStoneHorizontalPoints(array2);
+            stoneHorizontalEdge = calculateStoneHorizontalPoints(array2);
             // z 
             bool[,] array3;
             array3 = calCulateTheArray();
@@ -865,10 +980,12 @@ namespace Cad2D
             if (lsConnection.Connected)
             {
                 stoneScanPacketCount = stoneScan.Length;
+                verticalBoundryCount = stoneVerticalEdge.Length;
+                horizonalBoundryCount = stoneHorizontalEdge.Length;
                 stoneScanPacketCounter = 0;
-                lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], arraySegmentPtr + stoneScanPacketCounter);
-                writingPacketInfo p = new writingPacketInfo(DataType.WORD, stoneScan[stoneScanPacketCounter], arraySegmentPtr, LS_Connection.order);
-                writingPackets.Add(p);
+                sendPacketMutex.WaitOne();
+                lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
+                sendPacketMutex.ReleaseMutex();
             }
             else
             {
@@ -877,7 +994,7 @@ namespace Cad2D
         }
 
         // convert bool array of stone scan to simple int array
-        
+
 
         //@milad
         #region calculating stone edge and points
