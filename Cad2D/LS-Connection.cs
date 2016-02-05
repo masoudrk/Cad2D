@@ -773,6 +773,12 @@ namespace Cad2D
             return rv;
         }
 
+        internal void set(IPAddress _ip, int _portNumber)
+        {
+            this.Ip = _ip;
+            this.portNumber = _portNumber;
+        }
+
         #region ping region
 
         public bool PingHost()

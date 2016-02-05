@@ -68,8 +68,13 @@ namespace Cad2D
         //@milad
         double widthOffsetLength;
         double heightOffsetLength;
-        int verticalSlice = 140;
-        int horizontalSlice = 80;
+        /// <summary>
+        /// should add to settings
+        int StoneScanVerticalSlice = 140;
+        int stoneScanHorizontalSlice = 80;
+        int StoneEdgeVerticalSlice = 400;
+        int stoneEdgeHorizontalSlice = 400;
+        /// </summary>
         Point startPoint = new Point(0, 0);
         Point endPoint = new Point(704, 576);
         public List<LineGeometry> lineGeometryList;
@@ -87,7 +92,6 @@ namespace Cad2D
         private int horizonalBoundryCount;
         IPAddress ip;
         int portNumber;
-        private int countPackets;
         int maxAddress = 8000;
         int scanAriaSegment = 1000; // startin memory for sending array 
         int verticalBoundrySegment = 2000; // startin memory for sending array 
@@ -96,10 +100,7 @@ namespace Cad2D
         short[] stoneHorizontalEdge;
         short[] stoneVerticalEdge;
         List<writingPacketInfo> writingPackets;
-        int packetCounter = 0;
-
         string cameraIp;
-
         private Thread alarmThread;
         private System.Timers.Timer cameraCheckerTimer;
         private System.Timers.Timer clockTimer;
@@ -156,7 +157,6 @@ namespace Cad2D
             stoneScanPacketCount = 0;
             verticalBoundryCount = 0;
             horizonalBoundryCount = 0;
-            countPackets = 0;
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
             plcInformation = new PlcInformation();
@@ -222,7 +222,7 @@ namespace Cad2D
             if (plcInformation.PackestId.Exists(x => x == repi.order))
             {
                 plcInformation.parse(repi.continuousData);
-                OnGUIActions(() => changeUi());
+                OnGUIActions(() => changeMainUi());
                 if (plcInformation.shutdown.value != 0 && plcInformation.shutdown.value != 4)
                 {
                     shoutDownThePanelPC(plcInformation.shutdown.value);
@@ -234,7 +234,7 @@ namespace Cad2D
         {
             Dispatcher.Invoke(action);
         }
-        private void changeUi()
+        private void changeMainUi()
         {
 
             bool[] array = Convert.ToString(plcInformation.alert.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
@@ -345,8 +345,27 @@ namespace Cad2D
                 if (p.order == packet.order)
                 {
                     writingPackets.Remove(packet);
-                    stoneScanPacketCounter++;
-                    break;
+                    if (stoneScanPacketCounter < stoneScanPacketCount)
+                    {
+                        stoneScanPacketCounter++;
+                        break;
+                    }
+                    else
+                    {
+                        if (horizonalBoundryCounter < horizonalBoundryCount)
+                        {
+                            horizonalBoundryCounter++;
+                            break;
+                        }
+                        else
+                        {
+                            if (verticalBoundryCounter < verticalBoundryCount)
+                            {
+                                verticalBoundryCounter++;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -355,6 +374,24 @@ namespace Cad2D
                 sendPacketMutex.WaitOne();
                 lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                 sendPacketMutex.ReleaseMutex();
+            }
+            else
+            {
+                if(horizonalBoundryCounter < horizonalBoundryCount)
+                {
+                    sendPacketMutex.WaitOne();
+                    lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
+                    sendPacketMutex.ReleaseMutex();
+                }
+                else
+                {
+                    if(verticalBoundryCounter < verticalBoundryCount)
+                    {
+                        sendPacketMutex.WaitOne();
+                        lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
+                        sendPacketMutex.ReleaseMutex();
+                    }
+                }
             }
         }
 
@@ -775,6 +812,8 @@ namespace Cad2D
             ip = IPAddress.Parse(ps.PLCIpAdress);
             portNumber = ps.PLCPortNumber;
             cameraIp = ps.CameraIpAdress;
+            if(lsConnection != null)
+                lsConnection.set(ip, portNumber);
         }
 
         private void slider_x_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -983,6 +1022,8 @@ namespace Cad2D
                 verticalBoundryCount = stoneVerticalEdge.Length;
                 horizonalBoundryCount = stoneHorizontalEdge.Length;
                 stoneScanPacketCounter = 0;
+                horizonalBoundryCounter = 0;
+                verticalBoundryCounter = 0;
                 sendPacketMutex.WaitOne();
                 lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                 sendPacketMutex.ReleaseMutex();
@@ -1001,15 +1042,15 @@ namespace Cad2D
         private short[] calculateStoneHorizontalPoints(double[] array)
         {
             short[] stoneHorizontalPoints = new short[array.Length];
-            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / verticalSlice;
+            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / StoneEdgeVerticalSlice;
             for (int i = 0; i < (array.Length / 2); i++)
             {
                 stoneHorizontalPoints[i * 2] = (short)((array[i * 2] - startPoint.X) / widthOffsetLength);
                 stoneHorizontalPoints[i * 2 + 1] = (short)((array[i * 2 + 1] - startPoint.X) / widthOffsetLength);
-                if (stoneHorizontalPoints[i * 2 + 1] >= verticalSlice)
-                    stoneHorizontalPoints[i * 2 + 1] = (short)(verticalSlice - 1);
-                if (stoneHorizontalPoints[i * 2] >= verticalSlice)
-                    stoneHorizontalPoints[i * 2] = (short)(verticalSlice - 1);
+                if (stoneHorizontalPoints[i * 2 + 1] >= StoneEdgeVerticalSlice)
+                    stoneHorizontalPoints[i * 2 + 1] = (short)(StoneEdgeVerticalSlice - 1);
+                if (stoneHorizontalPoints[i * 2] >= StoneEdgeVerticalSlice)
+                    stoneHorizontalPoints[i * 2] = (short)(StoneEdgeVerticalSlice - 1);
             }
             return stoneHorizontalPoints;
         }
@@ -1017,30 +1058,30 @@ namespace Cad2D
         private short[] calculateStoneVerticalPoints(double[] array1)
         {
             short[] stoneVerticalPoints = new short[array1.Length];
-            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / horizontalSlice;
+            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / stoneEdgeHorizontalSlice;
             for (int i = 0; i < (array1.Length / 2); i++)
             {
                 stoneVerticalPoints[i * 2] = (short)((array1[i * 2] - startPoint.Y) / heightOffsetLength);
                 stoneVerticalPoints[i * 2 + 1] = (short)((array1[i * 2 + 1] - startPoint.Y) / heightOffsetLength);
-                if (stoneVerticalPoints[i * 2 + 1] >= horizontalSlice)
-                    stoneVerticalPoints[i * 2 + 1] = (short)(horizontalSlice - 1);
-                if (stoneVerticalPoints[i * 2] >= horizontalSlice)
-                    stoneVerticalPoints[i * 2] = (short)(horizontalSlice - 1);
+                if (stoneVerticalPoints[i * 2 + 1] >= stoneEdgeHorizontalSlice)
+                    stoneVerticalPoints[i * 2 + 1] = (short)(stoneEdgeHorizontalSlice - 1);
+                if (stoneVerticalPoints[i * 2] >= stoneEdgeHorizontalSlice)
+                    stoneVerticalPoints[i * 2] = (short)(stoneEdgeHorizontalSlice - 1);
             }
             return stoneVerticalPoints;
         }
         private bool[,] calCulateTheArray()
         {
-            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / verticalSlice;
+            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / StoneScanVerticalSlice;
             double WOffset = startPoint.X;
-            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / horizontalSlice;
+            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / stoneScanHorizontalSlice;
             double HOffset = startPoint.Y;
 
-            bool[,] array = new bool[horizontalSlice, verticalSlice];
+            bool[,] array = new bool[stoneScanHorizontalSlice, StoneScanVerticalSlice];
 
-            for (int i = 0; i < horizontalSlice; i++)
+            for (int i = 0; i < stoneScanHorizontalSlice; i++)
             {
-                for (int j = 0; j < verticalSlice; j++)
+                for (int j = 0; j < StoneScanVerticalSlice; j++)
                 {
                     array[i, j] = false;
                     short biger = 0;
@@ -1090,14 +1131,14 @@ namespace Cad2D
 
         private double[] calCulateVerticalPoints()
         {
-            double[] array = new double[2 * verticalSlice];
+            double[] array = new double[2 * StoneEdgeVerticalSlice];
 
 
-            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / verticalSlice;
+            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / StoneEdgeVerticalSlice;
             double offset = startPoint.X;
             double[] values = new double[2];
 
-            for (int i = 0; i < verticalSlice; i++)
+            for (int i = 0; i < StoneEdgeVerticalSlice; i++)
             {
                 int j = 0;
                 values[0] = 0;
@@ -1175,17 +1216,17 @@ namespace Cad2D
 
         private int[] calculateStoneScan(bool[,] array)
         {
-            int[] stoneScan = new int[(horizontalSlice / 16) * verticalSlice];
+            int[] stoneScan = new int[(stoneScanHorizontalSlice / 16) * StoneScanVerticalSlice];
 
-            for (int i = 0; i < verticalSlice; i++)
+            for (int i = 0; i < StoneScanVerticalSlice; i++)
             {
-                for (int k = 0; k < (horizontalSlice / 16); k++)
+                for (int k = 0; k < (stoneScanHorizontalSlice / 16); k++)
                 {
                     for (int j = 0; j < 16; j++)
                     {
-                        stoneScan[((horizontalSlice / 16) * i) + k] *= 2;
+                        stoneScan[((stoneScanHorizontalSlice / 16) * i) + k] *= 2;
                         if (array[(16 * k) + j, i])
-                            stoneScan[((horizontalSlice / 16) * i) + k]++;
+                            stoneScan[((stoneScanHorizontalSlice / 16) * i) + k]++;
                     }
                 }
             }
@@ -1194,13 +1235,13 @@ namespace Cad2D
         }
         private double[] calCulateHorizontalPoints()
         {
-            double[] array = new double[2 * horizontalSlice];
+            double[] array = new double[2 * stoneEdgeHorizontalSlice];
 
-            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / horizontalSlice;
+            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / stoneEdgeHorizontalSlice;
             double offset = startPoint.Y;
             double[] values = new double[2];
 
-            for (int i = 0; i < horizontalSlice; i++)
+            for (int i = 0; i < stoneEdgeHorizontalSlice; i++)
             {
                 int j = 0;
                 values[0] = 0;
