@@ -25,6 +25,8 @@ namespace Cad2D.Pages
     {
         public EventHandler backPageHandler;
         private CanvasCad2D cc2d;
+        public static KeypadTextBox[] registeredTextbox;
+
         public Page_Settings(CanvasCad2D cc2d)
         {
             InitializeComponent();
@@ -50,7 +52,7 @@ namespace Cad2D.Pages
 
             textBox_bottomRightX.Text = s.BottomRightOffsetX.ToString();
             textBox_bottomRightY.Text = s.BottomRightOffsetY.ToString();
-
+            
             checkBox_showSpeedMenu.IsChecked = s.showSpeedMonitorInMainPanel;
             checkBox_showGuideCircles.IsChecked = s.showGuideCircles;
             checkBox_captureModeInStart.IsChecked = s.captureModeWhenStart;
@@ -66,6 +68,25 @@ namespace Cad2D.Pages
             ScanAriaSegment.Text = s.ScanAriaSegment.ToString();
             VerticalBoundrySegment.Text = s.VerticalBoundrySegment.ToString();
             HorizonalBoundrySegment.Text = s.HorizonalBoundrySegment.ToString();
+
+            registeredTextbox = new KeypadTextBox[17];
+            registeredTextbox[0] = textBox_cameraIp;
+            registeredTextbox[1] = textBox_plcIp;
+            registeredTextbox[2] = textBox_plcPort;
+            registeredTextbox[3] = textBox_cameraPort;
+            registeredTextbox[4] = textBox_startArrayOffset;
+            registeredTextbox[5] = textBox_startVarsOffset;
+            registeredTextbox[6] = textBox_sv;
+            registeredTextbox[7] = textBox_ev;
+            registeredTextbox[8] = textBox_sh;
+            registeredTextbox[9] = textBox_eh;
+            registeredTextbox[10] = ScanAriaSegment;
+            registeredTextbox[11] = VerticalBoundrySegment;
+            registeredTextbox[12] = HorizonalBoundrySegment;
+            registeredTextbox[13] = textBox_BridgeY2;
+            registeredTextbox[14] = textBox_BridgeY3;
+            registeredTextbox[15] = textBox_BridgeX3;
+            registeredTextbox[16] = textBox_BridgeX2;
         }
 
         private void button_save_Click(object sender, RoutedEventArgs e)
@@ -115,7 +136,6 @@ namespace Cad2D.Pages
                 captureModeWhenStart = checkBox_captureModeInStart.IsChecked.Value,
                 ArrayMemoryOffset = int.Parse(textBox_startArrayOffset.Text.ToString()),
                 VarMemoryOffset = int.Parse(textBox_startVarsOffset.Text.ToString())
-
             };
 
             s.ScanVerticalSlice = int.Parse(textBox_sv.Text);
@@ -158,11 +178,19 @@ namespace Cad2D.Pages
             textBox_bottomRightX.Text = points[1].X.ToString();
             textBox_bottomRightY.Text = points[1].Y.ToString();
         }
+        
 
-        private void textBox_cameraIp_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ((KeypadTextBox)sender).hideKeypad();
+            hideKeypad();
         }
-
+        
+        public static void hideKeypad()
+        {
+            foreach (var keypadTextBox in registeredTextbox)
+            {
+                keypadTextBox.hideKeypad();
+            }
+        }
     }
 }

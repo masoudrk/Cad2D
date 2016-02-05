@@ -166,7 +166,7 @@ namespace Cad2D
             plcInformation.positions.wordNumberY = 953;
             plcInformation.manualOrAuto.wordNumber = 954;
 
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
             plcInfoReaderTimer.Start();
 

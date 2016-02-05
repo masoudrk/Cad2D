@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -188,6 +189,12 @@ namespace Cad2D.Pages
             panel_pass.IsEnabled = use;
             panel_newPass.IsEnabled = use;
             panel_newConfirmPass.IsEnabled = use;
+        }
+
+        private void imageKeyboard_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) +
+                                   "/osk.exe");
         }
     }
 }

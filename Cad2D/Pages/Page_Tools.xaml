@@ -108,6 +108,7 @@
                 <Button x:Name="button_save" Content="اعمال تغییرات" Height="36" Margin="0,10,251,0" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="174" Foreground="{DynamicResource MainColor}" FontWeight="Normal" Click="button_save_Click"/>
 
             </StackPanel>
+            <Image RenderOptions.BitmapScalingMode="HighQuality" x:Name="imageKeyboard" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="79" Margin="0,0,451,119" MouseDown="imageKeyboard_MouseDown" Source="/Cad2D;component/Resources/keyboard.png"  Width="80"/>
 
         </Grid>
     </ScrollViewer>
