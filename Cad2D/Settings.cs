@@ -9,6 +9,11 @@ using System.Xml.Serialization;
 public class Settings
 {
     public bool [] alarmBits;
+    public int clampAmount { get; set; }
+    public int clampTopLeft { get; set; }
+    public int clampTopRight { get; set; }
+    public int clampBottomRight { get; set; }
+    public int clampBottomLeft { get; set; }
 }
 
 public class PrimarySettings
