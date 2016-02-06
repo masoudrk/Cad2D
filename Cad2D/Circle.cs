@@ -40,7 +40,7 @@ namespace Cad2D
             if (mouseActionsEnable)
             {
                 cc2d.onTopCircle = this;
-                if (isFirstPoint && !cc2d.connectedsList.loop)
+                if (isFirstPoint && !cc2d.connectedsList.loop && cc2d.connectedsList.Count > 2)
                 {
                     cc2d.canLoopPath = true;
                 }
@@ -131,14 +131,16 @@ namespace Cad2D
 
             if (mouseEntered)
             {
-                if (isFirstPoint)
-                    dc.DrawEllipse(new BrushConverter().ConvertFromString("#55000000") as SolidColorBrush
-                        , new Pen(), new Point(X, Y), 10, 10);
-
                 dc.DrawEllipse(Brushes.Red, new Pen(), new Point(X, Y), radius, radius);
             }
             else
+            {
                 dc.DrawEllipse(defaultColor, new Pen(), new Point(X, Y), radius, radius);
+            }
+
+            if (isFirstPoint)
+                dc.DrawEllipse(new BrushConverter().ConvertFromString("#55ffffff") as SolidColorBrush
+                    , new Pen(), new Point(X, Y), radius + 40, radius + 40);
 
             base.OnRender(dc);
         }

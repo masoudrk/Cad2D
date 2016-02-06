@@ -48,7 +48,7 @@ namespace Cad2D
         }
 
         public bool mouseEnteredInCircle;
-        public bool canLoopPath;
+        public bool canLoopPath { set; get; }
 
         public Circle onTopCircle;
         public CadTool cadTool { set; get; }
@@ -516,6 +516,9 @@ namespace Cad2D
         {
             Cursor = Cursors.Arrow;
             cadTool = CadTool.CREATE_PATH;
+            state = State.GET_START;
+            setEnable((Control)sender, false);
+            setEnable(btn_clearPath, true);
         }
 
         private void toggle_Tool_Unchecked(object sender, RoutedEventArgs e)
@@ -723,6 +726,7 @@ namespace Cad2D
 
         private void clearPath()
         {
+            state = State.NON;
             foreach (ConnectedLine c in connectedsList)
             {
                 mainCanvas.Children.Remove(c.circle.connectedLine1);
@@ -737,7 +741,7 @@ namespace Cad2D
             guids.Clear();
             ///////////////////
 
-            state = State.GET_START;
+            //state = State.GET_START;
             connectedsList.loop = false;
             connectedsList.Clear();
 
@@ -1032,7 +1036,6 @@ namespace Cad2D
 
         private void sendingStoneScanToPLC()
         {
-
             if (lsConnection.Connected)
             {
                 stoneScanPacketCount = stoneScan.Length;
@@ -1047,7 +1050,8 @@ namespace Cad2D
             }
             else
             {
-                MessageBox.Show("پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                Dispatcher.Invoke(new Action(() =>
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.")));
             }
         }
 
