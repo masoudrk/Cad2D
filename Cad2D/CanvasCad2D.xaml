@@ -125,12 +125,12 @@
                     <StackPanel Name="panel_speeds" Orientation="Vertical" >
                         <Label Margin="0 5 1 0" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="سرعت محور X :" FontSize="17.333" VerticalContentAlignment="Center"/>
                         <StackPanel Name="SpeedX" FlowDirection="RightToLeft" Orientation="Horizontal" >
-                            <Slider Margin="5" Style="{DynamicResource FlatSlider}" Value="50" Width="160" x:Name="slider_x" FlowDirection="LeftToRight" ValueChanged="slider_x_ValueChanged" Height="20"/>
+                            <Slider Margin="5" Style="{DynamicResource FlatSlider}" Value="50" Width="160" x:Name="slider_x" FlowDirection="LeftToRight" ValueChanged="slider_x_ValueChanged" Height="20" PreviewMouseUp="slider_x_PreviewMouseUp" />
                             <Label x:Name="label_x" Content="50x" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
                         </StackPanel>
                         <Label Margin="0 5 1 0" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="سرعت محور Y :" FontSize="17.333" VerticalContentAlignment="Center"/>
                         <StackPanel Name="SpeedY" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 0 10" >
-                            <Slider Margin="5" Value="50" Style="{DynamicResource FlatSlider}" Minimum="0" Maximum="100" Width="160" x:Name="slider_y" FlowDirection="LeftToRight" ValueChanged="slider_y_ValueChanged" Height="20"/>
+                            <Slider Margin="5" Value="50" Style="{DynamicResource FlatSlider}" Minimum="0" Maximum="100" Width="160" x:Name="slider_y" FlowDirection="LeftToRight" ValueChanged="slider_y_ValueChanged" Height="20" PreviewMouseUp="slider_y_PreviewMouseUp"/>
                             <Label x:Name="label_y" Content="50x" Width="50" HorizontalContentAlignment="Center" FontSize="18.667"/>
                         </StackPanel>
                     </StackPanel>

@@ -343,6 +343,17 @@ namespace Cad2D
                 shoutDownThePanelPC(4);
                 return;
             }
+            if (positionxPacketInfo != null && positionxPacketInfo.order == p.order)
+            {
+                is_inSendingx = false;
+                return;
+            }
+            if (positionyPacketInfo != null && positionyPacketInfo.order == p.order)
+            {
+                is_inSendingy = false;
+                return;
+            }
+
             foreach (writingPacketInfo packet in writingPackets)
             {
                 if (p.order == packet.order)
@@ -816,6 +827,15 @@ namespace Cad2D
                 panel_speeds.Visibility = Visibility.Collapsed;
             }
 
+            StoneScanVerticalSlice = ps.ScanVerticalSlice;
+            stoneScanHorizontalSlice = ps.ScanHorizontalSlice;
+            StoneEdgeVerticalSlice = ps.EdgeVerticalSlice;
+            stoneEdgeHorizontalSlice = ps.EdgeHorizontalSlice;
+
+            scanAriaSegment = ps.ScanAriaSegment; // startin memory for sending array 
+            verticalBoundrySegment = ps.VerticalBoundrySegment; // startin memory for sending array 
+            horizonalBoundrySegment = ps.HorizonalBoundrySegment; // startin memory for sending array 
+
             ip = IPAddress.Parse(ps.PLCIpAdress);
             portNumber = ps.PLCPortNumber;
             cameraIp = ps.CameraIpAdress;
@@ -825,17 +845,65 @@ namespace Cad2D
             return ps;
         }
 
+        bool is_inSendingx = false;
+        bool is_inSendingy = false;
+        writingPacketInfo positionxPacketInfo = null;
+        writingPacketInfo positionyPacketInfo = null;
+
+        private void slider_x_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!is_inSendingx)
+            {
+                is_inSendingx = true;
+                Thread t = new Thread(sendPositionxToPlc);
+                t.Start();
+            }
+        }
+
+
+        private void slider_y_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!is_inSendingy)
+            {
+                is_inSendingy = true;
+                Thread t = new Thread(sendPositionYToPlc);
+                t.Start();
+            }
+        }
+
         private void slider_x_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (label_x != null)
                 label_x.Content = string.Format("{0}x", arg0: slider_x.Value.ToString("F0"));
+
         }
 
         private void slider_y_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (label_y != null)
                 label_y.Content = string.Format("{0}x", arg0: slider_y.Value.ToString("F0"));
+            
+
         }
+
+        void sendPositionxToPlc()
+        {
+
+            sendPacketMutex.WaitOne();
+            if (lsConnection != null && lsConnection.Connected)
+                OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_x.Value, 955, ref positionxPacketInfo));
+            sendPacketMutex.ReleaseMutex();
+        }
+        void sendPositionYToPlc()
+        {
+
+            sendPacketMutex.WaitOne();
+            if (lsConnection != null && lsConnection.Connected)
+                OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_y.Value, 956, ref positionyPacketInfo));
+            sendPacketMutex.ReleaseMutex();
+            
+        }
+
 
         private void btn_help_click(object sender, RoutedEventArgs e)
         {
@@ -1254,6 +1322,8 @@ namespace Cad2D
 
             return stoneScan;
         }
+
+
         private double[] calCulateHorizontalPoints()
         {
             double[] array = new double[2 * stoneEdgeHorizontalSlice];

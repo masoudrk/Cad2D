@@ -114,7 +114,7 @@ public static class Extentions
                 ScanVerticalSlice = ds.VerticalScan,
                 ScanHorizontalSlice = ds.HorizontalScan,
                 EdgeHorizontalSlice = ds.HorizontalEdge,
-                EdgeVerticalSlice = ds.HorizontalEdge,
+                EdgeVerticalSlice = ds.VerticalEdge,
                 ScanAriaSegment = ds.ScanAriaSegment,
                 VerticalBoundrySegment = ds.VerticalBoundrySegment,
                 HorizonalBoundrySegment = ds.HorizonalBoundrySegment
