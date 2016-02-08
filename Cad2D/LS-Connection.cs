@@ -512,7 +512,7 @@ namespace Cad2D
                 packetInfo[5] = calculateCheckSum(packetInfo);
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
                 //packet info for sending packet
