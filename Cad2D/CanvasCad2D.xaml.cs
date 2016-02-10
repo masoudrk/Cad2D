@@ -71,6 +71,7 @@ namespace Cad2D
         /// <summary>
         /// should add to settings
         int StoneScanVerticalSlice = 140;
+        PlcUtilitisAndOptions plcUtilitisAndOptions;
         int stoneScanHorizontalSlice = 80;
         int StoneEdgeVerticalSlice = 400;
         int stoneEdgeHorizontalSlice = 400;
@@ -82,8 +83,8 @@ namespace Cad2D
         Thread plcInfoReaderTimer;
         ////////////////
         //lsconnection
-        private Mutex sendPacketMutex = new Mutex();
-        LS_Connection lsConnection;
+        public static Mutex sendPacketMutex = new Mutex();
+        public static LS_Connection lsConnection;
         int stoneScanPacketCounter = 0;
         int verticalBoundryCounter = 0;
         int horizonalBoundryCounter = 0;
@@ -108,7 +109,7 @@ namespace Cad2D
         {
             InitializeComponent();
             pagesStack = new Stack<object>();
-
+            plcUtilitisAndOptions = new PlcUtilitisAndOptions();
             this.Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
 
             state = State.GET_START;
@@ -222,17 +223,33 @@ namespace Cad2D
         private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)
         {
             readingPacketCountinus repi = (readingPacketCountinus)sender;
-            if (plcInformation.PackestId.Exists(x => x == repi.order))
+            int i = plcInformation.PackestId.FindIndex(x => x == repi.order);
+            if ( i>= 0)
             {
+                plcInformation.PackestId.RemoveAt(i);
                 plcInformation.parse(repi.continuousData);
                 OnGUIActions(() => changeMainUi());
                 if (plcInformation.shutdown.value != 0 && plcInformation.shutdown.value != 4)
                 {
                     shoutDownThePanelPC(plcInformation.shutdown.value);
                 }
+                return;
+            }
+            i = plcUtilitisAndOptions.Velocity.PackestId.FindIndex(x => x == repi.order);
+            if (i >= 0)
+            {
+                plcUtilitisAndOptions.Velocity.updateValues(repi.continuousData);
+                OnGUIActions(() => setSlidersValues());
+                //////////
+                return;
             }
         }
 
+        public void setSlidersValues()
+        {
+            slider_x.Value = plcUtilitisAndOptions.Velocity.velocityX;
+            slider_y.Value = plcUtilitisAndOptions.Velocity.velocityY;
+        }
         private void OnGUIActions(Action action)
         {
             Dispatcher.Invoke(action);
@@ -412,6 +429,9 @@ namespace Cad2D
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
             alarm = alarm & 1048319;
+            sendPacketMutex.WaitOne();
+            lsConnection.readFromPlcContinoues(plcUtilitisAndOptions.Velocity.velocityXAddress * 2, plcUtilitisAndOptions.Velocity.velocityYAddress * 2 + 2, ref plcUtilitisAndOptions.Velocity.PackestId);
+            sendPacketMutex.ReleaseMutex();
         }
 
         private void Ls_connection_OnDisconnceted(object sender, EventArgs e)
@@ -875,15 +895,16 @@ namespace Cad2D
         {
             if (label_x != null)
                 label_x.Content = string.Format("{0}x", arg0: slider_x.Value.ToString("F0"));
-
+            if(plcUtilitisAndOptions != null)
+                plcUtilitisAndOptions.Velocity.velocityX = (int)slider_x.Value;
         }
 
         private void slider_y_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (label_y != null)
                 label_y.Content = string.Format("{0}x", arg0: slider_y.Value.ToString("F0"));
-            
-
+            if (plcUtilitisAndOptions != null)
+                plcUtilitisAndOptions.Velocity.velocityY = (int)slider_y.Value;
         }
 
         void sendPositionxToPlc()
