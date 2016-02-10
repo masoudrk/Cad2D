@@ -71,7 +71,7 @@ namespace Cad2D
         /// <summary>
         /// should add to settings
         int StoneScanVerticalSlice = 140;
-        PlcUtilitisAndOptions plcUtilitisAndOptions;
+        public static PlcUtilitisAndOptions plcUtilitisAndOptions;
         int stoneScanHorizontalSlice = 80;
         int StoneEdgeVerticalSlice = 400;
         int stoneEdgeHorizontalSlice = 400;
@@ -91,6 +91,9 @@ namespace Cad2D
         private int stoneScanPacketCount;
         private int verticalBoundryCount;
         private int horizonalBoundryCount;
+        Page_Tools pageToolsObject;
+
+        bool callPageTools;
         IPAddress ip;
         int portNumber;
         int maxAddress = 8000;
@@ -243,6 +246,24 @@ namespace Cad2D
                 //////////
                 return;
             }
+
+            i = plcUtilitisAndOptions.BridgeOptions.PackestId.FindIndex(x => x == repi.order);
+            if (i >= 0)
+            {
+                plcUtilitisAndOptions.BridgeOptions.updateValues(repi.continuousData);
+                pageToolsObject.getClampValues();
+                pageToolsObject.OnGUIActions(() => pageToolsObject.updateBridgeValues());
+                //////////
+                return;
+            }
+
+            i = plcUtilitisAndOptions.ClampOptions.PackestId.FindIndex(x => x == repi.order);
+            if (i >= 0)
+            {
+                plcUtilitisAndOptions.ClampOptions.updateValues(repi.continuousData);
+                pageToolsObject.OnGUIActions(() => pageToolsObject.updateClampValues());
+                return;
+            }
         }
 
         public void setSlidersValues()
@@ -334,7 +355,8 @@ namespace Cad2D
                     break;
                 case 3: // hibernate : set the 951 mw to 0 the go to case 4
                     sendPacketMutex.WaitOne();
-                    lsConnection.writeToPlc(DataType.WORD, 0, 951, ref shutDownPacketId);
+                    if(lsConnection.Connected)
+                        lsConnection.writeToPlc(DataType.WORD, 0, 951, ref shutDownPacketId);
                     sendPacketMutex.ReleaseMutex();
                     break;
                 case 4: // end hibernate
@@ -403,7 +425,8 @@ namespace Cad2D
             if (stoneScanPacketCounter < stoneScanPacketCount)
             {
                 sendPacketMutex.WaitOne();
-                lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
+                if (lsConnection.Connected)
+                    lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                 sendPacketMutex.ReleaseMutex();
             }
             else
@@ -419,7 +442,8 @@ namespace Cad2D
                     if(verticalBoundryCounter < verticalBoundryCount)
                     {
                         sendPacketMutex.WaitOne();
-                        lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
+                        if (lsConnection.Connected)
+                            lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
                         sendPacketMutex.ReleaseMutex();
                     }
                 }
@@ -785,9 +809,12 @@ namespace Cad2D
         {
             if (!canPushPage(typeof(Page_Tools)))
                 return;
-            Page_Tools p = new Page_Tools(this);
-            p.backPageHandler += backFromPage;
-            contentControl.Content = p;
+
+            
+            pageToolsObject = new Page_Tools(this);
+            pageToolsObject.backPageHandler += backFromPage;
+            callPageTools = true;
+            contentControl.Content = pageToolsObject;
 
             //btn_help.Visibility = Visibility.Collapsed;
             button_about.Visibility = Visibility.Collapsed;
@@ -828,6 +855,8 @@ namespace Cad2D
 
         public void backFromPage(object sender, EventArgs e)
         {
+            pageToolsObject = null;
+            callPageTools = false;
             if (sender.Equals("OPTIONS"))
                 checkPrimarySettings();
             else if (sender.Equals("TOOLS"))
@@ -1134,7 +1163,8 @@ namespace Cad2D
                 horizonalBoundryCounter = 0;
                 verticalBoundryCounter = 0;
                 sendPacketMutex.WaitOne();
-                lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
+                if (lsConnection.Connected)
+                    lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                 sendPacketMutex.ReleaseMutex();
             }
             else

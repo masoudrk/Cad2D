@@ -25,6 +25,8 @@ namespace Cad2D.Pages
     {
         public EventHandler backPageHandler;
         private CanvasCad2D cc2d;
+        private object lsConnection;
+
         public Page_Tools(CanvasCad2D cc2d)
         {
             InitializeComponent();
@@ -34,6 +36,7 @@ namespace Cad2D.Pages
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+
         }
 
         private void load()
@@ -57,8 +60,8 @@ namespace Cad2D.Pages
             }
             if (s.bridgeTop != null)
             {
-                textBox_TopValue.Value = s.bridgeTop.value ;
-                textBox_TopDelay.Value = s.bridgeTop.delay ;
+                textBox_TopValue.Value = s.bridgeTop.value;
+                textBox_TopDelay.Value = s.bridgeTop.delay;
             }
             if (s.bridgeBottom != null)
             {
@@ -81,6 +84,15 @@ namespace Cad2D.Pages
             textBox_ClampTopRight.Value = s.clampTopRight;
             textBox_ClampBottomRight.Value = s.clampBottomRight;
             textBox_ClampBottomLeft.Value = s.clampBottomLeft;
+
+            //bridge
+            CanvasCad2D.sendPacketMutex.WaitOne();
+            if (CanvasCad2D.lsConnection.Connected)
+                CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.delayAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.PackestId);
+            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+
+            //clamp
+
         }
 
         private void button_save_Click(object sender, RoutedEventArgs e)
@@ -97,7 +109,7 @@ namespace Cad2D.Pages
                         string Pass = key.GetValue("psk").ToString();
                         key.Close();
 
-                        if (BCrypt.Net.BCrypt.Verify(textBox_nowPass.Password ,Pass))
+                        if (BCrypt.Net.BCrypt.Verify(textBox_nowPass.Password, Pass))
                         {
                             key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Auth");
                             key.SetValue("psk", BCrypt.Net.BCrypt.HashPassword(textBox_newPass.Password));
@@ -113,17 +125,17 @@ namespace Cad2D.Pages
                 }
                 else
                 {
-                    if(!textBox_newPass.Password.Equals(""))
-                    if(!(textBox_newPass.Password.Length > 3))
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "طول رمز جدید میبایستی بیشتر از 4 کاراکتر باشد.");
-                    else
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "رمزهای جدید وارد شده با هم یکسان نیستند.");
+                    if (!textBox_newPass.Password.Equals(""))
+                        if (!(textBox_newPass.Password.Length > 3))
+                            ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "طول رمز جدید میبایستی بیشتر از 4 کاراکتر باشد.");
+                        else
+                            ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "رمزهای جدید وارد شده با هم یکسان نیستند.");
                 }
             }
             else
             {
                 RegistryKey rk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Auth");
-                
+
                 if (rk != null)
                 {
                     rk.Close();
@@ -169,9 +181,9 @@ namespace Cad2D.Pages
             s.writeToXmlFile("options.ini");
 
             ((MainWindow)Application.Current.MainWindow).showMsg("پیام", "تنظیمات با موفقیت ذخیره شدند!");
-            
+
             if (backPageHandler != null)
-                backPageHandler.Invoke("TOOLS" ,null);
+                backPageHandler.Invoke("TOOLS", null);
         }
 
         private void checkBox_usePass_Checked(object sender, RoutedEventArgs e)
@@ -195,6 +207,41 @@ namespace Cad2D.Pages
         {
             Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.System) +
                                    "/osk.exe");
+        }
+
+        public void updateClampValues()
+        {
+            textBox_ClampAmount.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.value;
+            textBox_ClampTopRight.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.value;
+            textBox_ClampTopLeft.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.value;
+            textBox_ClampBottomRight.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.value;
+            textBox_ClampBottomLeft.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.frontClamp.value;
+        }
+
+        public void updateBridgeValues()
+        {
+            textBox_TopValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.value;
+            textBox_TopDelay.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.delay;
+            textBox_RightValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.value;
+            textBox_RightDelay.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.delay;
+            textBox_BottomValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.value;
+            textBox_BottomDelay.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.delay;
+            textBox_LeftValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.value;
+            textBox_LeftDelay.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.delay;
+        }
+
+        public void getClampValues()
+        {
+            CanvasCad2D.sendPacketMutex.WaitOne();
+            if (CanvasCad2D.lsConnection.Connected)
+                CanvasCad2D.lsConnection.readFromPlcContinoues
+                (CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.PackestId);
+            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+        }
+
+        public void OnGUIActions(Action action)
+        {
+            Dispatcher.Invoke(action);
         }
     }
 }
