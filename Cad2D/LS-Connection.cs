@@ -239,7 +239,6 @@ namespace Cad2D
             {
                 Disconnect();
             }
-
         }
 
         private void parseData(readingPacketInfo p, byte[] data, int dataLength)
@@ -522,6 +521,7 @@ namespace Cad2D
             }
             return true;
         }
+
 
 
         public bool writeToPlc(DataType dt, int value, int address, ref List<writingPacketInfo> wpiList)

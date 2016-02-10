@@ -37,7 +37,7 @@ namespace Cad2D
                 behindClamp.valueAddress = 974;
             }
             public List<ushort> PackestId;
-            
+            public writingPacketInfo writingPacket { set; get; }
             public clamp clampValue { set; get; }
             public clamp upClamp { set; get; }
             public clamp downClamp { set; get; }
@@ -45,6 +45,7 @@ namespace Cad2D
             public clamp behindClamp { set; get; }
             public class clamp
             {
+                public writingPacketInfo writingPacket;
                 public int value { set; get; }
                 public int valueAddress { set; get; }
             }
@@ -83,6 +84,7 @@ namespace Cad2D
                 stoneOffsetDown.delayAddress = 965;
                 stoneOffsetLeft.delayAddress = 967;
             }
+            public writingPacketInfo writingPacket { set; get; }
             public List<ushort> PackestId;
             public stoneOffset stoneOffsetUp { set; get; }
             public stoneOffset stoneOffsetRight { set; get; }
@@ -90,6 +92,8 @@ namespace Cad2D
             public stoneOffset stoneOffsetLeft { set; get; }
             public class stoneOffset
             {
+                public writingPacketInfo writingPacketValue;
+                public writingPacketInfo writingPacketDelay;
                 public int value { set; get; }
                 public int delay { set; get; }
                 public int valueAddress { set; get; }

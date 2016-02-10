@@ -25,7 +25,7 @@ namespace Cad2D.Pages
     {
         public EventHandler backPageHandler;
         private CanvasCad2D cc2d;
-        private object lsConnection;
+        public static bool readingFromPlcFinished = false;
 
         public Page_Tools(CanvasCad2D cc2d)
         {
@@ -216,6 +216,7 @@ namespace Cad2D.Pages
             textBox_ClampTopLeft.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.value;
             textBox_ClampBottomRight.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.value;
             textBox_ClampBottomLeft.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.frontClamp.value;
+            readingFromPlcFinished = true;
         }
 
         public void updateBridgeValues()
@@ -242,6 +243,158 @@ namespace Cad2D.Pages
         public void OnGUIActions(Action action)
         {
             Dispatcher.Invoke(action);
+        }
+
+        private void textBox_TopValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if(readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_TopValue
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_TopDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_TopDelay
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_RightValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_RightValue
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_RightDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_RightDelay
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_BottomValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_BottomValue
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+
+        }
+
+        private void textBox_BottomDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_BottomDelay
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+
+        }
+
+        private void textBox_LeftValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_LeftValue
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+
+        }
+
+        private void textBox_LeftDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_LeftDelay
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+
+        }
+        /// <summary>
+        /// //////////clamp
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void textBox_ClampAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampAmount
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+
+        }
+
+        private void textBox_ClampTopRight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampTopRight
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_ClampTopLeft_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampTopLeft
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_ClampBottomRight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampBottomRight
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+
+        private void textBox_ClampBottomLeft_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (readingFromPlcFinished)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampBottomLeft
+                    .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.frontClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
         }
     }
 }
