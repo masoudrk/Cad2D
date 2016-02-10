@@ -376,6 +376,82 @@ namespace Cad2D
         private void Ls_connection_OnWritedSuccessfully(object sender, EventArgs e)
         {
             writingPacketInfo p = (writingPacketInfo)sender;
+            ///////////////clamp options writed//////////////////
+            if (plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket != null && plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket = null;
+                return;
+            }
+            if (plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket = null;
+                return;
+            }
+            if (plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket = null;
+                return;
+            }
+            if (plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket = null;
+                return;
+            }
+            if (plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket = null;
+                return;
+            }
+            ///////////////bridge options writed//////////////////
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue = null;
+                return;
+            }
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay = null;
+                return;
+            }
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue = null;
+                return;
+            }
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay = null;
+                return;
+            }
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue = null;
+                return;
+            }
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay = null;
+                return;
+            }
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue = null;
+                return;
+            }
+
+            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay.order == p.order)
+            {
+                plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay = null;
+                return;
+            }
+
+
             if (shutDownPacketId != null && shutDownPacketId.order == p.order)
             {
                 shutDownPacketId = null;
@@ -855,12 +931,16 @@ namespace Cad2D
 
         public void backFromPage(object sender, EventArgs e)
         {
-            pageToolsObject = null;
-            callPageTools = false;
+            
             if (sender.Equals("OPTIONS"))
                 checkPrimarySettings();
             else if (sender.Equals("TOOLS"))
+            {
                 getSensitiveAlarms();
+                Page_Tools.readingFromPlcFinished = false;
+                pageToolsObject = null;
+                callPageTools = false;
+            }
             button_back_ex_click(null, null);
         }
 
@@ -972,6 +1052,12 @@ namespace Cad2D
         }
         private void button_back_ex_click(object sender, RoutedEventArgs e)
         {
+            if (contentControl.Content.GetType() == typeof(Page_Tools))
+            {
+                Page_Tools.readingFromPlcFinished = false;
+                pageToolsObject = null;
+                callPageTools = false;
+            }
             contentControl.Content = pagesStack.Pop();
             if (contentControl.Content.GetType() == typeof(Page_Settings))
             {
