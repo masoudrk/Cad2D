@@ -5,8 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Cad2D.Pages"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="800" d:DesignWidth="900">
+    <ScrollViewer FlowDirection="RightToLeft" >
+        <ScrollViewer.Background>
+            <RadialGradientBrush Center="0.5,0.1">
+                <GradientStop Color="#FFE0E0E0" Offset="1"/>
+                <GradientStop Color="White"/>
+            </RadialGradientBrush>
+        </ScrollViewer.Background>
+        <Grid  RenderOptions.BitmapScalingMode="HighQuality"  FlowDirection="LeftToRight">
+            <Image HorizontalAlignment="Center" Height="300" VerticalAlignment="Top" Width="300" Source="/Cad2D;component/Resources/about1.png" Margin="293,40,293,0"/>
+            <TextBlock FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="143,327,143,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="600"  TextAlignment="Center" Height="157" ><Run Foreground="#FF0BA0F5" FontSize="50" Text="Magic Cube"/><LineBreak/><Run FontSize="16" FontFamily="Tahoma"/><LineBreak/><Run FontSize="18.667" FontFamily="Tahoma" Text="نرم افزار کنترل کننده PLC"/><Run FlowDirection="RightToLeft" FontSize="18.667" FontFamily="Tahoma" Text=" توسعه و"/><Run FlowDirection="RightToLeft" FontSize="18.667" FontFamily="Tahoma" Text=" "/><Run FlowDirection="RightToLeft" FontSize="18.667" FontFamily="Tahoma" Text="طراحی شده توسط تیم "/><Run FontSize="18.667" FontFamily="Tahoma" Text="MagicCube می باشد و به منظور کنترل و ارتباط همه جانبه دستگاه ساب سنگ و PLC"/><Run FlowDirection="RightToLeft" FontSize="18.667" FontFamily="Tahoma" Text=" و همچنین نمایش اشکالات فنی سیستم می باشد."/><LineBreak/><LineBreak/><Run FlowDirection="RightToLeft"/><LineBreak/><Run FlowDirection="RightToLeft"/><LineBreak/><Run FlowDirection="RightToLeft"/></TextBlock>
+            <Label FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="143,508,143,0" Content="برای توسعه این نرم افزار از کتابخانه های زیر استفاده شده است:    "  VerticalAlignment="Top" Width="600" Height="34" FontSize="16" Foreground="#FF4F4F4F" />
+            <Label FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="144,631,180,0" Content="Metro.Mahapps UI"  VerticalAlignment="Top" Width="562" Height="34" FontSize="16" Foreground="#FF4F4F4F" />
+            <Image x:Name="image" HorizontalAlignment="Center" Height="39" Margin="704,621,141,0" VerticalAlignment="Top" Width="41" Source="/Cad2D;component/Resources/tick.png" RenderOptions.BitmapScalingMode="HighQuality" />
+            <Label HorizontalContentAlignment="Right" HorizontalAlignment="Center" Margin="144,555,180,0" Content=".Net Framework 4.0"  VerticalAlignment="Top" Width="562" Height="34" FontSize="16" Foreground="#FF4F4F4F" />
+            <Image x:Name="image_Copy" HorizontalAlignment="Center" Height="39" Margin="704,545,141,0" VerticalAlignment="Top" Width="41" Source="/Cad2D;component/Resources/tick.png" RenderOptions.BitmapScalingMode="HighQuality" />
+            <Label FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="144,593,180,0" Content="Bcrypt.Net"  VerticalAlignment="Top" Width="562" Height="34" FontSize="16" Foreground="#FF4F4F4F" />
+            <Image x:Name="image_Copy1" HorizontalAlignment="Center" Height="39" Margin="704,583,141,0" VerticalAlignment="Top" Width="41" Source="/Cad2D;component/Resources/tick.png" RenderOptions.BitmapScalingMode="HighQuality" />
+            <Label FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="144,668,180,0" Content="Presentation Framework"  VerticalAlignment="Top" Width="562" Height="34" FontSize="16" Foreground="#FF4F4F4F" />
+            <Image x:Name="image_Copy2" HorizontalAlignment="Center" Height="39" Margin="704,658,141,0" VerticalAlignment="Top" Width="41" Source="/Cad2D;component/Resources/tick.png" RenderOptions.BitmapScalingMode="HighQuality" />
+            <TextBlock TextWrapping="Wrap" FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="67,738,67,0"  VerticalAlignment="Top" Width="752" Height="27" FontSize="16" Foreground="#FFFF7433" ><Span><Run Text="تمامی حقوق این نرم افزار متعلق به گروه MagicCube بوده و کپی برداری از این نرم افزار "/></Span><Run FlowDirection="RightToLeft" Text="پیگرد"/><Run FlowDirection="RightToLeft" Text=" "/><Run FlowDirection="RightToLeft" Text="قانونی "/><Run FlowDirection="RightToLeft" Text="خواهد داشت"/><Run Text="."/></TextBlock>
+            <TextBlock TextWrapping="Wrap" FlowDirection="RightToLeft" HorizontalAlignment="Center" Margin="342,765,378,20"   VerticalAlignment="Top"  FontSize="20" Foreground="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" Text="www.magiccube.ir" />
+
+        </Grid>
+    </ScrollViewer>
 </UserControl>
