@@ -146,7 +146,7 @@ namespace Cad2D.Pages
             s.VerticalBoundrySegment = int.Parse(VerticalBoundrySegment.Text);
             s.HorizonalBoundrySegment = int.Parse(HorizonalBoundrySegment.Text);
 
-            s.writeToXmlFile("_pss.ini");
+            s.writeToXmlFile(Env.PrimarySettingsFile);
 
             ((MainWindow)Application.Current.MainWindow).showMsg("پیام", "تنظیمات با موفقیت ذخیره شدند!");
 
