@@ -184,6 +184,7 @@ namespace Cad2D
             if (lsConnection.Connected)
             {
                 lsConnection.readFromPlcContinoues(plcInformation.alert.wordNumber * 2, plcInformation.manualOrAuto.wordNumber * 2 + 2, ref plcInformation.PackestId);
+             
             }
             else
             {
@@ -245,6 +246,7 @@ namespace Cad2D
             {
                 plcUtilitisAndOptions.Encoder.PackestIdX.RemoveAt(i);
                 plcUtilitisAndOptions.Encoder.updateEncoderXValues(repi.continuousData);
+                if (pageSettingObject == null) return;
                 pageSettingObject.readEncoderYValues();
                 pageSettingObject.OnGUIActions(() => pageSettingObject.updateEncoderXValues());
                 return;
@@ -255,6 +257,7 @@ namespace Cad2D
             {
                 plcUtilitisAndOptions.Encoder.PackestIdY.RemoveAt(i);
                 plcUtilitisAndOptions.Encoder.updateEncoderYValues(repi.continuousData);
+                if (pageSettingObject == null) return;
                 pageSettingObject.OnGUIActions(() => pageSettingObject.updateEncoderYValues());
                 return;
             }
@@ -394,12 +397,73 @@ namespace Cad2D
 
         private void Ls_connection_OnReadedSuccessfully(object sender, EventArgs e)
         {
+            readingPacketInfo p = (readingPacketInfo)sender;
+            try
+            {
+                if (plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderXPals.value = (ushort)p.value;
+                    plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket = null;
+                    if (pageSettingObject != null)
+                        pageSettingObject.readPosX();
+                }
+                if (plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderXPos.value = (ushort)p.value;
+                    plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket = null;
+                    if (pageSettingObject != null)
+                        pageSettingObject.readPalsY();
+                }
+                if (plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderYPals.value = (ushort)p.value;
+                    plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket = null;
+                    if (pageSettingObject != null)
+                        pageSettingObject.readPosY();
+                }
+                if (plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderYPos.value = (ushort)p.value;
+                    plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket = null;
+                    if (pageSettingObject != null)
+                        pageSettingObject.OnGUIActions(() => pageSettingObject.setNewChanges());
+                }
+            }
+            catch (Exception error)
+            {
 
+            }
         }
 
         private void Ls_connection_OnWritedSuccessfully(object sender, EventArgs e)
         {
             writingPacketInfo p = (writingPacketInfo)sender;
+            //////////////////encoder /////////////////////
+            if (plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket = null;
+                if (pageSettingObject != null)
+                    pageSettingObject.OnGUIActions(()=> pageSettingObject.sendingDivXValueToPlc());
+                return;
+            }
+
+            if (plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket = null;
+                if (pageSettingObject != null)
+                    pageSettingObject.OnGUIActions(() => pageSettingObject.sendingDivYValueToPlc());
+                return;
+            }
+            if (plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket = null;
+                return;
+            }
+            if (plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket.order == p.order)
+            {
+                plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket = null;
+                return;
+            }
             ///////////////clamp options writed//////////////////
             if (plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket != null && plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket.order == p.order)
             {
@@ -557,7 +621,6 @@ namespace Cad2D
             lsConnection.readFromPlcContinoues(plcUtilitisAndOptions.Velocity.velocityXAddress * 2, plcUtilitisAndOptions.Velocity.velocityYAddress * 2 + 2, ref plcUtilitisAndOptions.Velocity.PackestId);
             sendPacketMutex.ReleaseMutex();
         }
-
         private void Ls_connection_OnDisconnceted(object sender, EventArgs e)
         {
             alarm = alarm | 256;
@@ -959,6 +1022,7 @@ namespace Cad2D
             
             if (sender.Equals("OPTIONS"))
             {
+                pageSettingObject.encoderReader.Abort();
                 pageSettingObject = null;
                 Page_Settings.readingFinished = false;
                 callPageSetting = false;
@@ -1035,7 +1099,7 @@ namespace Cad2D
             if (label_x != null)
                 label_x.Content = string.Format("{0}x", arg0: slider_x.Value.ToString("F0"));
             if(plcUtilitisAndOptions != null)
-                plcUtilitisAndOptions.Velocity.velocityX = (int)slider_x.Value;
+                plcUtilitisAndOptions.Velocity.velocityX = (ushort)slider_x.Value;
         }
 
         private void slider_y_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -1043,7 +1107,7 @@ namespace Cad2D
             if (label_y != null)
                 label_y.Content = string.Format("{0}x", arg0: slider_y.Value.ToString("F0"));
             if (plcUtilitisAndOptions != null)
-                plcUtilitisAndOptions.Velocity.velocityY = (int)slider_y.Value;
+                plcUtilitisAndOptions.Velocity.velocityY = (ushort)slider_y.Value;
         }
 
         void sendPositionxToPlc()
@@ -1084,6 +1148,8 @@ namespace Cad2D
         {
             if (contentControl.Content.GetType() == typeof(Page_Settings))
             {
+                if(pageSettingObject != null)
+                    pageSettingObject.encoderReader.Abort();
                 pageSettingObject = null;
                 Page_Settings.readingFinished = false;
                 callPageSetting = false;

@@ -62,23 +62,23 @@ namespace Cad2D
             {
                 public writingPacketInfo writingPacket;
                 public readingPacketInfo readingPacket;
-                public int value { set; get; }
+                public ushort value { set; get; }
                 public int valueAddress { set; get; }
             }
 
             public void updateEncoderXValues(byte [] dataArray)
             {
-                EncoderXPals.value = dataArray[1] * 256 + dataArray[0];
-                EncoderXMult.value = dataArray[3] * 256 + dataArray[2];
-                EncoderXDiv.value = dataArray[5] * 256 + dataArray[4];
-                EncoderXPos.value = dataArray[7] * 256 + dataArray[6];
+                EncoderXPals.value = (ushort)(dataArray[1] * 256 + dataArray[0]);
+                EncoderXMult.value = (ushort)(dataArray[3] * 256 + dataArray[2]);
+                EncoderXDiv.value = (ushort)(dataArray[5] * 256 + dataArray[4]);
+                EncoderXPos.value = (ushort)(dataArray[7] * 256 + dataArray[6]);
             }
             public void updateEncoderYValues(byte[] dataArray)
             {
-                EncoderYPals.value = dataArray[1] * 256 + dataArray[0];
-                EncoderYMult.value = dataArray[3] * 256 + dataArray[2];
-                EncoderYDiv.value = dataArray[5] * 256 + dataArray[4];
-                EncoderYPos.value = dataArray[7] * 256 + dataArray[6];
+                EncoderYPals.value = (ushort)(dataArray[1] * 256 + dataArray[0]);
+                EncoderYMult.value = (ushort)(dataArray[3] * 256 + dataArray[2]);
+                EncoderYDiv.value = (ushort)(dataArray[5] * 256 + dataArray[4]);
+                EncoderYPos.value = (ushort)(dataArray[7] * 256 + dataArray[6]);
             }
         }
 
@@ -108,19 +108,19 @@ namespace Cad2D
             public class clamp
             {
                 public writingPacketInfo writingPacket;
-                public int value { set; get; }
+                public ushort value { set; get; }
                 public int valueAddress { set; get; }
             }
 
             public void updateValues(byte[] dataArray)
             {
-                clampValue.value = dataArray[1] * 256 + dataArray[0];
+                clampValue.value = (ushort)(dataArray[1] * 256 + dataArray[0]);
 
-                upClamp.value = dataArray[3] * 256 + dataArray[2];
-                downClamp.value = dataArray[5] * 256 + dataArray[4];
+                upClamp.value = (ushort)(dataArray[3] * 256 + dataArray[2]);
+                downClamp.value = (ushort)(dataArray[5] * 256 + dataArray[4]);
 
-                frontClamp.value = dataArray[7] * 256 + dataArray[6];
-                behindClamp.value = dataArray[9] * 256 + dataArray[8];
+                frontClamp.value = (ushort)(dataArray[7] * 256 + dataArray[6]);
+                behindClamp.value = (ushort)(dataArray[9] * 256 + dataArray[8]);
 
             }
         }
@@ -155,25 +155,25 @@ namespace Cad2D
             {
                 public writingPacketInfo writingPacketValue;
                 public writingPacketInfo writingPacketDelay;
-                public int value { set; get; }
-                public int delay { set; get; }
+                public ushort value { set; get; }
+                public ushort delay { set; get; }
                 public int valueAddress { set; get; }
                 public int delayAddress { set; get; }
             }
 
             public void updateValues(byte [] dataArray)
             {
-                stoneOffsetUp.value = dataArray[1] * 256 + dataArray[0];
-                stoneOffsetUp.delay = dataArray[3] * 256 + dataArray[2];
+                stoneOffsetUp.value = (ushort)(dataArray[1] * 256 + dataArray[0]);
+                stoneOffsetUp.delay = (ushort)(dataArray[3] * 256 + dataArray[2]);
 
-                stoneOffsetRight.value = dataArray[5] * 256 + dataArray[4];
-                stoneOffsetRight.delay = dataArray[7] * 256 + dataArray[6];
+                stoneOffsetRight.value = (ushort)(dataArray[5] * 256 + dataArray[4]);
+                stoneOffsetRight.delay = (ushort)(dataArray[7] * 256 + dataArray[6]);
 
-                stoneOffsetDown.value = dataArray[9] * 256  + dataArray [8];
-                stoneOffsetDown.delay = dataArray[11] * 256 + dataArray[10];
+                stoneOffsetDown.value = (ushort)(dataArray[9] * 256  + dataArray [8]);
+                stoneOffsetDown.delay = (ushort)(dataArray[11] * 256 + dataArray[10]);
 
-                stoneOffsetLeft.value = dataArray[13] * 256 + dataArray[12];
-                stoneOffsetLeft.delay = dataArray[15] * 256 + dataArray[14];
+                stoneOffsetLeft.value = (ushort)(dataArray[13] * 256 + dataArray[12]);
+                stoneOffsetLeft.delay = (ushort)(dataArray[15] * 256 + dataArray[14]);
 
             }
         }
@@ -189,18 +189,16 @@ namespace Cad2D
                 velocityYAddress = 956;
             }
             public List<ushort> PackestId;
-            public int velocityX { set; get; }
+            public ushort velocityX { set; get; }
             public int velocityXAddress { set; get; }
-            public int velocityY { set; get; }
+            public ushort velocityY { set; get; }
             public int velocityYAddress { set; get; }
 
             public void updateValues(byte []byteData)
             {
-                velocityX = byteData[1] * 256 + byteData[0];
-                velocityY = byteData[3] * 256 + byteData[2];
+                velocityX = (ushort)(byteData[1] * 256 + byteData[0]);
+                velocityY = (ushort)(byteData[3] * 256 + byteData[2]);
             }
         }
-
-
     }
 }

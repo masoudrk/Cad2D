@@ -149,8 +149,8 @@
 
 
                 </StackPanel>
-                <Button x:Name="button_resetOffsets_Copy" Content="اعمال" Margin="0,380,642,859" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="97" Foreground="{DynamicResource MainColor}" FontWeight="Normal"  RenderTransformOrigin="0.433,-2.806"/>
-                <Button x:Name="button_resetOffsets_Copy1" Content="اعمال" Margin="0,417,642,823" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="97" Foreground="{DynamicResource MainColor}" FontWeight="Normal"  RenderTransformOrigin="0.433,-2.806"/>
+                <Button x:Name="button_EncoderX" Content="اعمال" Margin="0,377,642,862" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="97" Foreground="{DynamicResource MainColor}" FontWeight="Normal"  RenderTransformOrigin="0.433,-2.806" Click="button_EncoderX_Click"/>
+                <Button x:Name="button_EncoderY" Content="اعمال" Margin="0,414,642,826" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="97" Foreground="{DynamicResource MainColor}" FontWeight="Normal"  RenderTransformOrigin="0.433,-2.806" Click="button_EncoderY_Click"/>
 
             </Grid>
         </ScrollViewer>

@@ -276,7 +276,7 @@ namespace Cad2D
             return;
         }
 
-        public bool readFromPlc(DataType dt, int address)
+        public bool readFromPlc(DataType dt, int address ,ref readingPacketInfo rpi)
         {
             if (dt == DataType.CONTINUOUS)
                 return false;
@@ -300,7 +300,8 @@ namespace Cad2D
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                readingPacketInfoList.Add(new readingPacketInfo(dt, address, (byte)order));
+                rpi = new readingPacketInfo(dt, address, (byte)order);
+                readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
             else
@@ -324,7 +325,8 @@ namespace Cad2D
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                readingPacketInfoList.Add(new readingPacketInfo(dt, address, (byte)order));
+                rpi = new readingPacketInfo(dt, address, (byte)order);
+                readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
 
             }
@@ -349,7 +351,8 @@ namespace Cad2D
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                readingPacketInfoList.Add(new readingPacketInfo(dt, address, (byte)order));
+                rpi = new readingPacketInfo(dt, address, (byte)order);
+                readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
 
             }
@@ -374,7 +377,8 @@ namespace Cad2D
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                readingPacketInfoList.Add(new readingPacketInfo(dt, address, (byte)order));
+                rpi = new readingPacketInfo(dt, address, (byte)order);
+                readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
             return true;

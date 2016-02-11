@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SiriusMicrotech.core.UI;
+using System.Threading;
 
 namespace Cad2D.Pages
 {
@@ -27,6 +28,9 @@ namespace Cad2D.Pages
         private CanvasCad2D cc2d;
         public static KeypadTextBox[] registeredTextbox;
         public static bool readingFinished = false;
+        public Thread encoderReader;
+        private bool firstTime;
+
         public Page_Settings(CanvasCad2D cc2d)
         {
             InitializeComponent();
@@ -89,16 +93,78 @@ namespace Cad2D.Pages
             registeredTextbox[15] = textBox_DivX;
             registeredTextbox[16] = textBox_MultX;
 
-            CanvasCad2D.sendPacketMutex.WaitOne();
-            CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress *2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress * 2 +2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdX);
-            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdX);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+            encoderReader = new Thread(PlcInfoReaderTimer_Elapsed);
+            firstTime = true;
+            encoderReader.Start();
+        }
+        /// <summary>
+        /// ///////kar dare
+        /// </summary>
+        private void PlcInfoReaderTimer_Elapsed()
+        {
+            if (firstTime)
+            {
+                Thread.Sleep(2000);
+                firstTime = false;
+                PlcInfoReaderTimer_Elapsed();
+                return;
+            }
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.readFromPlc(DataType.WORD ,CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress , ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+            else
+                return;
+
+            Thread.Sleep(2000);
+            PlcInfoReaderTimer_Elapsed();
+        }
+
+
+        public void readPosX()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+        public void readPalsY()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
+        }
+        public void readPosY()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
         }
 
         public void readEncoderYValues()
         {
-            CanvasCad2D.sendPacketMutex.WaitOne();
-            CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress * 2+2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdY);
-            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.sendPacketMutex.WaitOne();
+                CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdY);
+                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+            }
         }
 
         public void OnGUIActions(Action action)
@@ -225,6 +291,81 @@ namespace Cad2D.Pages
             {
                 keypadTextBox.hideKeypad();
             }
+        }
+
+        private void button_EncoderY_Click(object sender, RoutedEventArgs e)
+        {
+            if (readingFinished)
+            {
+                if (CanvasCad2D.lsConnection.Connected)
+                {
+                    int data;
+                    if (!Int32.TryParse(textBox_MultY.Text, out data))
+                        data = 0;
+                    CanvasCad2D.sendPacketMutex.WaitOne();
+                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
+                        , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket);
+                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                }
+            }
+        }
+
+        private void button_EncoderX_Click(object sender, RoutedEventArgs e)
+        {
+            if (readingFinished)
+            {
+                if (CanvasCad2D.lsConnection.Connected)
+                {
+                    int data;
+                    if (!Int32.TryParse(textBox_MultX.Text, out data))
+                        data = 0;
+                    CanvasCad2D.sendPacketMutex.WaitOne();
+                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
+                        , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXMult.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket);
+                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                }
+            }
+        }
+
+        public void sendingDivXValueToPlc()
+        {
+            if (readingFinished)
+            {
+                if (CanvasCad2D.lsConnection.Connected)
+                {
+                    int data;
+                    if (!Int32.TryParse(textBox_DivX.Text, out data))
+                        data = 0;
+                    CanvasCad2D.sendPacketMutex.WaitOne();
+                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
+                        , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXDiv.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket);
+                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                }
+            }
+        }
+        public void sendingDivYValueToPlc()
+        {
+            if (readingFinished)
+            {
+                if (CanvasCad2D.lsConnection.Connected)
+                {
+                    int data;
+                    if (!Int32.TryParse(textBox_DivY.Text, out data))
+                        data = 0;
+                    CanvasCad2D.sendPacketMutex.WaitOne();
+                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
+                        , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYDiv.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket);
+                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                }
+            }
+        }
+
+        public void setNewChanges()
+        {
+            textBox_PalsX.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.value.ToString();
+            textBox_PositionX.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.value.ToString();
+            textBox_PalsY.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.value.ToString();
+            textBox_PositionY.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.value.ToString();
         }
     }
 }
