@@ -178,7 +178,7 @@ namespace Cad2D.Pages
             s.bridgeRight.delay = (int)(textBox_RightDelay.Value);
 
 
-            s.writeToXmlFile("options.ini");
+            s.writeToXmlFile(Env.SettingsFile);
 
             ((MainWindow)Application.Current.MainWindow).showMsg("پیام", "تنظیمات با موفقیت ذخیره شدند!");
 

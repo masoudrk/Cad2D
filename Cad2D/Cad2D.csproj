@@ -97,6 +97,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Analyzer.cs" />
+    <Compile Include="Env.cs" />
     <Compile Include="LineGeometry.cs" />
     <Compile Include="LS-Connection.cs" />
     <Compile Include="MyPasswordDialog.xaml.cs">

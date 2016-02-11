@@ -54,6 +54,9 @@ public static class Extentions
 {
     public static void writeToXmlFile(this object obj , string settingFile)
     {
+        if (!Directory.Exists(Env.SettingsFolderPath))
+            Directory.CreateDirectory(Env.SettingsFolderPath);
+
         StreamWriter sw = new StreamWriter(settingFile);
 
         XmlSerializer s = new XmlSerializer(obj.GetType());
@@ -67,7 +70,7 @@ public static class Extentions
 
     public static Settings FromXml()
     {
-        string addr = "options.ini";
+        string addr = Env.SettingsFile;
         if (File.Exists(addr))
         {
             StreamReader sr = new StreamReader(addr);
@@ -88,7 +91,7 @@ public static class Extentions
     }
     public static PrimarySettings FromXmlPrimary()
     {
-        string addr = "_pss.ini";
+        string addr = Env.PrimarySettingsFile;
         if (File.Exists(addr))
         {
             StreamReader sr = new StreamReader(addr);
