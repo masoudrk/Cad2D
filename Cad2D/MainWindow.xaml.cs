@@ -51,9 +51,7 @@ namespace Cad2D
                 openDesignFile(allArgs[1]);
             }
             openImageFile(@"C:\Users\-MR-\Desktop\image.jpg");*/
-
-            string pass = BCrypt.Net.BCrypt.HashPassword("barca1982");
-            Console.Write(pass);
+           
         }
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
