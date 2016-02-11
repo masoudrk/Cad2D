@@ -92,7 +92,8 @@ namespace Cad2D
         private int verticalBoundryCount;
         private int horizonalBoundryCount;
         Page_Tools pageToolsObject;
-
+        Page_Settings pageSettingObject;
+        bool callPageSetting;
         bool callPageTools;
         IPAddress ip;
         int portNumber;
@@ -238,9 +239,30 @@ namespace Cad2D
                 }
                 return;
             }
+
+            i = plcUtilitisAndOptions.Encoder.PackestIdX.FindIndex(x => x == repi.order);
+            if (i >= 0)
+            {
+                plcUtilitisAndOptions.Encoder.PackestIdX.RemoveAt(i);
+                plcUtilitisAndOptions.Encoder.updateEncoderXValues(repi.continuousData);
+                pageSettingObject.readEncoderYValues();
+                pageSettingObject.OnGUIActions(() => pageSettingObject.updateEncoderXValues());
+                return;
+            }
+
+            i = plcUtilitisAndOptions.Encoder.PackestIdY.FindIndex(x => x == repi.order);
+            if (i >= 0)
+            {
+                plcUtilitisAndOptions.Encoder.PackestIdY.RemoveAt(i);
+                plcUtilitisAndOptions.Encoder.updateEncoderYValues(repi.continuousData);
+                pageSettingObject.OnGUIActions(() => pageSettingObject.updateEncoderYValues());
+                return;
+            }
+
             i = plcUtilitisAndOptions.Velocity.PackestId.FindIndex(x => x == repi.order);
             if (i >= 0)
             {
+                plcUtilitisAndOptions.Velocity.PackestId.RemoveAt(i);
                 plcUtilitisAndOptions.Velocity.updateValues(repi.continuousData);
                 OnGUIActions(() => setSlidersValues());
                 //////////
@@ -250,6 +272,7 @@ namespace Cad2D
             i = plcUtilitisAndOptions.BridgeOptions.PackestId.FindIndex(x => x == repi.order);
             if (i >= 0)
             {
+                plcUtilitisAndOptions.BridgeOptions.PackestId.RemoveAt(i);
                 plcUtilitisAndOptions.BridgeOptions.updateValues(repi.continuousData);
                 pageToolsObject.getClampValues();
                 pageToolsObject.OnGUIActions(() => pageToolsObject.updateBridgeValues());
@@ -260,6 +283,7 @@ namespace Cad2D
             i = plcUtilitisAndOptions.ClampOptions.PackestId.FindIndex(x => x == repi.order);
             if (i >= 0)
             {
+                plcUtilitisAndOptions.ClampOptions.PackestId.RemoveAt(i);
                 plcUtilitisAndOptions.ClampOptions.updateValues(repi.continuousData);
                 pageToolsObject.OnGUIActions(() => pageToolsObject.updateClampValues());
                 return;
@@ -924,16 +948,22 @@ namespace Cad2D
                 return;
             }
 
-            Page_Settings p = new Page_Settings(this);
-            p.backPageHandler += backFromPage;
-            contentControl.Content = p;
+            pageSettingObject = new Page_Settings(this);
+            pageSettingObject.backPageHandler += backFromPage;
+            callPageSetting = true;
+            contentControl.Content = pageSettingObject;
         }
 
         public void backFromPage(object sender, EventArgs e)
         {
             
             if (sender.Equals("OPTIONS"))
+            {
+                pageSettingObject = null;
+                Page_Settings.readingFinished = false;
+                callPageSetting = false;
                 checkPrimarySettings();
+            }
             else if (sender.Equals("TOOLS"))
             {
                 getSensitiveAlarms();
@@ -1052,6 +1082,13 @@ namespace Cad2D
         }
         private void button_back_ex_click(object sender, RoutedEventArgs e)
         {
+            if (contentControl.Content.GetType() == typeof(Page_Settings))
+            {
+                pageSettingObject = null;
+                Page_Settings.readingFinished = false;
+                callPageSetting = false;
+                checkPrimarySettings();
+            }
             if (contentControl.Content.GetType() == typeof(Page_Tools))
             {
                 Page_Tools.readingFromPlcFinished = false;

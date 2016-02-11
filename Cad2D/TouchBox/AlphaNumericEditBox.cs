@@ -35,13 +35,13 @@ namespace SiriusMicrotech.core.UI
         public TouchNumericBox()
             : base()
         {
-
+            /*
             try
             {
                 DefaultStyleKeyProperty.OverrideMetadata(typeof(TouchNumericBox), new FrameworkPropertyMetadata(typeof(TouchNumericBox)));
                 
             }
-            catch { }
+            catch { }*/
         }
 
 
@@ -140,12 +140,12 @@ namespace SiriusMicrotech.core.UI
         public TouchAlphaNumericBox()
             : base()
         {
-
+            /*
             try
             {
                 DefaultStyleKeyProperty.OverrideMetadata(typeof(TouchAlphaNumericBox), new FrameworkPropertyMetadata(typeof(TouchAlphaNumericBox)));
             }
-            catch { }
+            catch { }*/
         }
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {

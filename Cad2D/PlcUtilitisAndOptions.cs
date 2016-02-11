@@ -11,12 +11,75 @@ namespace Cad2D
         public _velocity Velocity { set; get; }
         public _BridgeOptions BridgeOptions { set; get; }
         public _ClampOptions ClampOptions { set; get; }
-
+        public _Encoder Encoder { get; set; }
         public PlcUtilitisAndOptions()
         {
             ClampOptions = new _ClampOptions();
             BridgeOptions = new _BridgeOptions();
             Velocity = new _velocity();
+            Encoder = new _Encoder();
+        }
+
+        public class _Encoder
+        {
+
+            public _Encoder()
+            {
+                PackestIdX = new List<ushort>();
+                PackestIdY = new List<ushort>();
+                EncoderXPals = new EncoderCell();
+                EncoderXMult = new EncoderCell();
+                EncoderXDiv = new EncoderCell();
+                EncoderXPos = new EncoderCell();
+                EncoderYPals = new EncoderCell();
+                EncoderYMult = new EncoderCell();
+                EncoderYDiv = new EncoderCell();
+                EncoderYPos = new EncoderCell();
+
+                EncoderXPals.valueAddress = 980;
+                EncoderXMult.valueAddress = 981;
+                EncoderXDiv.valueAddress = 982;
+                EncoderXPos.valueAddress = 983;
+
+
+                EncoderYPals.valueAddress = 984;
+                EncoderYMult.valueAddress = 985;
+                EncoderYDiv.valueAddress = 986;
+                EncoderYPos.valueAddress = 987;
+            }
+            public List<ushort> PackestIdY;
+            public List<ushort> PackestIdX;
+
+            public EncoderCell EncoderXPals { set; get; }
+            public EncoderCell EncoderXMult { set; get; }
+            public EncoderCell EncoderXDiv { set; get; }
+            public EncoderCell EncoderXPos { set; get; }
+            public EncoderCell EncoderYPals { set; get; }
+            public EncoderCell EncoderYMult { set; get; }
+            public EncoderCell EncoderYDiv { set; get; }
+            public EncoderCell EncoderYPos { set; get; }
+            public class EncoderCell
+            {
+                public writingPacketInfo writingPacket;
+                public readingPacketInfo readingPacket;
+                public int value { set; get; }
+                public int valueAddress { set; get; }
+            }
+
+            public void updateEncoderXValues(byte [] dataArray)
+            {
+                EncoderXPals.value = dataArray[1] * 256 + dataArray[0];
+                EncoderXMult.value = dataArray[3] * 256 + dataArray[2];
+                EncoderXDiv.value = dataArray[5] * 256 + dataArray[4];
+                EncoderXPos.value = dataArray[7] * 256 + dataArray[6];
+            }
+            public void updateEncoderYValues(byte[] dataArray)
+            {
+                EncoderYPals.value = dataArray[1] * 256 + dataArray[0];
+                EncoderYMult.value = dataArray[3] * 256 + dataArray[2];
+                EncoderYDiv.value = dataArray[5] * 256 + dataArray[4];
+                EncoderYPos.value = dataArray[7] * 256 + dataArray[6];
+            }
         }
 
         public class _ClampOptions
@@ -37,7 +100,6 @@ namespace Cad2D
                 behindClamp.valueAddress = 974;
             }
             public List<ushort> PackestId;
-            public writingPacketInfo writingPacket { set; get; }
             public clamp clampValue { set; get; }
             public clamp upClamp { set; get; }
             public clamp downClamp { set; get; }
@@ -84,7 +146,6 @@ namespace Cad2D
                 stoneOffsetDown.delayAddress = 965;
                 stoneOffsetLeft.delayAddress = 967;
             }
-            public writingPacketInfo writingPacket { set; get; }
             public List<ushort> PackestId;
             public stoneOffset stoneOffsetUp { set; get; }
             public stoneOffset stoneOffsetRight { set; get; }

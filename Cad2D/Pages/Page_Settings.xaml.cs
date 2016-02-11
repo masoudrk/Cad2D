@@ -26,7 +26,7 @@ namespace Cad2D.Pages
         public EventHandler backPageHandler;
         private CanvasCad2D cc2d;
         public static KeypadTextBox[] registeredTextbox;
-
+        public static bool readingFinished = false;
         public Page_Settings(CanvasCad2D cc2d)
         {
             InitializeComponent();
@@ -36,6 +36,7 @@ namespace Cad2D.Pages
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+
         }
 
         private void load()
@@ -83,10 +84,43 @@ namespace Cad2D.Pages
             registeredTextbox[10] = ScanAriaSegment;
             registeredTextbox[11] = VerticalBoundrySegment;
             registeredTextbox[12] = HorizonalBoundrySegment;
-            registeredTextbox[13] = textBox_BridgeY2;
-            registeredTextbox[14] = textBox_BridgeY3;
-            registeredTextbox[15] = textBox_BridgeX3;
-            registeredTextbox[16] = textBox_BridgeX2;
+            registeredTextbox[13] = textBox_MultY;
+            registeredTextbox[14] = textBox_DivY;
+            registeredTextbox[15] = textBox_DivX;
+            registeredTextbox[16] = textBox_MultX;
+
+            CanvasCad2D.sendPacketMutex.WaitOne();
+            CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress *2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress * 2 +2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdX);
+            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+        }
+
+        public void readEncoderYValues()
+        {
+            CanvasCad2D.sendPacketMutex.WaitOne();
+            CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress * 2+2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdY);
+            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+        }
+
+        public void OnGUIActions(Action action)
+        {
+            Dispatcher.Invoke(action);
+        }
+
+        public void updateEncoderXValues()
+        {
+            textBox_PalsX.Text     = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.value.ToString();
+            textBox_MultX.Text     = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXMult.value.ToString();
+            textBox_DivX.Text      =  CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXDiv.value.ToString();
+            textBox_PositionX.Text =  CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.value.ToString();
+        }
+
+        public void updateEncoderYValues()
+        {
+            textBox_PalsY.Text     = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.value.ToString();
+            textBox_MultY.Text     = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.value.ToString();
+            textBox_DivY.Text      =  CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYDiv.value.ToString();
+            textBox_PositionY.Text =  CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.value.ToString();
+            readingFinished = true;
         }
 
         private void button_save_Click(object sender, RoutedEventArgs e)
