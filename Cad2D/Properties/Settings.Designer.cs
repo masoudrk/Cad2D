@@ -85,7 +85,7 @@ namespace Cad2D.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("$2a$10$a6QzlfnPGbrEf2iDd.Dn8.SbOiEOG8vev0RnrnpYf69nTpUtgTWTS")]
+        [global::System.Configuration.DefaultSettingValueAttribute("$2a$10$YhtPJ2KYImFOm0lDbRs93u55GO9BhD5w0GPrToJcn2MwhzOx/Hzd.")]
         public string AdminPass {
             get {
                 return ((string)(this["AdminPass"]));
