@@ -51,7 +51,7 @@ namespace Cad2D
                 openDesignFile(allArgs[1]);
             }
             openImageFile(@"C:\Users\-MR-\Desktop\image.jpg");*/
-            
+           
         }
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

@@ -18,13 +18,13 @@
       <Value Profile="(Default)">1234</Value>
     </Setting>
     <Setting Name="AdminPass" Type="System.String" Scope="User">
-      <Value Profile="(Default)">$2a$10$a6QzlfnPGbrEf2iDd.Dn8.SbOiEOG8vev0RnrnpYf69nTpUtgTWTS</Value>
+      <Value Profile="(Default)">$2a$10$YhtPJ2KYImFOm0lDbRs93u55GO9BhD5w0GPrToJcn2MwhzOx/Hzd.</Value>
     </Setting>
-    <Setting Name="VarMemoryOffset" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
+    <Setting Name="VelocityMem" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">955</Value>
     </Setting>
-    <Setting Name="ArrayMemoryOffset" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1200</Value>
+    <Setting Name="PLCInformationMem" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">950</Value>
     </Setting>
     <Setting Name="VerticalScan" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">140</Value>
@@ -46,6 +46,24 @@
     </Setting>
     <Setting Name="HorizonalBoundrySegment" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="BridgeOptionMem" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">960</Value>
+    </Setting>
+    <Setting Name="ClampMem" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">970</Value>
+    </Setting>
+    <Setting Name="XEncoderMem" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">980</Value>
+    </Setting>
+    <Setting Name="YEncoderMem" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">984</Value>
+    </Setting>
+    <Setting Name="EdgeMin" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="EdgeMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
     </Setting>
   </Settings>
 </SettingsFile>
