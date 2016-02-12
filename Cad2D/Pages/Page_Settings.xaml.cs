@@ -435,7 +435,7 @@ namespace Cad2D.Pages
         }
 
         private void TextBox_XEncoderMem_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        { 
             int value = 0;
             if (int.TryParse(TextBox_XEncoderMem.Text, out value))
                 label_XEncoder.Content = $"{value + 3} < ";
