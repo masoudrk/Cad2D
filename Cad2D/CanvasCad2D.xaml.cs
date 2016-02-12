@@ -93,8 +93,6 @@ namespace Cad2D
         private int horizonalBoundryCount;
         Page_Tools pageToolsObject;
         Page_Settings pageSettingObject;
-        bool callPageSetting;
-        bool callPageTools;
         IPAddress ip;
         int portNumber;
         int maxAddress = 8000;
@@ -138,6 +136,7 @@ namespace Cad2D
                 new Uri("pack://application:,,,/Cad2D;component/Resources/alarm_off.png",
                     UriKind.Absolute));
 
+            plcInformation = new PlcInformation();
             PrimarySettings ps = checkPrimarySettings();
             getSensitiveAlarms();
 
@@ -174,7 +173,6 @@ namespace Cad2D
             horizonalBoundryCount = 0;
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
-            plcInformation = new PlcInformation();
 
             //Thread.Sleep(1000);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
@@ -253,7 +251,6 @@ namespace Cad2D
                 plcUtilitisAndOptions.Encoder.updateEncoderXValues(repi.continuousData);
                 if (pageSettingObject == null) return;
                 pageSettingObject.readEncoderYValues();
-                pageSettingObject.OnGUIActions(() => pageSettingObject.updateEncoderXValues());
                 return;
             }
 
@@ -263,7 +260,6 @@ namespace Cad2D
                 plcUtilitisAndOptions.Encoder.PackestIdY.RemoveAt(i);
                 plcUtilitisAndOptions.Encoder.updateEncoderYValues(repi.continuousData);
                 if (pageSettingObject == null) return;
-                pageSettingObject.OnGUIActions(() => pageSettingObject.updateEncoderYValues());
                 return;
             }
 
@@ -991,7 +987,6 @@ namespace Cad2D
             
             pageToolsObject = new Page_Tools(this);
             pageToolsObject.backPageHandler += backFromPage;
-            callPageTools = true;
             contentControl.Content = pageToolsObject;
 
             //btn_help.Visibility = Visibility.Collapsed;
@@ -1028,7 +1023,6 @@ namespace Cad2D
 
             pageSettingObject = new Page_Settings(this);
             pageSettingObject.backPageHandler += backFromPage;
-            callPageSetting = true;
             contentControl.Content = pageSettingObject;
         }
 
@@ -1040,7 +1034,6 @@ namespace Cad2D
                 pageSettingObject.encoderReader.Abort();
                 pageSettingObject = null;
                 Page_Settings.readingFinished = false;
-                callPageSetting = false;
                 checkPrimarySettings();
             }
             else if (sender.Equals("TOOLS"))
@@ -1048,7 +1041,6 @@ namespace Cad2D
                 getSensitiveAlarms();
                 Page_Tools.readingFromPlcFinished = false;
                 pageToolsObject = null;
-                callPageTools = false;
             }
             button_back_ex_click(null, null);
         }
@@ -1064,6 +1056,13 @@ namespace Cad2D
             {
                 panel_speeds.Visibility = Visibility.Collapsed;
             }
+
+            plcUtilitisAndOptions.setNewValues();
+            plcInformation.setAddressValues();
+            minVerticalSlice = ps.EdgeVerticalSliceMin;
+            maxVerticalSlice = ps.EdgeVerticalSliceMax;
+            minHorizontalSlice = ps.EdgeHorizontalSliceMin;
+            maxHorizontalSlice = ps.EdgeHorizontalSliceMax;
 
             StoneScanVerticalSlice = ps.ScanVerticalSlice;
             stoneScanHorizontalSlice = ps.ScanHorizontalSlice;
@@ -1133,7 +1132,7 @@ namespace Cad2D
 
             sendPacketMutex.WaitOne();
             if (lsConnection != null && lsConnection.Connected)
-                OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_x.Value, 955, ref positionxPacketInfo));
+                OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_x.Value, plcUtilitisAndOptions.Velocity.velocityXAddress, ref positionxPacketInfo));
             sendPacketMutex.ReleaseMutex();
         }
         void sendPositionYToPlc()
@@ -1141,7 +1140,7 @@ namespace Cad2D
 
             sendPacketMutex.WaitOne();
             if (lsConnection != null && lsConnection.Connected)
-                OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_y.Value, 956, ref positionyPacketInfo));
+                OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_y.Value, plcUtilitisAndOptions.Velocity.velocityYAddress, ref positionyPacketInfo));
             sendPacketMutex.ReleaseMutex();
             
         }
@@ -1170,14 +1169,12 @@ namespace Cad2D
                     pageSettingObject.encoderReader.Abort();
                 pageSettingObject = null;
                 Page_Settings.readingFinished = false;
-                callPageSetting = false;
                 checkPrimarySettings();
             }
             if (contentControl.Content.GetType() == typeof(Page_Tools))
             {
                 Page_Tools.readingFromPlcFinished = false;
                 pageToolsObject = null;
-                callPageTools = false;
             }
             contentControl.Content = pagesStack.Pop();
             if (contentControl.Content.GetType() == typeof(Page_Settings))

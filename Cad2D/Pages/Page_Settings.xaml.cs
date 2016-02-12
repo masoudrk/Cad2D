@@ -396,6 +396,9 @@ namespace Cad2D.Pages
             textBox_PositionX.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.value.ToString();
             textBox_PalsY.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.value.ToString();
             textBox_PositionY.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.value.ToString();
+
+            updateEncoderYValues();
+            updateEncoderXValues();
         }
 
         private void TextBox_Velocity_TextChanged(object sender, TextChangedEventArgs e)

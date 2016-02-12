@@ -14,12 +14,16 @@ namespace Cad2D
         public _Encoder Encoder { get; set; }
         public PlcUtilitisAndOptions()
         {
-            ClampOptions = new _ClampOptions(970);
-            BridgeOptions = new _BridgeOptions(960);
-            Velocity = new _velocity(955);
-            Encoder = new _Encoder(980 , 984);
+            setNewValues();
         }
-
+        public void setNewValues()
+        {
+            PrimarySettings ps = Extentions.FromXmlPrimary();
+            ClampOptions = new _ClampOptions((ushort)ps.ClampMem);//970
+            BridgeOptions = new _BridgeOptions((ushort)ps.BridgeOptionMem);//960
+            Velocity = new _velocity((ushort)ps.Velocity);//955
+            Encoder = new _Encoder((ushort)ps.XEncoderMem, (ushort)ps.YEncoderMem);//980,984
+        }
         public class _Encoder
         {
 
