@@ -39,15 +39,23 @@ public class PrimarySettings
     public bool showSpeedMonitorInMainPanel { get; set; }
     public bool showGuideCircles { get; set; }
     public bool captureModeWhenStart { set; get; }
-    public int VarMemoryOffset { get; set; }
-    public int ArrayMemoryOffset { get; set; }
+    public int PlcInformation { get; set; }
+    public int Velocity { get; set; }
     public int ScanVerticalSlice { set; get; }
-    public int EdgeVerticalSlice { set; get; }
     public int ScanHorizontalSlice { set; get; }
+    public int EdgeVerticalSlice { set; get; }
     public int EdgeHorizontalSlice { set; get; }
+    public int EdgeVerticalSliceMin { set; get; }
+    public int EdgeVerticalSliceMax { set; get; }
+    public int EdgeHorizontalSliceMin { set; get; }
+    public int EdgeHorizontalSliceMax { set; get; }
     public int ScanAriaSegment { set; get; }
     public int VerticalBoundrySegment { set; get; }
     public int HorizonalBoundrySegment { set; get; }
+    public int ClampMem { set; get; }
+    public int BridgeOptionMem { set; get; }
+    public int XEncoderMem { set; get; }
+    public int YEncoderMem { set; get; }
 }
 
 public static class Extentions
@@ -112,15 +120,23 @@ public static class Extentions
                 CameraPortNumber = ds.CameraPort,
                 PLCIpAdress = ds.PLCIP,
                 PLCPortNumber = ds.PLCPort,
-                VarMemoryOffset = ds.VarMemoryOffset,
-                ArrayMemoryOffset = ds.ArrayMemoryOffset,
+                Velocity = ds.VelocityMem,
+                PlcInformation = ds.PLCInformationMem,
                 ScanVerticalSlice = ds.VerticalScan,
                 ScanHorizontalSlice = ds.HorizontalScan,
                 EdgeHorizontalSlice = ds.HorizontalEdge,
                 EdgeVerticalSlice = ds.VerticalEdge,
                 ScanAriaSegment = ds.ScanAriaSegment,
                 VerticalBoundrySegment = ds.VerticalBoundrySegment,
-                HorizonalBoundrySegment = ds.HorizonalBoundrySegment
+                HorizonalBoundrySegment = ds.HorizonalBoundrySegment,
+                ClampMem = ds.ClampMem,
+                BridgeOptionMem = ds.BridgeOptionMem,
+                XEncoderMem = ds.XEncoderMem,
+                YEncoderMem = ds.YEncoderMem,
+                EdgeHorizontalSliceMin = ds.EdgeMin,
+                EdgeHorizontalSliceMax = ds.EdgeMax,
+                EdgeVerticalSliceMax = ds.EdgeMax,
+                EdgeVerticalSliceMin = ds.EdgeMin
             };
             return s;
         }

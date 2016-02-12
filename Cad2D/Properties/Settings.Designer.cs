@@ -97,25 +97,25 @@ namespace Cad2D.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int VarMemoryOffset {
+        [global::System.Configuration.DefaultSettingValueAttribute("955")]
+        public int VelocityMem {
             get {
-                return ((int)(this["VarMemoryOffset"]));
+                return ((int)(this["VelocityMem"]));
             }
             set {
-                this["VarMemoryOffset"] = value;
+                this["VelocityMem"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
-        public int ArrayMemoryOffset {
+        [global::System.Configuration.DefaultSettingValueAttribute("950")]
+        public int PLCInformationMem {
             get {
-                return ((int)(this["ArrayMemoryOffset"]));
+                return ((int)(this["PLCInformationMem"]));
             }
             set {
-                this["ArrayMemoryOffset"] = value;
+                this["PLCInformationMem"] = value;
             }
         }
         
@@ -200,6 +200,78 @@ namespace Cad2D.Properties {
             }
             set {
                 this["HorizonalBoundrySegment"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("960")]
+        public int BridgeOptionMem {
+            get {
+                return ((int)(this["BridgeOptionMem"]));
+            }
+            set {
+                this["BridgeOptionMem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("970")]
+        public int ClampMem {
+            get {
+                return ((int)(this["ClampMem"]));
+            }
+            set {
+                this["ClampMem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("980")]
+        public int XEncoderMem {
+            get {
+                return ((int)(this["XEncoderMem"]));
+            }
+            set {
+                this["XEncoderMem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("984")]
+        public int YEncoderMem {
+            get {
+                return ((int)(this["YEncoderMem"]));
+            }
+            set {
+                this["YEncoderMem"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int EdgeMin {
+            get {
+                return ((int)(this["EdgeMin"]));
+            }
+            set {
+                this["EdgeMin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int EdgeMax {
+            get {
+                return ((int)(this["EdgeMax"]));
+            }
+            set {
+                this["EdgeMax"] = value;
             }
         }
     }
