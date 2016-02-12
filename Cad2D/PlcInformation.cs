@@ -32,7 +32,14 @@ namespace Cad2D
     {
         public PlcInformation()
         {///////////////////////
-            int address = 950;
+            setAddressValues();
+        }
+
+        public void setAddressValues()
+        {
+
+            PrimarySettings ps = Extentions.FromXmlPrimary();
+            int address = ps.PlcInformation;
             PackestId = new List<ushort>();
 
             alert = new _Alert();
@@ -45,6 +52,7 @@ namespace Cad2D
             manualOrAuto = new _ManualOrAuto();
             manualOrAuto.wordNumber = address++;
         }
+
         public List<ushort> PackestId;
         public _Positions positions;
         public _Alert alert ;

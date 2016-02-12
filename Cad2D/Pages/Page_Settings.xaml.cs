@@ -31,7 +31,6 @@ namespace Cad2D.Pages
         public static KeypadTextBox[] registeredTextbox;
         public static bool readingFinished = false;
         public Thread encoderReader;
-        private bool firstTime;
 
         public Page_Settings(CanvasCad2D cc2d)
         {
@@ -122,7 +121,6 @@ namespace Cad2D.Pages
                 CanvasCad2D.sendPacketMutex.ReleaseMutex();
             }
             encoderReader = new Thread(PlcInfoReaderTimer_Elapsed);
-            firstTime = true;
             encoderReader.Start();
         }
         /// <summary>
@@ -130,13 +128,6 @@ namespace Cad2D.Pages
         /// </summary>
         private void PlcInfoReaderTimer_Elapsed()
         {
-            if (firstTime)
-            {
-                Thread.Sleep(2000);
-                firstTime = false;
-                PlcInfoReaderTimer_Elapsed();
-                return;
-            }
             if (CanvasCad2D.lsConnection.Connected)
             {
                 CanvasCad2D.sendPacketMutex.WaitOne();
@@ -396,6 +387,9 @@ namespace Cad2D.Pages
             textBox_PositionX.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.value.ToString();
             textBox_PalsY.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.value.ToString();
             textBox_PositionY.Text = CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.value.ToString();
+
+            updateEncoderYValues();
+            updateEncoderXValues();
         }
 
         private void TextBox_Velocity_TextChanged(object sender, TextChangedEventArgs e)
