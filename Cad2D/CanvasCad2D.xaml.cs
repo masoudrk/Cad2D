@@ -101,9 +101,19 @@ namespace Cad2D
         int scanAriaSegment = 1000; // startin memory for sending array 
         int verticalBoundrySegment = 2000; // startin memory for sending array 
         int horizonalBoundrySegment = 3000; // startin memory for sending array 
+
+        /// <summary>
+        /// ////////shoud add to settingd
+        double minVerticalSlice = 10;
+        double maxVerticalSlice = 4000;
+        double minHorizontalSlice = 5;
+        double maxHorizontalSlice = 8000;
+        /// </summary>
+        /// 
+
         int[] stoneScan;
-        short[] stoneHorizontalEdge;
-        short[] stoneVerticalEdge;
+        ushort[] stoneHorizontalEdge;
+        ushort[] stoneVerticalEdge;
         List<writingPacketInfo> writingPackets;
         string cameraIp;
         private Thread alarmThread;
@@ -165,11 +175,6 @@ namespace Cad2D
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
             plcInformation = new PlcInformation();
-            plcInformation.alert.wordNumber = 950;
-            plcInformation.shutdown.wordNumber = 951;
-            plcInformation.positions.wordNumberX = 952;
-            plcInformation.positions.wordNumberY = 953;
-            plcInformation.manualOrAuto.wordNumber = 954;
 
             //Thread.Sleep(1000);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
@@ -610,10 +615,19 @@ namespace Cad2D
                             lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
                         sendPacketMutex.ReleaseMutex();
                     }
+                    else
+                    {
+                        OnGUIActions(() => writeToPlcFinished());
+                    }
                 }
             }
         }
 
+        private void writeToPlcFinished()
+        {
+            setEnable(btn_sendToPlc_back, true);
+            ((MainWindow)Application.Current.MainWindow).showMsg("پیام", "اطلاعات ارسال شد .");
+        }
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
             alarm = alarm & 1048319;
@@ -934,6 +948,7 @@ namespace Cad2D
             else
             {
                 sendDataToPlc();
+                setEnable(btn_sendToPlc_back, false);
             }
         }
 
@@ -1054,6 +1069,9 @@ namespace Cad2D
             stoneScanHorizontalSlice = ps.ScanHorizontalSlice;
             StoneEdgeVerticalSlice = ps.EdgeVerticalSlice;
             stoneEdgeHorizontalSlice = ps.EdgeHorizontalSlice;
+
+            startPoint = new Point(ps.TopLeftOffsetX, ps.TopLeftOffsetY);
+            endPoint = new Point(ps.BottomRightOffsetX, ps.BottomRightOffsetY);
 
             scanAriaSegment = ps.ScanAriaSegment; // startin memory for sending array 
             verticalBoundrySegment = ps.VerticalBoundrySegment; // startin memory for sending array 
@@ -1368,34 +1386,47 @@ namespace Cad2D
 
         //@milad
         #region calculating stone edge and points
-        private short[] calculateStoneHorizontalPoints(double[] array)
+        private ushort[] calculateStoneHorizontalPoints(double[] array)
         {
-            short[] stoneHorizontalPoints = new short[array.Length];
-            widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / StoneEdgeVerticalSlice;
+            ushort[] stoneHorizontalPoints = new ushort[array.Length];
+            double zarib = (maxHorizontalSlice - minHorizontalSlice) / (endPoint.X - startPoint.X);
             for (int i = 0; i < (array.Length / 2); i++)
             {
-                stoneHorizontalPoints[i * 2] = (short)((array[i * 2] - startPoint.X) / widthOffsetLength);
-                stoneHorizontalPoints[i * 2 + 1] = (short)((array[i * 2 + 1] - startPoint.X) / widthOffsetLength);
-                if (stoneHorizontalPoints[i * 2 + 1] >= StoneEdgeVerticalSlice)
-                    stoneHorizontalPoints[i * 2 + 1] = (short)(StoneEdgeVerticalSlice - 1);
-                if (stoneHorizontalPoints[i * 2] >= StoneEdgeVerticalSlice)
-                    stoneHorizontalPoints[i * 2] = (short)(StoneEdgeVerticalSlice - 1);
+                if (array[i * 2] == startPoint.X && array[i * 2 + 1] == startPoint.X)
+                {
+                    stoneHorizontalPoints[i * 2] = 0;
+                    stoneHorizontalPoints[i * 2 + 1] = 0;
+                    continue;
+                }
+
+                stoneHorizontalPoints[i * 2] = (ushort)(zarib * (array[i * 2] - startPoint.X) + minHorizontalSlice);
+                stoneHorizontalPoints[i * 2 + 1] = (ushort)((zarib * (array[i * 2 + 1] - startPoint.X) + minHorizontalSlice));
+                if (stoneHorizontalPoints[i * 2 + 1] >= maxHorizontalSlice)
+                    stoneHorizontalPoints[i * 2 + 1] = (ushort)(maxHorizontalSlice - 1);
+                if (stoneHorizontalPoints[i * 2] >= maxHorizontalSlice)
+                    stoneHorizontalPoints[i * 2] = (ushort)(maxHorizontalSlice - 1);
             }
             return stoneHorizontalPoints;
         }
 
-        private short[] calculateStoneVerticalPoints(double[] array1)
+        private ushort[] calculateStoneVerticalPoints(double[] array1)
         {
-            short[] stoneVerticalPoints = new short[array1.Length];
-            heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / stoneEdgeHorizontalSlice;
+            ushort[] stoneVerticalPoints = new ushort[array1.Length];
+            double zarib = (maxVerticalSlice - minVerticalSlice) / (endPoint.Y - startPoint.Y);
             for (int i = 0; i < (array1.Length / 2); i++)
             {
-                stoneVerticalPoints[i * 2] = (short)((array1[i * 2] - startPoint.Y) / heightOffsetLength);
-                stoneVerticalPoints[i * 2 + 1] = (short)((array1[i * 2 + 1] - startPoint.Y) / heightOffsetLength);
-                if (stoneVerticalPoints[i * 2 + 1] >= stoneEdgeHorizontalSlice)
-                    stoneVerticalPoints[i * 2 + 1] = (short)(stoneEdgeHorizontalSlice - 1);
-                if (stoneVerticalPoints[i * 2] >= stoneEdgeHorizontalSlice)
-                    stoneVerticalPoints[i * 2] = (short)(stoneEdgeHorizontalSlice - 1);
+                if(array1[i * 2] == startPoint.Y && array1[i * 2 + 1] == startPoint.Y)
+                {
+                    stoneVerticalPoints[i * 2] = 0;
+                    stoneVerticalPoints[i * 2 + 1] = 0;
+                    continue;
+                }
+                stoneVerticalPoints[i * 2] = (ushort)(zarib * (array1[i * 2] - startPoint.Y) + minVerticalSlice);
+                stoneVerticalPoints[i * 2 + 1] = (ushort)((zarib * (array1[i * 2 + 1] - startPoint.Y) + minVerticalSlice));
+                if (stoneVerticalPoints[i * 2 + 1] >= maxVerticalSlice)
+                    stoneVerticalPoints[i * 2 + 1] = (ushort)(maxVerticalSlice - 1);
+                if (stoneVerticalPoints[i * 2] >= maxVerticalSlice)
+                    stoneVerticalPoints[i * 2] = (ushort)(maxVerticalSlice - 1);
             }
             return stoneVerticalPoints;
         }
@@ -1407,6 +1438,8 @@ namespace Cad2D
             double HOffset = startPoint.Y;
 
             bool[,] array = new bool[stoneScanHorizontalSlice, StoneScanVerticalSlice];
+
+            PrimarySettings ps = Extentions.FromXmlPrimary();
 
             for (int i = 0; i < stoneScanHorizontalSlice; i++)
             {
@@ -1438,15 +1471,18 @@ namespace Cad2D
                     {
                         array[i, j] = true;
                         // for testing ->
-                        Circle c = cloneCircle();
-                        c.mouseActionsEnable = false;
-                        c.radius = 2;
-                        c.X = WOffset;
-                        c.defaultColor = Brushes.GreenYellow;
-                        c.Y = HOffset;
-                        guids.Add(c);
-                        mainCanvas.Children.Add(c);
-                        //end testing   
+                        if(ps.showGuideCircles)
+                        {
+                            Circle c = cloneCircle();
+                            c.mouseActionsEnable = false;
+                            c.radius = 2;
+                            c.X = WOffset;
+                            c.defaultColor = Brushes.GreenYellow;
+                            c.Y = HOffset;
+                            guids.Add(c);
+                            mainCanvas.Children.Add(c);
+                            //end testing   
+                        }
                     }
 
                     WOffset += widthOffsetLength;
@@ -1466,7 +1502,7 @@ namespace Cad2D
             widthOffsetLength = ((float)(endPoint.X - startPoint.X)) / StoneEdgeVerticalSlice;
             double offset = startPoint.X;
             double[] values = new double[2];
-
+            PrimarySettings ps = Extentions.FromXmlPrimary();
             for (int i = 0; i < StoneEdgeVerticalSlice; i++)
             {
                 int j = 0;
@@ -1514,25 +1550,28 @@ namespace Cad2D
 
                 values[0] = Clamp(values[0], startPoint.Y, endPoint.Y);
                 values[1] = Clamp(values[1], startPoint.Y, endPoint.Y);
-                if (values[0] != 0 || values[1] != 0)
+                if (values[0] != startPoint.Y || values[1] != startPoint.Y)
                 {
-                    //for testing 
-                    Circle c = cloneCircle();
-                    c.mouseActionsEnable = false;
-                    c.radius = 2;
-                    c.X = offset;
-                    c.Y = values[0];
+                    if (ps.showGuideCircles)
+                    {
+                        //for testing 
+                        Circle c = cloneCircle();
+                        c.mouseActionsEnable = false;
+                        c.radius = 2;
+                        c.X = offset;
+                        c.Y = values[0];
 
-                    Circle c2 = cloneCircle();
-                    c2.mouseActionsEnable = false;
-                    c2.radius = 2;
-                    c2.X = offset;
-                    c2.Y = values[1];
-                    guids.Add(c);
-                    guids.Add(c2);
-                    mainCanvas.Children.Add(c);
-                    mainCanvas.Children.Add(c2);
-                    //end testing
+                        Circle c2 = cloneCircle();
+                        c2.mouseActionsEnable = false;
+                        c2.radius = 2;
+                        c2.X = offset;
+                        c2.Y = values[1];
+                        guids.Add(c);
+                        guids.Add(c2);
+                        mainCanvas.Children.Add(c);
+                        mainCanvas.Children.Add(c2);
+                        //end testing
+                    }
                 }
                 array[2 * i] = values[0];
                 array[2 * i + 1] = values[1];
@@ -1571,7 +1610,7 @@ namespace Cad2D
             heightOffsetLength = ((float)(endPoint.Y - startPoint.Y)) / stoneEdgeHorizontalSlice;
             double offset = startPoint.Y;
             double[] values = new double[2];
-
+            PrimarySettings ps = Extentions.FromXmlPrimary();
             for (int i = 0; i < stoneEdgeHorizontalSlice; i++)
             {
                 int j = 0;
@@ -1621,27 +1660,31 @@ namespace Cad2D
                 values[0] = Clamp(values[0], startPoint.X, endPoint.X);
                 values[1] = Clamp(values[1], startPoint.X, endPoint.X);
 
-                if (values[0] != 0 || values[1] != 0)
+                if (values[0] != startPoint.X || values[1] != startPoint.X)
                 {
+                    if(ps.showGuideCircles)
+                    {
+                        Circle c = cloneCircle();
+                        c.mouseActionsEnable = false;
+                        c.radius = 2;
+                        c.X = values[0];
+                        c.defaultColor = Brushes.Red;
+                        c.Y = offset;
+
+                        Circle c2 = cloneCircle();
+                        c2.mouseActionsEnable = false;
+                        c2.radius = 2;
+                        c2.X = values[1];
+                        c2.defaultColor = Brushes.Red;
+                        c2.Y = offset;
+
+                        guids.Add(c);
+                        guids.Add(c2);
+                        mainCanvas.Children.Add(c);
+                        mainCanvas.Children.Add(c2);
+
+                    }
                     //for testing 
-                    Circle c = cloneCircle();
-                    c.mouseActionsEnable = false;
-                    c.radius = 2;
-                    c.X = values[0];
-                    c.defaultColor = Brushes.Red;
-                    c.Y = offset;
-
-                    Circle c2 = cloneCircle();
-                    c2.mouseActionsEnable = false;
-                    c2.radius = 2;
-                    c2.X = values[1];
-                    c2.defaultColor = Brushes.Red;
-                    c2.Y = offset;
-
-                    guids.Add(c);
-                    guids.Add(c2);
-                    mainCanvas.Children.Add(c);
-                    mainCanvas.Children.Add(c2);
                     // end testing 
                 }
 

@@ -14,17 +14,17 @@ namespace Cad2D
         public _Encoder Encoder { get; set; }
         public PlcUtilitisAndOptions()
         {
-            ClampOptions = new _ClampOptions();
-            BridgeOptions = new _BridgeOptions();
-            Velocity = new _velocity();
-            Encoder = new _Encoder();
+            ClampOptions = new _ClampOptions(970);
+            BridgeOptions = new _BridgeOptions(960);
+            Velocity = new _velocity(955);
+            Encoder = new _Encoder(980 , 984);
         }
 
         public class _Encoder
         {
 
-            public _Encoder()
-            {
+            public _Encoder(ushort address1 , ushort address2)
+            {//980 , 984
                 PackestIdX = new List<ushort>();
                 PackestIdY = new List<ushort>();
                 EncoderXPals = new EncoderCell();
@@ -36,16 +36,16 @@ namespace Cad2D
                 EncoderYDiv = new EncoderCell();
                 EncoderYPos = new EncoderCell();
 
-                EncoderXPals.valueAddress = 980;
-                EncoderXMult.valueAddress = 981;
-                EncoderXDiv.valueAddress = 982;
-                EncoderXPos.valueAddress = 983;
+                EncoderXPals.valueAddress = address1++;
+                EncoderXMult.valueAddress = address1++;
+                EncoderXDiv.valueAddress = address1++;
+                EncoderXPos.valueAddress = address1++;
 
 
-                EncoderYPals.valueAddress = 984;
-                EncoderYMult.valueAddress = 985;
-                EncoderYDiv.valueAddress = 986;
-                EncoderYPos.valueAddress = 987;
+                EncoderYPals.valueAddress = address2++;
+                EncoderYMult.valueAddress = address2++;
+                EncoderYDiv.valueAddress = address2++;
+                EncoderYPos.valueAddress = address2++;
             }
             public List<ushort> PackestIdY;
             public List<ushort> PackestIdX;
@@ -84,8 +84,8 @@ namespace Cad2D
 
         public class _ClampOptions
         {
-            public _ClampOptions()
-            {
+            public _ClampOptions(ushort address)
+            {//970
                 PackestId = new List<ushort>();
                 clampValue = new clamp();
                 upClamp = new clamp();
@@ -93,11 +93,11 @@ namespace Cad2D
                 frontClamp = new clamp();
                 behindClamp = new clamp();
 
-                clampValue.valueAddress = 970;
-                upClamp.valueAddress = 971;
-                downClamp.valueAddress = 972;
-                frontClamp.valueAddress = 973;
-                behindClamp.valueAddress = 974;
+                clampValue.valueAddress = address++;
+                upClamp.valueAddress = address++;
+                downClamp.valueAddress = address++;
+                frontClamp.valueAddress = address++;
+                behindClamp.valueAddress = address++;
             }
             public List<ushort> PackestId;
             public clamp clampValue { set; get; }
@@ -128,7 +128,7 @@ namespace Cad2D
 
         public class _BridgeOptions
         {
-            public _BridgeOptions ()
+            public _BridgeOptions (int address)
             {
                 PackestId = new List<ushort>();
                 stoneOffsetUp = new stoneOffset();
@@ -136,15 +136,15 @@ namespace Cad2D
                 stoneOffsetDown = new stoneOffset();
                 stoneOffsetLeft = new stoneOffset();
                 //shoud assinge addreses
-                stoneOffsetUp.valueAddress = 960;
-                stoneOffsetRight.valueAddress = 962;
-                stoneOffsetDown.valueAddress = 964;
-                stoneOffsetLeft.valueAddress = 966;
+                stoneOffsetUp.valueAddress = address++;
+                stoneOffsetRight.valueAddress = address++;
+                stoneOffsetDown.valueAddress = address++;
+                stoneOffsetLeft.valueAddress = address++;
                 //shoud assinge addreses
-                stoneOffsetUp.delayAddress = 961;
-                stoneOffsetRight.delayAddress = 963;
-                stoneOffsetDown.delayAddress = 965;
-                stoneOffsetLeft.delayAddress = 967;
+                stoneOffsetUp.delayAddress = address++;
+                stoneOffsetRight.delayAddress = address++;
+                stoneOffsetDown.delayAddress = address++;
+                stoneOffsetLeft.delayAddress = address++;
             }
             public List<ushort> PackestId;
             public stoneOffset stoneOffsetUp { set; get; }
@@ -180,13 +180,11 @@ namespace Cad2D
 
         public class _velocity
         {
-            public _velocity()
+            public _velocity(int address)
             {
                 PackestId = new List<ushort>();
-                velocityX = 50;
-                velocityY = 50;
-                velocityXAddress = 955;
-                velocityYAddress = 956;
+                velocityXAddress = address++;
+                velocityYAddress = address++;
             }
             public List<ushort> PackestId;
             public ushort velocityX { set; get; }

@@ -31,14 +31,25 @@ namespace Cad2D
     public class PlcInformation
     {
         public PlcInformation()
-        {
+        {///////////////////////
+            int address = 950;
             PackestId = new List<ushort>();
+
+            alert = new _Alert();
+            alert.wordNumber = address++;
+            shutdown = new _ShutDown();
+            shutdown.wordNumber = address++;
+            positions = new _Positions();
+            positions.wordNumberX = address++;
+            positions.wordNumberY = address++;
+            manualOrAuto = new _ManualOrAuto();
+            manualOrAuto.wordNumber = address++;
         }
         public List<ushort> PackestId;
-        public _Positions positions = new _Positions();
-        public _Alert alert = new _Alert();
-        public _ShutDown shutdown = new _ShutDown();
-        public _ManualOrAuto manualOrAuto = new _ManualOrAuto();
+        public _Positions positions;
+        public _Alert alert ;
+        public _ShutDown shutdown;
+        public _ManualOrAuto manualOrAuto;
 
         internal void parse(byte[] continuousData)
         {
