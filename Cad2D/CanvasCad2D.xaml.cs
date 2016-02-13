@@ -188,12 +188,12 @@ namespace Cad2D
                 CaptureMode();
 
             initDataGrid(dataGrid);
-
+            /*
             dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
             dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
             dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
             dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
-            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
+            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });*/
         }
 
         public static void initDataGrid(DataGrid d)
@@ -227,11 +227,11 @@ namespace Cad2D
         
         class GridItem
         {
-            public int val1 { set; get; }
-            public int val2 { set; get; }
-            public int val3 { set; get; }
-            public int val4 { set; get; }
-            public int val5 { set; get; }
+            public double val1 { set; get; }
+            public double val2 { set; get; }
+            public double val3 { set; get; }
+            public double val4 { set; get; }
+            public double val5 { set; get; }
         }
 
         private void PlcInfoReaderTimer_Elapsed()
@@ -1380,11 +1380,23 @@ namespace Cad2D
             bool[,] array3;
             array3 = calCulateTheArray();
             stoneScan = calculateStoneScan(array3);
-           
+                       
             progressDialog = MainWindow._window.showProgress();
-
+            dataGrid.Items.Clear();
+            for (int i = 0; i < StoneEdgeVerticalSlice; i++)
+            {
+                if (i< stoneEdgeHorizontalSlice)
+                    dataGrid.Items.Add(new GridItem() { val1=i, val2= setPericision(array1[i * 2]), val3= setPericision(array1[i * 2 + 1]), val4= setPericision(array2[i * 2]), val5= setPericision(array2[i * 2 + 1]) });
+                else
+                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(array1[i * 2]), val3 = setPericision(array1[i * 2 + 1]), val4 = 0, val5 = 0 });
+            }
             Thread t = new Thread(sendingStoneScanToPLC);
             t.Start();
+        }
+
+        public double setPericision(double v)
+        {
+            return Math.Truncate(v * 1000f) / 1000f;
         }
 
         private Task<MyProgressDialog> progressDialog;
@@ -1635,13 +1647,14 @@ namespace Cad2D
 
         private void button_showData_Click(object sender, RoutedEventArgs e)
         {
-            if (_windowDisplaySendData == null)
+            if (_windowDisplaySendData == null || ! _windowDisplaySendData.IsVisible)
             {
                 _windowDisplaySendData = new Window_DisplaySendData(dataGrid.Items);
                 _windowDisplaySendData.Show();
             }
             else
             {
+               
                 _windowDisplaySendData.Show();
                 if (_windowDisplaySendData.WindowState == WindowState.Minimized)
                 {
