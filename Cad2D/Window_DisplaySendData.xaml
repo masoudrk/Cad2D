@@ -1,0 +1,23 @@
+﻿<controls:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Cad2D"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        x:Class="Cad2D.Window_DisplaySendData"
+        mc:Ignorable="d"
+        ShowIconOnTitleBar="True"
+        BorderThickness="3" WindowTitleBrush="#FF41B1E1"
+        BorderBrush="#FF41B1E1"
+        MinWidth="300"
+        MaxWidth="400"
+    MinHeight="200"
+        Title="اطلاعات ارسالی به پی ال سی" Height="475.602" Width="550">
+    <Grid>
+        <DataGrid x:Name="dataGrid" Margin="10" GridLinesVisibility="Horizontal" Foreground="Black" IsSynchronizedWithCurrentItem="True" BeginningEdit="dataGrid_BeginningEdit"/>
+
+    </Grid>
+</controls:MetroWindow>
+

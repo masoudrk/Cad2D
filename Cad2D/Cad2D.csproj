@@ -151,6 +151,9 @@
     <Compile Include="Settings.cs" />
     <Compile Include="TouchBox\AlphaNumericEditBox.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="Window_DisplaySendData.xaml.cs">
+      <DependentUpon>Window_DisplaySendData.xaml</DependentUpon>
+    </Compile>
     <Page Include="CameraPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -231,6 +234,10 @@
     <Page Include="TouchBox\TouchStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Window_DisplaySendData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

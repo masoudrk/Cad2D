@@ -10,14 +10,14 @@
         x:Class="Cad2D.MainWindow"
         mc:Ignorable="d"
         ShowIconOnTitleBar="True"
-        BorderThickness="1" 
+        BorderThickness="1" WindowTitleBrush="#FF41B1E1"
+        BorderBrush="#FF41B1E1"
         WindowTransitionsEnabled="False"
         TitlebarHeight="35"
         MinHeight="710"
         MinWidth="1010"
         Title="سیستم کنترل PLC" Height="710" Width="1024" WindowStartupLocation="CenterScreen"  
-        Background="#FF2A3A56" Loaded="MetroWindow_Loaded" WindowTitleBrush="#FF41B1E1"
-        BorderBrush="#FF41B1E1"
+        Background="#FF2A3A56" Loaded="MetroWindow_Loaded" 
     Closing="MetroWindow_Closing" WindowState="Maximized">
 
     <Controls:MetroWindow.TitleTemplate>

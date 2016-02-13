@@ -18,6 +18,7 @@ using MahApps.Metro.Controls;
 using Brushes = System.Windows.Media.Brushes;
 using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
+using System.Windows.Data;
 
 namespace Cad2D
 {
@@ -118,6 +119,10 @@ namespace Cad2D
         private Thread alarmThread;
         private System.Timers.Timer cameraCheckerTimer;
         private System.Timers.Timer clockTimer;
+
+
+        private Window_DisplaySendData _windowDisplaySendData;
+
         public CanvasCad2D()
         {
             InitializeComponent();
@@ -181,6 +186,52 @@ namespace Cad2D
 
             if(ps.captureModeWhenStart)
                 CaptureMode();
+
+            initDataGrid(dataGrid);
+
+            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
+            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
+            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
+            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
+            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
+        }
+
+        public static void initDataGrid(DataGrid d)
+        {
+            DataGridTextColumn c1 = new DataGridTextColumn();
+            c1.Header = "Index";
+            c1.Binding = new Binding("val1");
+            c1.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
+            d.Columns.Add(c1);
+            DataGridTextColumn c2 = new DataGridTextColumn();
+            c2.Header = "Min";
+            c2.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
+            c2.Binding = new Binding("val2");
+            d.Columns.Add(c2);
+            DataGridTextColumn c3 = new DataGridTextColumn();
+            c3.Header = "Max";
+            c3.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
+            c3.Binding = new Binding("val3");
+            d.Columns.Add(c3);
+            DataGridTextColumn c4 = new DataGridTextColumn();
+            c4.Header = "Min";
+            c4.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
+            c4.Binding = new Binding("val4");
+            d.Columns.Add(c4);
+            DataGridTextColumn c5 = new DataGridTextColumn();
+            c5.Header = "Max";
+            c5.Width = new DataGridLength(1, DataGridLengthUnitType.Star);
+            c5.Binding = new Binding("val5");
+            d.Columns.Add(c5);
+        }
+        
+        class GridItem
+        {
+            public int val1 { set; get; }
+            public int val2 { set; get; }
+            public int val3 { set; get; }
+            public int val4 { set; get; }
+            public int val5 { set; get; }
         }
 
         private void PlcInfoReaderTimer_Elapsed()
@@ -1579,6 +1630,32 @@ namespace Cad2D
             return stoneScan;
         }
 
+
+        private void button_showData_Click(object sender, RoutedEventArgs e)
+        {
+            if (_windowDisplaySendData == null)
+            {
+                _windowDisplaySendData = new Window_DisplaySendData(dataGrid.Items);
+                _windowDisplaySendData.Show();
+            }
+            else
+            {
+                _windowDisplaySendData.Show();
+                if (_windowDisplaySendData.WindowState == WindowState.Minimized)
+                {
+                    _windowDisplaySendData.WindowState = WindowState.Normal;
+                }
+                _windowDisplaySendData.Activate();
+                _windowDisplaySendData.Topmost = true;  // important
+                _windowDisplaySendData.Topmost = false; // important
+                _windowDisplaySendData.Focus();
+            }
+        }
+        
+        private void dataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            e.Cancel = true;
+        }
 
         private double[] calCulateHorizontalPoints()
         {
