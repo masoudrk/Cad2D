@@ -147,17 +147,10 @@
                 <Grid>
 
                     <DataGrid x:Name="dataGrid" Background="Transparent" ColumnWidth="*" HorizontalAlignment="Stretch" 
-   HorizontalContentAlignment="Stretch" GridLinesVisibility="All" AutoGenerateColumns="False" Margin="0,45,0,0" 
+   HorizontalContentAlignment="Stretch" GridLinesVisibility="All" Margin="0,45,0,0" BeginningEdit="dataGrid_BeginningEdit" RowDetailsVisibilityMode="Visible" 
 >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Width="55" Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="شماره"/>
-                            <DataGridTextColumn Width="*" Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="b"/>
-                            <DataGridTextColumn Width="*" Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="c"/>
-                            <DataGridTextColumn Width="*" Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="d"/>
-                            <DataGridTextColumn Width="*" Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="e"/>
-                        </DataGrid.Columns>
                     </DataGrid>
-                    <Button Style="{DynamicResource SquareButtonStyle}" x:Name="button_showData" Content="نمایش مجزا" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="210" Height="35" FontSize="14.667"/>
+                    <Button Style="{DynamicResource SquareButtonStyle}" x:Name="button_showData" Content="نمایش مجزا" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="210" Height="35" FontSize="14.667" Click="button_showData_Click"/>
                 </Grid>
             </Border>
 
