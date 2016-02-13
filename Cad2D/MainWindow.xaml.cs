@@ -26,9 +26,11 @@ namespace Cad2D
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        public static MainWindow _window;
         public MainWindow()
         {
             InitializeComponent();
+            _window = this;
             RegistryKey k = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Auth");
             if (k != null)
             {
@@ -66,6 +68,12 @@ namespace Cad2D
         public async void showMsg(string title, string msg)
         {
             await this.ShowChildWindowAsync(new MyDialog(title, msg) { Title = "توجه" });
+        }
+        public async Task<MyProgressDialog> showProgress()
+        {
+           MyProgressDialog m =  new MyProgressDialog();
+           await this.ShowChildWindowAsync(m);
+           return m;
         }
         public void showAdminPasswordReq()
         {

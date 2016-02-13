@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -624,7 +625,8 @@ namespace Cad2D
         private void writeToPlcFinished()
         {
             setEnable(btn_sendToPlc_back, true);
-            ((MainWindow)Application.Current.MainWindow).showMsg("پیام", "اطلاعات ارسال شد .");
+            progressDialog.Result.Close();
+            //MainWindow._window.showMsg("پیام", "اطلاعات ارسال شد .");
         }
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
@@ -746,7 +748,7 @@ namespace Cad2D
             setEnable((Control)sender, false);
             setEnable(btn_clearPath, true);
         }
-
+    
         private void toggle_Tool_Unchecked(object sender, RoutedEventArgs e)
         {
             cadTool = CadTool.NON;
@@ -774,7 +776,7 @@ namespace Cad2D
                     }
                     return;
                 }
-
+                
                 if (connectedsList.Count > 2)
                 {
                     setEnable(btn_sendToPlc_back,true);
@@ -1325,10 +1327,14 @@ namespace Cad2D
             bool[,] array3;
             array3 = calCulateTheArray();
             stoneScan = calculateStoneScan(array3);
+           
+            progressDialog = MainWindow._window.showProgress();
+
             Thread t = new Thread(sendingStoneScanToPLC);
             t.Start();
         }
 
+        private Task<MyProgressDialog> progressDialog;
 
         private void sendingStoneScanToPLC()
         {
