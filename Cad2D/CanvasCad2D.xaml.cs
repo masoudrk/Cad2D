@@ -1330,6 +1330,11 @@ namespace Cad2D
 
         private void sendDataToPlc()
         {
+            if(!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             lineGeometryList.Clear();
             foreach (Circle c in guids)
             {
