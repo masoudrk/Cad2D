@@ -613,7 +613,8 @@ namespace Cad2D
                     }
                     else
                     {
-                        OnGUIActions(() => writeToPlcFinished());
+                        if(pagesStack.Peek().GetType() == typeof(CanvasCad2D))
+                            OnGUIActions(() => writeToPlcFinished());
                     }
                 }
             }
