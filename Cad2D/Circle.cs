@@ -18,8 +18,8 @@ namespace Cad2D
     public class Circle : Control
     {
         public double X, Y;
-        private bool mouseEntered;
-        private bool mouseDragged;
+        //private bool mouseEntered;
+       // private bool mouseDragged;
         public bool mouseActionsEnable = true;
 
         public bool isFirstPoint;
@@ -45,11 +45,11 @@ namespace Cad2D
                     cc2d.canLoopPath = true;
                 }
                 cc2d.mouseEnteredInCircle = true;
-                mouseEntered = true;
+                //mouseEntered = true;
                 InvalidateVisual();
             }
         }
-
+        /*
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (mouseActionsEnable)
@@ -75,7 +75,7 @@ namespace Cad2D
                 InvalidateVisual();
             }
             base.OnMouseMove(e);
-        }
+        }*/
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
@@ -87,7 +87,7 @@ namespace Cad2D
                 {
                     cc2d.canLoopPath = false;
                 }
-                mouseEntered = false;
+                //mouseEntered = false;
                 InvalidateVisual();
             }
             base.OnMouseLeave(e);
@@ -99,9 +99,8 @@ namespace Cad2D
             {
                 if (cc2d.state == CanvasCad2D.State.NON)
                 {
-                    Cursor = Cursors.ScrollAll;
-                    mouseDragged = true;
-                    cc2d.state = CanvasCad2D.State.DRAGGING_VERTEX;
+                    //mouseDragged = true;
+                   // cc2d.state = CanvasCad2D.State.DRAGGING_VERTEX;
                 }
             }
             base.OnMouseDown(e);
@@ -113,30 +112,16 @@ namespace Cad2D
             {
                 if (cc2d.state == CanvasCad2D.State.DRAGGING_VERTEX)
                 {
-                    mouseDragged = false;
-                    cc2d.state = CanvasCad2D.State.NON;
+                    //mouseDragged = false;
+                    //cc2d.state = CanvasCad2D.State.NON;
                 }
-
-                Cursor = Cursors.Arrow;
             }
             base.OnMouseUp(e);
         }
 
         protected override void OnRender(DrawingContext dc)
         {
-            if (mouseDragged)
-            {
-                dc.DrawEllipse(Brushes.Transparent, new Pen(), new Point(X, Y), 250, 250);
-            }
-
-            if (mouseEntered)
-            {
-                dc.DrawEllipse(Brushes.Red, new Pen(), new Point(X, Y), radius, radius);
-            }
-            else
-            {
-                dc.DrawEllipse(defaultColor, new Pen(), new Point(X, Y), radius, radius);
-            }
+            dc.DrawEllipse(defaultColor, new Pen(), new Point(X, Y), radius, radius);
 
             if (isFirstPoint)
                 dc.DrawEllipse(new BrushConverter().ConvertFromString("#55ffffff") as SolidColorBrush

@@ -82,13 +82,10 @@ namespace Cad2D.Pages
             passBox.Focus();
         }
 
-        private void passBox_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-        }
-
         private void imageKeyboard_MouseDown(object sender, MouseButtonEventArgs e)
         {
             showKeyboard();
         }
+        
     }
 }

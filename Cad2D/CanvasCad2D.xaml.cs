@@ -686,6 +686,10 @@ namespace Cad2D
         {
             state = State.NON;
             connectedsList.First.Value.circle.connectedLine1 = connectedsList.Last.Value.line;
+
+            connectedsList.Last.Value.line.X2 = connectedsList.First.Value.circle.X;
+            connectedsList.Last.Value.line.Y2 = connectedsList.First.Value.circle.Y;
+
             canLoopPath = false;
             connectedsList.loop = true;
 
@@ -723,9 +727,6 @@ namespace Cad2D
         public static Circle cloneCircle()
         {
             Circle e = new Circle();
-            /*e.Fill = Brushes.Aqua;
-            e.Stroke = Brushes.Aqua;
-            e.StrokeThickness = 1;*/
             e.HorizontalAlignment = HorizontalAlignment.Center;
             e.VerticalAlignment = VerticalAlignment.Center;
 
@@ -735,11 +736,6 @@ namespace Cad2D
         #endregion
 
         #region Cad Tool Toggle Buttons
-        private void toggle_EraserTool_Checked(object sender, RoutedEventArgs e)
-        {
-            Cursor = Cursors.Cross;
-            cadTool = CadTool.ERASER;
-        }
 
         private void toggle_PenTool_Checked(object sender, RoutedEventArgs e)
         {
@@ -812,8 +808,8 @@ namespace Cad2D
                     lastLine.Y2 = clickedPoint.Y;
 
                     Line newLine = cloneLine();
-                    newLine.X1 = clickedPoint.X;
-                    newLine.Y1 = clickedPoint.Y;
+                    newLine.X1= newLine.X2 = clickedPoint.X;
+                    newLine.Y1= newLine.Y2 = clickedPoint.Y;
 
                     Circle c = cloneCircle();
                     c.X = clickedPoint.X;
@@ -825,45 +821,9 @@ namespace Cad2D
                 }
             }
             #endregion
-            #region Eraser Actions
-            else if (cadTool == CadTool.ERASER)
-            {
-                if (mouseEnteredInCircle && connectedsList.Count > 3)
-                {
-                    LinkedListNode<ConnectedLine> cln = connectedsList.Find(onTopCircle.cl);
-                    LinkedListNode<ConnectedLine> nextNode = cln.Next;
-                    LinkedListNode<ConnectedLine> periNode = cln.Previous;
-
-                    if (nextNode == null)
-                        nextNode = connectedsList.First;
-
-                    if (periNode == null)
-                        periNode = connectedsList.Last;
-
-                    Circle nextCircle = nextNode.Value.circle;
-                    Circle periCircle = periNode.Value.circle;
-
-                    Line betLine = cloneLine();
-
-                    betLine.X1 = periCircle.X;
-                    betLine.X2 = nextCircle.X;
-                    betLine.Y1 = periCircle.Y;
-                    betLine.Y2 = nextCircle.Y;
-
-                    nextCircle.connectedLine1 = null;
-                    periCircle.connectedLine2 = null;
-                    nextCircle.connectedLine1 = betLine;
-                    periCircle.connectedLine2 = betLine;
-
-                    connectedsList.Remove(cln);
-                    mainCanvas.Children.Remove(onTopCircle.connectedLine1);
-                    mainCanvas.Children.Remove(onTopCircle.connectedLine2);
-                    mainCanvas.Children.Remove(onTopCircle);
-                    mainCanvas.Children.Insert(1, betLine);
-                }
-            }
-            #endregion
         }
+        
+        /*
         private void mainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (state == State.DRAWING)
@@ -873,7 +833,7 @@ namespace Cad2D
                 lastLine.X2 = mousePos.X;
                 lastLine.Y2 = mousePos.Y;
             }
-        }
+        }*/
 
         private Bitmap bSrc;
         private writingPacketInfo shutDownPacketId = null;
