@@ -11,7 +11,7 @@
         <System:Double x:Key="labelWidth">160</System:Double>
     </UserControl.Resources>
     <Grid Background="White">
-        <PasswordBox VerticalAlignment="Center" HorizontalAlignment="Center" PasswordChar="•" x:Name="passBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Height="32" Width="155" Margin="17.5,0,0,0" MouseDown="passBox_MouseDown" />
+        <PasswordBox VerticalAlignment="Center" HorizontalAlignment="Center" PasswordChar="•" x:Name="passBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Height="32" Width="155" Margin="17.5,0,0,0" KeyDown="passBox_KeyDown" />
         <Button x:Name="button_save" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource MetroCircleButtonStyle}" FontFamily="Tahoma" Width="55" Height="55" Foreground="{DynamicResource MainColor}" FontWeight="Normal" Margin="126,125,324,125" Click="button_save_Click">
             <Image Margin="5" RenderOptions.BitmapScalingMode="HighQuality" Source="/Cad2D;component/Resources/tick.png" />
         </Button>
