@@ -773,6 +773,11 @@ namespace Cad2D
                     return;
                 }
 
+                if (connectedsList.Count > 2)
+                {
+                    setEnable(btn_sendToPlc_back,true);
+                }
+
                 if (state == State.NON)
                     return;
 
@@ -903,6 +908,8 @@ namespace Cad2D
             }
             else
             {
+                if(!connectedsList.loop)
+                    endDrawVertex();
                 sendDataToPlc();
                 setEnable(btn_sendToPlc_back, false);
             }
