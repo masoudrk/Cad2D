@@ -113,6 +113,9 @@
     <Compile Include="Env.cs" />
     <Compile Include="LineGeometry.cs" />
     <Compile Include="LS-Connection.cs" />
+    <Compile Include="MyProgressDialog.xaml.cs">
+      <DependentUpon>MyProgressDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MyPasswordDialog.xaml.cs">
       <DependentUpon>MyPasswordDialog.xaml</DependentUpon>
     </Compile>
@@ -178,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MenuStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MyProgressDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
