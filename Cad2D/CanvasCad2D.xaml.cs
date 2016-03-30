@@ -83,6 +83,7 @@ namespace Cad2D
         public List<LineGeometry> lineGeometryList;
         private List<Circle> guids;
         Thread plcInfoReaderTimer;
+        Circle head = cloneCircle();
         ////////////////
         //lsconnection
         public static Mutex sendPacketMutex = new Mutex();
@@ -119,7 +120,7 @@ namespace Cad2D
         private Thread alarmThread;
         private System.Timers.Timer cameraCheckerTimer;
         private System.Timers.Timer clockTimer;
-
+        private int headPosition;
 
         private Window_DisplaySendData _windowDisplaySendData;
 
@@ -130,6 +131,14 @@ namespace Cad2D
             plcUtilitisAndOptions = new PlcUtilitisAndOptions();
             this.Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
 
+
+            head.mouseActionsEnable = false;
+            head.radius = 50;
+            head.X = 0;
+            head.Y = 0;
+            head.defaultColor = Brushes.DarkCyan;
+            head.Name = "head";
+            headPosition = mainCanvas.Children.Add(head);
             state = State.GET_START;
             cadTool = CadTool.NON;
 
@@ -411,6 +420,15 @@ namespace Cad2D
                 label_AutoOrManual.Content = "اتوماتیک"; image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/auto.png"));
             }
 
+            
+            double zaribx = (maxHorizontalSlice - minHorizontalSlice) / (endPoint.X - startPoint.X);
+            double xPos = (plcInformation.positions.valueX/zaribx) + startPoint.X - (minHorizontalSlice/zaribx);
+
+            double zaribY = (maxVerticalSlice - minVerticalSlice) / (endPoint.Y - startPoint.Y);
+            double yPos = (plcInformation.positions.valueY / zaribY) + startPoint.Y - (minVerticalSlice / zaribY);
+            
+            Canvas.SetTop(mainCanvas.Children[headPosition], yPos);
+            Canvas.SetLeft(mainCanvas.Children[headPosition], xPos);
         }
 
         private bool[] createBoolArray(bool[] array)
@@ -752,13 +770,14 @@ namespace Cad2D
             setEnable(btn_clearPath, true);
             setEnable(btn_CreatePathTool, false);
             setEnable(btn_sendToPlc_back, true);
+            calculateAllPoints();
         }
 
         public void addConnectedLine(Line l, Circle c)
         {
             c.cc2d = this;
 
-            mainCanvas.Children.Insert(1, l);
+            mainCanvas.Children.Insert(2, l);
             mainCanvas.Children.Add(c);
             ConnectedLine cl = new ConnectedLine() { line = l, circle = c };
             c.cl = cl;
@@ -988,6 +1007,7 @@ namespace Cad2D
             }
 
             ///@milad
+            dataGrid.Items.Clear();
             foreach (Circle c in guids)
                 mainCanvas.Children.Remove(c);
 
@@ -1351,14 +1371,8 @@ namespace Cad2D
         }
         #endregion
 
-
-        private void sendDataToPlc()
+        private void calculateAllPoints()
         {
-            if(!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
             lineGeometryList.Clear();
             foreach (Circle c in guids)
             {
@@ -1380,16 +1394,26 @@ namespace Cad2D
             bool[,] array3;
             array3 = calCulateTheArray();
             stoneScan = calculateStoneScan(array3);
-                       
-            progressDialog = MainWindow._window.showProgress();
+
             dataGrid.Items.Clear();
             for (int i = 0; i < StoneEdgeVerticalSlice; i++)
             {
-                if (i< stoneEdgeHorizontalSlice)
-                    dataGrid.Items.Add(new GridItem() { val1=i, val2= setPericision(array1[i * 2]), val3= setPericision(array1[i * 2 + 1]), val4= setPericision(array2[i * 2]), val5= setPericision(array2[i * 2 + 1]) });
+                if (i < stoneEdgeHorizontalSlice)
+                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(array1[i * 2]), val3 = setPericision(array1[i * 2 + 1]), val4 = setPericision(array2[i * 2]), val5 = setPericision(array2[i * 2 + 1]) });
                 else
                     dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(array1[i * 2]), val3 = setPericision(array1[i * 2 + 1]), val4 = 0, val5 = 0 });
             }
+        }
+
+        private void sendDataToPlc()
+        {
+            if(!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
+
+            progressDialog = MainWindow._window.showProgress();
             Thread t = new Thread(sendingStoneScanToPLC);
             t.Start();
         }
