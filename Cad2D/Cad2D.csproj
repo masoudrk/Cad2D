@@ -134,6 +134,9 @@
     <Compile Include="Pages\Page_SetOffsets.xaml.cs">
       <DependentUpon>Page_SetOffsets.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Page_Hsc.xaml.cs">
+      <DependentUpon>Page_Hsc.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Page_Tools.xaml.cs">
       <DependentUpon>Page_Tools.xaml</DependentUpon>
     </Compile>
@@ -214,6 +217,10 @@
     <Page Include="Pages\Page_SetOffsets.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Page_Hsc.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\Page_Tools.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SiriusMicrotech.core.UI;
 using System.Threading;
+using MahApps.Metro.Controls;
 
 namespace Cad2D.Pages
 {
@@ -26,15 +27,18 @@ namespace Cad2D.Pages
     /// </summary>
     public partial class Page_Settings : UserControl
     {
+        
         public EventHandler backPageHandler;
         private CanvasCad2D cc2d;
         public static KeypadTextBox[] registeredTextbox;
         public static bool readingFinished = false;
         public Thread encoderReader;
+        public Stack<object> pagesStack;
 
         public Page_Settings(CanvasCad2D cc2d)
         {
             InitializeComponent();
+            pagesStack = new Stack<object>();
             this.cc2d = cc2d;
             load();
         }
@@ -444,6 +448,13 @@ namespace Cad2D.Pages
                 label_YEncoder.Content = $"{value + 3} < ";
             else
                 label_YEncoder.Content = "مقدار وارد شده نامعتبر است";
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            Page_Hsc ps = new Page_Hsc();
+            pagesStack.Push(((TransitioningContentControl)Parent).Content);
+            ((TransitioningContentControl)Parent).Content = ps;
         }
     }
 }
