@@ -27,6 +27,7 @@ namespace Cad2D
     public partial class MainWindow : MetroWindow
     {
         public static MainWindow _window;
+        private CanvasCad2D cc2d;
         public MainWindow()
         {
             InitializeComponent();
@@ -38,7 +39,7 @@ namespace Cad2D
             }
             else
             {
-                CanvasCad2D cc2d = new CanvasCad2D();
+                cc2d = new CanvasCad2D();
                 contentControl.Content = cc2d;
             }
             /*
@@ -71,10 +72,24 @@ namespace Cad2D
         }
         public async Task<MyProgressDialog> showProgress()
         {
-           MyProgressDialog m =  new MyProgressDialog();
-           await this.ShowChildWindowAsync(m);
-           return m;
+            MyProgressDialog m = new MyProgressDialog();
+            await this.ShowChildWindowAsync(m);
+            return m;
         }
+        public async Task<MyStartDirectionDialog> showDirections()
+        {
+            MyStartDirectionDialog m = new MyStartDirectionDialog();
+            m.ClosingFinished += MOnClosed;
+            await this.ShowChildWindowAsync(m);
+            return m;
+        }
+
+        private void MOnClosed(object sender, EventArgs eventArgs)
+        {
+            MyStartDirectionDialog m = (MyStartDirectionDialog) sender;
+            cc2d.setDirection(m.direction);
+        }
+
         public void showAdminPasswordReq()
         {
             this.ShowChildWindowAsync(new MyPasswordDialog());

@@ -274,5 +274,17 @@ namespace Cad2D.Properties {
                 this["EdgeMax"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int DiskDiameter {
+            get {
+                return ((int)(this["DiskDiameter"]));
+            }
+            set {
+                this["DiskDiameter"] = value;
+            }
+        }
     }
 }

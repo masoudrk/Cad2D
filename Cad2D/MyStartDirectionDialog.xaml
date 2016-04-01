@@ -1,0 +1,61 @@
+﻿<simpleChildWindow:ChildWindow x:Class="Cad2D.MyStartDirectionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    mc:Ignorable="d"
+    d:DesignWidth="640"
+    d:DesignHeight="530"
+    BorderBrush="{DynamicResource AccentColorBrush}"
+    BorderThickness="0"
+    ShowCloseButton="True">
+    <!-- simpleChildWindow:ChildWindow ShowTitleBar="False" -->
+    <Grid Margin="10,0,2,0">
+        <Label Margin="1,0,-7,149" FlowDirection="RightToLeft" Content="لطفا جهت و موقعیت شروع عملیات را انتخاب کنید :" FontSize="18" VerticalContentAlignment="Center" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="1" Grid.RowSpan="2"/>
+        <Button x:Name="button_Cancle" Content="انصراف" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" Foreground="{DynamicResource MainColor}" FontWeight="Normal"  RenderTransformOrigin="0.433,-2.806" Grid.Row="3" Click="button_Cancle_Click" Margin="10,43"/>
+        <Button x:Name="button_Dir_1_2" Grid.Row="1" Grid.Column="0" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_1_2_Click" Margin="0,1,0,148" Grid.RowSpan="2">
+            <Image Source="Resources/1-2.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_1_4" Grid.Row="1" Grid.Column="1" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_1_4_Click" Margin="0,1,0,148" Grid.RowSpan="2">
+            <Image Source="Resources/1-4.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_2_1" Grid.Row="1" Grid.Column="2" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_2_1_Click" Margin="0,1,0,148" Grid.RowSpan="2">
+            <Image Source="Resources/2-1.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_2_3" Grid.Row="1" Grid.Column="3" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_2_3_Click" Margin="0,1,-6,148" Grid.RowSpan="2">
+            <Image Source="Resources/2-3.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_3_2" Grid.Row="2" Grid.Column="0" Style="{DynamicResource MetroCircleButtonStyle}" Margin="0,2,0,0" Click="button_Dir_3_2_Click">
+            <Image Source="Resources/3-2.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_3_4" Grid.Row="2" Grid.Column="1" Style="{DynamicResource MetroCircleButtonStyle}" Margin="0,2,0,0" Click="button_Dir_3_4_Click">
+            <Image Source="Resources/3-4.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_4_1" Grid.Row="2" Grid.Column="2" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_4_1_Click" Margin="0,2,0,0">
+            <Image Source="Resources/4-1.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Dir_4_3" Grid.Row="2" Grid.Column="3" Click="button_Dir_4_3_Click"
+    Style="{DynamicResource MetroCircleButtonStyle}" Margin="0,2,-6,0">
+            <Image Source="Resources/4-3.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Button x:Name="button_Edges" Grid.Row="3" Grid.Column="3" 
+    Style="{DynamicResource MetroCircleButtonStyle}" Margin="10,5,-7,3" Click="button_Edges_Click">
+            <Image Source="Resources/Edges.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="25" />
+        </Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+    </Grid>
+</simpleChildWindow:ChildWindow>

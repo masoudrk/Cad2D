@@ -56,6 +56,8 @@ public class PrimarySettings
     public int BridgeOptionMem { set; get; }
     public int XEncoderMem { set; get; }
     public int YEncoderMem { set; get; }
+    public int DiskDiameter { set; get; }
+
 }
 
 public static class Extentions
@@ -136,7 +138,8 @@ public static class Extentions
                 EdgeHorizontalSliceMin = ds.EdgeMin,
                 EdgeHorizontalSliceMax = ds.EdgeMax,
                 EdgeVerticalSliceMax = ds.EdgeMax,
-                EdgeVerticalSliceMin = ds.EdgeMin
+                EdgeVerticalSliceMin = ds.EdgeMin,
+                DiskDiameter = ds.DiskDiameter
             };
             return s;
         }

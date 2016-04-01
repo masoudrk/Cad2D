@@ -19,6 +19,7 @@ using Brushes = System.Windows.Media.Brushes;
 using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Cad2D
 {
@@ -509,187 +510,202 @@ namespace Cad2D
         private void Ls_connection_OnWritedSuccessfully(object sender, EventArgs e)
         {
             writingPacketInfo p = (writingPacketInfo)sender;
-            //////////////////encoder /////////////////////
-            if (plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket.order == p.order)
+            try
             {
-                plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket = null;
-                if (pageSettingObject != null)
-                    pageSettingObject.OnGUIActions(()=> pageSettingObject.sendingDivXValueToPlc());
-                return;
-            }
-
-            if (plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket = null;
-                if (pageSettingObject != null)
-                    pageSettingObject.OnGUIActions(() => pageSettingObject.sendingDivYValueToPlc());
-                return;
-            }
-            if (plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket = null;
-                return;
-            }
-            if (plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket = null;
-                return;
-            }
-            ///////////////clamp options writed//////////////////
-            if (plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket != null && plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket = null;
-                return;
-            }
-            if (plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket = null;
-                return;
-            }
-            if (plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket = null;
-                return;
-            }
-            if (plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket = null;
-                return;
-            }
-            if (plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket.order == p.order)
-            {
-                plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket = null;
-                return;
-            }
-            ///////////////bridge options writed//////////////////
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue = null;
-                return;
-            }
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay = null;
-                return;
-            }
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue = null;
-                return;
-            }
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay = null;
-                return;
-            }
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue = null;
-                return;
-            }
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay = null;
-                return;
-            }
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue = null;
-                return;
-            }
-
-            if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay.order == p.order)
-            {
-                plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay = null;
-                return;
-            }
-
-
-            if (shutDownPacketId != null && shutDownPacketId.order == p.order)
-            {
-                shutDownPacketId = null;
-                shoutDownThePanelPC(4);
-                return;
-            }
-            if (positionxPacketInfo != null && positionxPacketInfo.order == p.order)
-            {
-                is_inSendingx = false;
-                return;
-            }
-            if (positionyPacketInfo != null && positionyPacketInfo.order == p.order)
-            {
-                is_inSendingy = false;
-                return;
-            }
-
-            foreach (writingPacketInfo packet in writingPackets)
-            {
-                if (p.order == packet.order)
+                ///////////// 
+                if (directionTypePacket.writingPacket != null && directionTypePacket.writingPacket.order == p.order)
                 {
-                    writingPackets.Remove(packet);
-                    if (stoneScanPacketCounter < stoneScanPacketCount)
+                    directionTypePacket.writingPacket = null;
+                    if(sendingInFirstTime)
+                        _sendDataToPlc();
+                    return;
+                }
+                //////////////////encoder /////////////////////
+                if (plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket = null;
+                    if (pageSettingObject != null)
+                        pageSettingObject.OnGUIActions(() => pageSettingObject.sendingDivXValueToPlc());
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket = null;
+                    if (pageSettingObject != null)
+                        pageSettingObject.OnGUIActions(() => pageSettingObject.sendingDivYValueToPlc());
+                    return;
+                }
+                if (plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket = null;
+                    return;
+                }
+                ///////////////clamp options writed//////////////////
+                if (plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket != null && plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket = null;
+                    return;
+                }
+                ///////////////bridge options writed//////////////////
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue = null;
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay = null;
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue = null;
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue = null;
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay = null;
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue = null;
+                    return;
+                }
+
+                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay.order == p.order)
+                {
+                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay = null;
+                    return;
+                }
+
+
+                if (shutDownPacketId != null && shutDownPacketId.order == p.order)
+                {
+                    shutDownPacketId = null;
+                    shoutDownThePanelPC(4);
+                    return;
+                }
+                if (positionxPacketInfo != null && positionxPacketInfo.order == p.order)
+                {
+                    is_inSendingx = false;
+                    return;
+                }
+                if (positionyPacketInfo != null && positionyPacketInfo.order == p.order)
+                {
+                    is_inSendingy = false;
+                    return;
+                }
+
+                foreach (writingPacketInfo packet in writingPackets)
+                {
+                    if (p.order == packet.order)
                     {
-                        stoneScanPacketCounter++;
-                        break;
-                    }
-                    else
-                    {
-                        if (horizonalBoundryCounter < horizonalBoundryCount)
+                        writingPackets.Remove(packet);
+                        if (stoneScanPacketCounter < stoneScanPacketCount)
                         {
-                            horizonalBoundryCounter++;
+                            stoneScanPacketCounter++;
                             break;
                         }
                         else
                         {
-                            if (verticalBoundryCounter < verticalBoundryCount)
+                            if (horizonalBoundryCounter < horizonalBoundryCount)
                             {
-                                verticalBoundryCounter++;
+                                horizonalBoundryCounter++;
                                 break;
+                            }
+                            else
+                            {
+                                if (verticalBoundryCounter < verticalBoundryCount)
+                                {
+                                    verticalBoundryCounter++;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            if (stoneScanPacketCounter < stoneScanPacketCount)
-            {
-                sendPacketMutex.WaitOne();
-                if (lsConnection.Connected)
-                    lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
-                sendPacketMutex.ReleaseMutex();
-            }
-            else
-            {
-                if(horizonalBoundryCounter < horizonalBoundryCount)
+                if (stoneScanPacketCounter < stoneScanPacketCount)
                 {
                     sendPacketMutex.WaitOne();
-                    lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
+                    if (lsConnection.Connected)
+                        lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                     sendPacketMutex.ReleaseMutex();
                 }
                 else
                 {
-                    if(verticalBoundryCounter < verticalBoundryCount)
+                    if (horizonalBoundryCounter < horizonalBoundryCount)
                     {
                         sendPacketMutex.WaitOne();
-                        if (lsConnection.Connected)
-                            lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
+                        lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
                         sendPacketMutex.ReleaseMutex();
                     }
                     else
                     {
-                        if (pagesStack.Count == 0)
+                        if (verticalBoundryCounter < verticalBoundryCount)
                         {
-                            OnGUIActions(() => writeToPlcFinished());
+                            sendPacketMutex.WaitOne();
+                            if (lsConnection.Connected)
+                                lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
+                            sendPacketMutex.ReleaseMutex();
                         }
-                            
+                        else
+                        {
+                            if (pagesStack.Count == 0)
+                            {
+                                OnGUIActions(() => writeToPlcFinished());
+                            }
+
+                        }
                     }
                 }
+            }
+            catch (Exception exc)
+            {
+                Console.Write(exc);
             }
         }
 
@@ -697,7 +713,6 @@ namespace Cad2D
         {
             setEnable(btn_sendToPlc_back, true);
             progressDialog.Result.Close();
-            //MainWindow._window.showMsg("پیام", "اطلاعات ارسال شد .");
         }
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
@@ -970,6 +985,7 @@ namespace Cad2D
                         UriKind.Absolute));
                 btn_sendToPlc_back.Visibility = Visibility.Visible;
                 border_tools2.Visibility = Visibility.Hidden;
+                border_Directions.Visibility = Visibility.Hidden;
             }
             else
             {
@@ -1224,6 +1240,7 @@ namespace Cad2D
             if (contentControl.Content.GetType() == typeof(Page_Settings))
             {
                 border_tools2.Visibility = Visibility.Collapsed;
+                border_Directions.Visibility = Visibility.Collapsed;
             }
 
             if (pagesStack.Count == 0)
@@ -1266,7 +1283,7 @@ namespace Cad2D
 
         public void setupMainPanels(bool en)
         {
-            border_tools1.Visibility = border_tools2.Visibility =
+            border_Directions.Visibility = border_tools1.Visibility = border_tools2.Visibility =
                 (en) ? Visibility.Visible : Visibility.Collapsed;
 
             button_back_from_down.Visibility = (!en) ? Visibility.Visible : Visibility.Collapsed;
@@ -1407,7 +1424,12 @@ namespace Cad2D
 
         private void sendDataToPlc()
         {
-            if(!lsConnection.Connected)
+            directionDialog = MainWindow._window.showDirections();
+        }
+
+        private void _sendDataToPlc()
+        {
+            if (!lsConnection.Connected)
             {
                 ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
                 return;
@@ -1417,13 +1439,13 @@ namespace Cad2D
             Thread t = new Thread(sendingStoneScanToPLC);
             t.Start();
         }
-
         public double setPericision(double v)
         {
             return Math.Truncate(v * 1000f) / 1000f;
         }
 
         private Task<MyProgressDialog> progressDialog;
+        private Task<MyStartDirectionDialog> directionDialog;
 
         private void sendingStoneScanToPLC()
         {
@@ -1802,5 +1824,143 @@ namespace Cad2D
 
         #endregion
 
+        public void setDirection(int dir)
+        {
+            sendingInFirstTime = true;
+            switch (dir)
+            {
+                case 0:
+                    btn_sendToPlc_back.IsEnabled = true;
+                    break;
+                case 1:
+                    setDirectionButtons(button_Dir_1_2);
+                    sendDirectionTypeToPlc(1);
+                    break;
+                case 2:
+                    setDirectionButtons(button_Dir_1_4);
+                    sendDirectionTypeToPlc(2);
+                    break;
+                case 3:
+                    setDirectionButtons(button_Dir_2_1);
+                    sendDirectionTypeToPlc(4);
+                    break;
+                case 4:
+                    setDirectionButtons(button_Dir_2_3);
+                    sendDirectionTypeToPlc(8);
+                    break;
+                case 5:
+                    setDirectionButtons(button_Dir_3_2);
+                    sendDirectionTypeToPlc(16);
+                    break;
+                case 6:
+                    setDirectionButtons(button_Dir_3_4);
+                    sendDirectionTypeToPlc(32);
+                    break;
+                case 7:
+                    setDirectionButtons(button_Dir_4_1);
+                    sendDirectionTypeToPlc(64);
+                    break;
+                case 8:
+                    setDirectionButtons(button_Dir_4_3);
+                    sendDirectionTypeToPlc(128);
+                    break;
+                case 9:
+                    setDirectionButtons(button_Edges);
+                    sendDirectionTypeToPlc(256);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private bool sendingInFirstTime = true;
+        private LS_Connection.Packet<ushort> directionTypePacket;
+
+        private void button_Dir_1_2_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_1_2);
+            sendDirectionTypeToPlc(1);
+        }
+
+        private void button_Dir_1_4_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_1_4);
+            sendDirectionTypeToPlc(2);
+        }
+
+        private void button_Dir_2_1_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_2_1);
+            sendDirectionTypeToPlc(4);
+        }
+
+        private void button_Dir_2_3_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_2_3);
+            sendDirectionTypeToPlc(8);
+        }
+
+        private void button_Dir_3_2_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_3_2);
+            sendDirectionTypeToPlc(16);
+        }
+
+        private void button_Dir_3_4_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+
+        }
+
+        private void button_Dir_4_1_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_4_1);
+            sendDirectionTypeToPlc(64);
+        }
+
+        private void button_Dir_4_3_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_4_3);
+            sendDirectionTypeToPlc(128);
+        }
+
+        private void button_Edges_Click(object sender, RoutedEventArgs e)
+        {
+            sendingInFirstTime = false;
+            setDirectionButtons(button_Edges);
+            sendDirectionTypeToPlc(256);
+        }
+
+        public void sendDirectionTypeToPlc(ushort dir)
+        {
+            
+            directionTypePacket = new LS_Connection.Packet<ushort>(201 , dir);
+
+            sendPacketMutex.WaitOne();
+            if (lsConnection.Connected)
+                lsConnection.writeToPlc(directionTypePacket.dataType, directionTypePacket.value, directionTypePacket.valueAddress, ref directionTypePacket.writingPacket);
+            sendPacketMutex.ReleaseMutex();
+        }
+
+        private void setDirectionButtons(Button buttonDir12)
+        {
+            button_Edges.Background = null;
+            button_Dir_4_3.Background = null;
+            button_Dir_4_1.Background = null;
+            button_Dir_3_4.Background = null;
+            button_Dir_3_2.Background = null;
+            button_Dir_2_3.Background = null;
+            button_Dir_2_1.Background = null;
+            button_Dir_1_2.Background = null;
+            button_Dir_1_4.Background = null;
+            buttonDir12.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0xff, 0x41, 0x57, 0x85));
+        }
     }
 }

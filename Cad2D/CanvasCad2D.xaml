@@ -32,7 +32,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="258"/>
+                <RowDefinition Height="65"/>
             </Grid.RowDefinitions>
 
             <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="2" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
@@ -47,7 +48,7 @@
             </Border>
 
 
-            <Border Name="border_tools2" Margin="0 8 0 0" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Column="2" Grid.Row="3" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top">
+            <Border Name="border_tools2" Margin="0 8 0 0" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Column="2" Grid.Row="3" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Height="150">
                 <StackPanel Orientation="Vertical">
                     <Button x:Name="button_switchToCamera" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_switchToCamera_Click" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" >
                         <Image Source="Resources/camera.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
@@ -81,7 +82,38 @@
                     <!--</ScrollViewer>-->
                 </Controls:TransitioningContentControl>
             </Border>
-            <Border Name="border_setting" Width="{StaticResource SmallIconSize}" HorizontalAlignment="Left" CornerRadius="0 6 6 0" Margin="0,0,0,16" Grid.Row="5" Grid.Column="2" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" >
+            <Border x:Name="border_Directions" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="1" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="10,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="button_Dir_1_2" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_1_2_Click"   >
+                        <Image Source="Resources/1-2.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Dir_1_4" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_1_4_Click"   >
+                        <Image Source="Resources/1-4.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Dir_2_1" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_2_1_Click"   >
+                        <Image Source="Resources/2-1.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Dir_2_3" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_2_3_Click"   >
+                        <Image Source="Resources/2-3.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Dir_3_2" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_3_2_Click"   >
+                        <Image Source="Resources/3-2.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Dir_3_4" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_3_4_Click"   >
+                        <Image Source="Resources/3-4.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Dir_4_1" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_4_1_Click"   >
+                        <Image Source="Resources/4-1.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button  x:Name="button_Dir_4_3" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_4_3_Click"  >
+                        <Image Source="Resources/4-3.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Edges" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Edges_Click" >
+                        <Image Source="Resources/Edges.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                </StackPanel>
+            </Border>
+            <Border Name="border_setting" Width="{StaticResource SmallIconSize}" HorizontalAlignment="Left" CornerRadius="0 6 6 6" Margin="0,0,0,16" Grid.Row="5" Grid.Column="2" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Grid.RowSpan="2" >
                 <StackPanel Orientation="Vertical">
                     <Image Name="image_alarm" Source="Resources/alarm_off.png" RenderOptions.BitmapScalingMode="HighQuality" MouseDown="button_alarm_click" Margin="7,5,8,0" />
 
@@ -104,7 +136,7 @@
             </Border>
             <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="26" Margin="564,32,0,0" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
             <TextBox x:Name="textBox_Copy" HorizontalAlignment="Left" Height="26" Margin="564,63,0,0" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
-            <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" Height="26" Margin="564,100,0,0" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
+            <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" Height="26" Margin="564,6,0,0" Grid.Row="5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
         </Grid>
         <StackPanel HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="220" Margin="0 20 0 0">
 
@@ -143,7 +175,7 @@
                     </StackPanel>
                 </StackPanel>
             </Border>
-            <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0"  Height="258" Padding="5" >
+            <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 6 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0"  Height="258" Padding="5" >
                 <Grid Margin="0,0,0,30">
 
                     <DataGrid x:Name="dataGrid" Background="Transparent" ColumnWidth="*" HorizontalAlignment="Stretch" 
