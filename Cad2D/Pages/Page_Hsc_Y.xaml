@@ -1,0 +1,230 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:SiriusMicrotech="clr-namespace:SiriusMicrotech.core.UI"
+             xmlns:local="clr-namespace:Cad2D"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Cad2D.Pages.Page_Hsc_Y"
+             mc:Ignorable="d" 
+             Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <System:Double x:Key="textBoxWidth">200</System:Double>
+            <System:Double x:Key="labelWidth">160</System:Double>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer FlowDirection="RightToLeft" Background="White">
+            <Grid FlowDirection="LeftToRight" Background="White" Height="1263" Width="815" >
+
+                <Label Content="test mode AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,6,0,0"/>
+                <CheckBox x:Name="checkBox" Content="" HorizontalAlignment="Left" Margin="254,10,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
+                <Label Content="jog calc auto AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,438,0,0"/>
+                <CheckBox x:Name="checkBox_Copy" Content="" HorizontalAlignment="Left" Margin="254,442,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
+                <Label Content="MAN min tar pos AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="427,182,0,0"/>
+                <TextBox x:Name="textBoxManMin"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="703,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" KeyDown="textBoxManMin_KeyDown"/>
+                <Label Content="Cur pos mm AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="356,6,0,0"/>
+                <TextBox x:Name="textBoxCurPosmm" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="569,16,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="127"/>
+                <Label Content="spd req AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="101,68,0,0"/>
+                <Label Content="ACC AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="140,139,0,0"/>
+                <TextBox x:Name="textBoxAcc" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="95" KeyDown="textBoxAcc_KeyDown"/>
+                <Label Content="DEC AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="578,123,0,0"/>
+                <TextBox x:Name="textBoxDec"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="703,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="102" KeyDown="textBoxDec_KeyDown"/>
+                <Label Content="MAN max tar pos AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,182,0,0"/>
+                <TextBox x:Name="textBoxManMax"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="95" KeyDown="textBoxManMax_KeyDown"/>
+                <Label Content="jog Array AXY :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,499,0,0"/>
+                <Label Content="dec Auto AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="3,826,0,0"/>
+                <CheckBox x:Name="checkBox_Copy1" Content="" HorizontalAlignment="Left" Margin="237,830,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
+                <Label Content="dec stop AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="395,821,0,0"/>
+                <TextBox x:Name="textBoxDecStop" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="592,826,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="61" KeyDown="textBoxDecStop_KeyDown"/>
+                <Label Content="Dec Array AXY :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="1,892,0,0"/>
+                <TextBox x:Name="textBoxDecArray_1"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_1_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_2"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxDecArray_2_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_3"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_3_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_4"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_4_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_5"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_5_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_6"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_6_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_7"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxDecArray_7_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_8"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_8_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_9"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_9_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_10"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxDecArray_10_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_11"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_11_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_12"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_12_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_13"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_13_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_14"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_14_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_15"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxDecArray_15_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_16"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,982,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_16_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_17"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_17_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_18"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxDecArray_18_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_19"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_19_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_20"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_20_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_21"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_21_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_22"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_22_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_23"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxDecArray_23_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_24"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,1019,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_24_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_25"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_25_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_26"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxDecArray_26_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_27"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_27_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_28"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_28_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_29"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_29_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_30"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_30_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_31"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxDecArray_31_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_32"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,1056,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_32_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_33"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_33_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_34"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxDecArray_34_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_35"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_35_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_36"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_36_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_37"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_37_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_38"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_38_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_39"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxDecArray_39_KeyDown"/>
+                <TextBox x:Name="textBoxDecArray_40"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,1093,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_40_KeyDown"/>
+                <Label x:Name="label_Copy39" Content="2" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="131,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy40" Content="10" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="121,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy41" Content="18" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="120,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy42" Content="26" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="120,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy43" Content="34" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="120,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy44" Content="3" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="232,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy45" Content="11" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="223,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy46" Content="19" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="221,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy47" Content="27" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="221,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy48" Content="35" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="221,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy49" Content="4" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="335,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy50" Content="12" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="323,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy51" Content="20" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="324,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy52" Content="28" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="324,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy53" Content="36" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="324,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy54" Content="5" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="429,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy55" Content="13" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="419,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy56" Content="21" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="418,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy57" Content="29" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="418,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy58" Content="37" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="418,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy59" Content="6" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="528,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy60" Content="14" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="515,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy61" Content="22" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="517,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy62" Content="30" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="517,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy63" Content="38" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="517,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy64" Content="7" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="624,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy65" Content="15" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="614,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy66" Content="23" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="613,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy67" Content="31" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="613,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy68" Content="39" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="613,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy69" Content="8" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="720,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy70" Content="16" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="710,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy71" Content="24" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="709,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy72" Content="32" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="709,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy73" Content="40" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="709,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy74" Content="1" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="19,945,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy75" Content="9" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="19,982,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy76" Content="17" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,1019,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy77" Content="25" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,1056,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy78" Content="33" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,1093,0,0" VerticalAlignment="Top" Height="34"/>
+                <TextBox x:Name="textBoxjogArray_1"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_1_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_2"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxjogArray_2_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_3"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_3_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_4"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_4_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_5"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_5_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_6"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_6_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_7"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxjogArray_7_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_8"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,555,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_8_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_9"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_9_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_10"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxjogArray_10_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_11"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_11_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_12"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_12_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_13"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_13_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_14"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_14_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_15"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxjogArray_15_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_16"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_16_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_17"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_17_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_18"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxjogArray_18_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_19"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_19_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_20"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_20_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_21"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_21_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_22"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_22_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_23"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxjogArray_23_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_24"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_24_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_25"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_25_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_26"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxjogArray_26_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_27"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_27_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_28"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_28_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_29"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_29_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_30"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_30_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_31"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxjogArray_31_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_32"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,666,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_32_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_33"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_33_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_34"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxjogArray_34_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_35"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_35_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_36"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="356,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_36_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_37"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="450,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_37_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_38"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="546,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_38_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_39"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="645,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="66" KeyDown="textBoxjogArray_39_KeyDown"/>
+                <TextBox x:Name="textBoxjogArray_40"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="741,703,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxjogArray_40_KeyDown"/>
+                <Label x:Name="label_Copy" Content="2" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="131,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy1" Content="10" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="121,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy2" Content="18" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="120,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy3" Content="26" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="120,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy4" Content="34" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="120,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy5" Content="3" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="232,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy6" Content="11" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="223,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy7" Content="19" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="221,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy8" Content="27" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="221,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy9" Content="35" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="221,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy10" Content="4" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="335,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy11" Content="12" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="323,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy12" Content="20" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="324,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy13" Content="28" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="324,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy14" Content="36" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="324,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy15" Content="5" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="429,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy16" Content="13" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="419,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy17" Content="21" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="418,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy18" Content="29" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="418,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy19" Content="37" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="418,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy20" Content="6" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="528,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy21" Content="14" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="515,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy22" Content="22" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="517,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy23" Content="30" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="517,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy24" Content="38" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="517,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy25" Content="7" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="624,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy26" Content="15" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="614,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy27" Content="23" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="613,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy28" Content="31" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="613,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy29" Content="39" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="613,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy30" Content="8" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="720,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy31" Content="16" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="710,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy32" Content="24" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="709,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy33" Content="32" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="709,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy34" Content="40" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="709,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label x:Name="label_Copy35" Content="1" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="19,555,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy36" Content="9" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="19,592,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy37" Content="17" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,629,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy38" Content="25" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,666,0,0" VerticalAlignment="Top" Height="37"/>
+                <Label x:Name="label_Copy79" Content="33" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,703,0,0" VerticalAlignment="Top" Height="34"/>
+                <TextBox x:Name="textBoxSpdReq"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="101" KeyDown="textBoxSpdReq_KeyDown"/>
+                <Label Content="Bwd kesh AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="62,250,0,0"/>
+                <TextBox x:Name="textBox_Copy86" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="276,260,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="95"/>
+                <Label Content="MAX bwd disp AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="48,316,0,0"/>
+                <TextBox x:Name="textBox_Copy87" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="276,326,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="95"/>
+                <Label Content="Fwd kesh AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="517,250,0,0"/>
+                <TextBox x:Name="textBoxFwdKesh" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="703,260,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="102"/>
+                <Label Content="MAX fwd disp AXY" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="464,316,0,0"/>
+                <TextBox x:Name="textBoxMaxFwd" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="703,326,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="102"/>
+
+                <!--<Border Height="1" Margin="5">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                        <GradientStop Offset="0.0" Color="Transparent"/>
+                        <GradientStop Offset="0.5" Color="Gray"/>
+                        <GradientStop Offset="1.0" Color="Transparent"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>-->
+
+
+
+
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
