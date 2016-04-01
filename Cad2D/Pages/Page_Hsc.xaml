@@ -24,23 +24,23 @@
                 <Label Content="jog calc auto AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,63,0,0"/>
                 <CheckBox x:Name="checkBox_Copy" Content="" HorizontalAlignment="Left" Margin="254,67,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
                 <Label Content="MAN min tar pos AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,125,0,0"/>
-                <TextBox x:Name="textBox"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="61"/>
-                <Label Content="Cur pos mm AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="396,10,0,0"/>
-                <TextBox x:Name="textBox_Copy" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="624,16,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="61"/>
-                <Label Content="Cur pos mm AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="396,67,0,0"/>
-                <Slider Margin="623,85,32,774" Style="{DynamicResource FlatSlider}" Value="2000" Width="160" x:Name="slider_x" FlowDirection="LeftToRight"  Height="20" Minimum="0" Maximum="4000"  />
+                <TextBox x:Name="textBox"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80"/>
+                <Label Content="Cur pos mm AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="356,6,0,0"/>
+                <TextBox x:Name="textBox_Copy" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="569,16,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="127"/>
+                <Label Content="spd req AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="356,62,0,0"/>
+                <Slider Margin="517,75,119,784" Style="{DynamicResource FlatSlider}" Value="2000" Width="Auto" x:Name="slider_x" FlowDirection="LeftToRight"  Height="20" Minimum="0" Maximum="4000"  />
                 <Label Content="ACC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="361,125,0,0"/>
-                <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="482,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="61"/>
-                <Label Content="ACC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="582,120,0,0"/>
-                <TextBox x:Name="textBox_Copy2"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="703,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="61"/>
+                <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="482,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="95"/>
+                <Label Content="DEC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="582,125,0,0"/>
+                <TextBox x:Name="textBox_Copy2"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="703,130,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="102"/>
                 <Label Content="MAN max tar pos AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,182,0,0"/>
-                <TextBox x:Name="textBox_Copy3"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="61"/>
+                <TextBox x:Name="textBox_Copy3"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80"/>
                 <Label Content="jog Array AXX :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,230,0,0"/>
-                <Label Content="dec mode AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="3,530,0,0"/>
+                <Label Content="dec Auto AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="3,530,0,0"/>
                 <CheckBox x:Name="checkBox_Copy1" Content="" HorizontalAlignment="Left" Margin="237,534,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
-                <Label Content="decstop AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="395,525,0,0"/>
+                <Label Content="dec stop AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="395,525,0,0"/>
                 <TextBox x:Name="textBox_Copy44" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="592,530,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="61"/>
-                <Label Content="jog Array AXX :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="1,596,0,0"/>
+                <Label Content="Dec Array AXX :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="1,596,0,0"/>
                 <TextBox x:Name="textBox_Copy45"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,649,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67"/>
                 <TextBox x:Name="textBox_Copy46"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,649,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68"/>
                 <TextBox x:Name="textBox_Copy47"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="254,649,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67"/>
@@ -201,6 +201,7 @@
                 <Label x:Name="label_Copy37" Content="17" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,360,0,0" VerticalAlignment="Top" Height="37"/>
                 <Label x:Name="label_Copy38" Content="25" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,397,0,0" VerticalAlignment="Top" Height="37"/>
                 <Label x:Name="label_Copy79" Content="33" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,434,0,0" VerticalAlignment="Top" Height="34"/>
+                <Label VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="720,63,0,0" Width="44" Height="42"/>
 
                 <!--<Border Height="1" Margin="5">
                 <Border.Background>
