@@ -87,7 +87,7 @@ namespace Cad2D
         Circle head = cloneCircle();
         ////////////////
         //lsconnection
-        public static Mutex sendPacketMutex = new Mutex();
+        
         public static LS_Connection lsConnection;
         int stoneScanPacketCounter = 0;
         int verticalBoundryCounter = 0;
@@ -125,6 +125,7 @@ namespace Cad2D
 
         private Window_DisplaySendData _windowDisplaySendData;
 
+        private LS_Connection.Packet<ushort> diskDiameter;
         public CanvasCad2D()
         {
             InitializeComponent();
@@ -187,23 +188,18 @@ namespace Cad2D
             stoneScanPacketCount = 0;
             verticalBoundryCount = 0;
             horizonalBoundryCount = 0;
+            diskDiameter = new LS_Connection.Packet<ushort>(232);
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
 
-            //Thread.Sleep(1000);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
             plcInfoReaderTimer.Start();
 
             if(ps.captureModeWhenStart)
                 CaptureMode();
-
+            
             initDataGrid(dataGrid);
-            /*
-            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
-            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
-            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
-            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });
-            dataGrid.Items.Add(new GridItem() { val1 = 1, val2 = 2, val3 = 3, val4 = 4, val5 = 5 });*/
+
         }
 
         public static void initDataGrid(DataGrid d)
@@ -253,11 +249,14 @@ namespace Cad2D
             }
             else
             {
-                bool ping = lsConnection.PingHost();
-                if (ping)
+                Thread.Sleep(2000);
+                if (!lsConnection.Connected)
                 {
-                    lsConnection.connect(ip, portNumber);
-                    Thread.Sleep(2000);
+                    bool ping = lsConnection.PingHost();
+                    if (ping)
+                    {
+                        lsConnection.connect(ip, portNumber);
+                    }
                 }
             }
             Thread.Sleep(1000);
@@ -453,10 +452,10 @@ namespace Cad2D
                     System.Diagnostics.Process.Start("shutdown.exe", "-r -t 0");
                     break;
                 case 3: // hibernate : set the 951 mw to 0 the go to case 4
-                    sendPacketMutex.WaitOne();
+                     
                     if(lsConnection.Connected)
                         lsConnection.writeToPlc(DataType.WORD, 0, 951, ref shutDownPacketId);
-                    sendPacketMutex.ReleaseMutex();
+                     
                     break;
                 case 4: // end hibernate
                     shutDownPacketId = null;
@@ -467,11 +466,78 @@ namespace Cad2D
             }
         }
 
+        private void setDiskDiameter(ushort diameter)
+        {
+            Circle c = (Circle)mainCanvas.Children[headPosition];
+            mainCanvas.Children.Remove(c);
+            c.radius = diameter;
+            mainCanvas.Children.Insert(headPosition , c);
+        }
         private void Ls_connection_OnReadedSuccessfully(object sender, EventArgs e)
         {
             readingPacketInfo p = (readingPacketInfo)sender;
             try
             {
+                if (plcUtilitisAndOptions.DiskDiameter.readingPacket != null && plcUtilitisAndOptions.DiskDiameter.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Disk_Diameter.Text = p.value.ToString());
+                    plcUtilitisAndOptions.DiskDiameter.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ParkPosAXX.readingPacket != null && plcUtilitisAndOptions.ParkPosAXX.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Park_Pos_AXX.Text = p.value.ToString());
+                    plcUtilitisAndOptions.ParkPosAXX.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ParkPosAXY.readingPacket != null && plcUtilitisAndOptions.ParkPosAXY.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Park_Pos_AXY.Text = p.value.ToString());
+                    plcUtilitisAndOptions.ParkPosAXY.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.MinDif.readingPacket != null && plcUtilitisAndOptions.MinDif.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Min_Dif.Text = p.value.ToString());
+                    plcUtilitisAndOptions.MinDif.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.AXXFeedDist.readingPacket != null && plcUtilitisAndOptions.AXXFeedDist.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_AXX_Feed_Dist.Text = p.value.ToString());
+                    plcUtilitisAndOptions.AXXFeedDist.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.AXYFeedDist.readingPacket != null && plcUtilitisAndOptions.AXYFeedDist.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_AXY_Feed_Dist.Text = p.value.ToString());
+                    plcUtilitisAndOptions.AXYFeedDist.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.Hashye.readingPacket != null && plcUtilitisAndOptions.Hashye.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Hashye.Text = p.value.ToString());
+                    plcUtilitisAndOptions.Hashye.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ManSpdAXX.readingPacket != null && plcUtilitisAndOptions.ManSpdAXX.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Man_Spd_AXX.Text = p.value.ToString());
+                    plcUtilitisAndOptions.ManSpdAXX.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ManSpdAXY.readingPacket != null && plcUtilitisAndOptions.ManSpdAXY.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageSettingObject.text_Man_Spd_AXY.Text = p.value.ToString());
+                    plcUtilitisAndOptions.ManSpdAXY.readingPacket = null;
+                    return;
+                }
+                if (diskDiameter.readingPacket != null && diskDiameter.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => setDiskDiameter((ushort)p.value));
+                    diskDiameter.readingPacket = null;
+                    return;
+                }
                 if (plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket.order == p.order)
                 {
                     plcUtilitisAndOptions.Encoder.EncoderXPals.value = (ushort)p.value;
@@ -513,7 +579,7 @@ namespace Cad2D
             try
             {
                 ///////////// 
-                if (directionTypePacket.writingPacket != null && directionTypePacket.writingPacket.order == p.order)
+                if (directionTypePacket != null && directionTypePacket.writingPacket != null && directionTypePacket.writingPacket.order == p.order)
                 {
                     directionTypePacket.writingPacket = null;
                     if(sendingInFirstTime)
@@ -670,27 +736,27 @@ namespace Cad2D
 
                 if (stoneScanPacketCounter < stoneScanPacketCount)
                 {
-                    sendPacketMutex.WaitOne();
+                     
                     if (lsConnection.Connected)
                         lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
-                    sendPacketMutex.ReleaseMutex();
+                     
                 }
                 else
                 {
                     if (horizonalBoundryCounter < horizonalBoundryCount)
                     {
-                        sendPacketMutex.WaitOne();
+                         
                         lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
-                        sendPacketMutex.ReleaseMutex();
+                         
                     }
                     else
                     {
                         if (verticalBoundryCounter < verticalBoundryCount)
                         {
-                            sendPacketMutex.WaitOne();
+                             
                             if (lsConnection.Connected)
                                 lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
-                            sendPacketMutex.ReleaseMutex();
+                             
                         }
                         else
                         {
@@ -717,9 +783,13 @@ namespace Cad2D
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
             alarm = alarm & 1048319;
-            sendPacketMutex.WaitOne();
+             
+            if (lsConnection.Connected)
+                lsConnection.readFromPlc(diskDiameter.dataType, diskDiameter.valueAddress, ref diskDiameter.readingPacket);
+             
+             
             lsConnection.readFromPlcContinoues(plcUtilitisAndOptions.Velocity.velocityXAddress * 2, plcUtilitisAndOptions.Velocity.velocityYAddress * 2 + 2, ref plcUtilitisAndOptions.Velocity.PackestId);
-            sendPacketMutex.ReleaseMutex();
+             
         }
         private void Ls_connection_OnDisconnceted(object sender, EventArgs e)
         {
@@ -1190,19 +1260,17 @@ namespace Cad2D
         void sendPositionxToPlc()
         {
 
-            sendPacketMutex.WaitOne();
+             
             if (lsConnection != null && lsConnection.Connected)
                 OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_x.Value, plcUtilitisAndOptions.Velocity.velocityXAddress, ref positionxPacketInfo));
-            sendPacketMutex.ReleaseMutex();
+             
         }
         void sendPositionYToPlc()
         {
-
-            sendPacketMutex.WaitOne();
+            
             if (lsConnection != null && lsConnection.Connected)
                 OnGUIActions(() => lsConnection.writeToPlc(DataType.WORD, (int)slider_y.Value, plcUtilitisAndOptions.Velocity.velocityYAddress, ref positionyPacketInfo));
-            sendPacketMutex.ReleaseMutex();
-            
+
         }
 
 
@@ -1434,8 +1502,8 @@ namespace Cad2D
                 ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
                 return;
             }
-
-            progressDialog = MainWindow._window.showProgress();
+            Dispatcher.Invoke(() => progressDialog = MainWindow._window.showProgress());
+            //progressDialog = MainWindow._window.showProgress();
             Thread t = new Thread(sendingStoneScanToPLC);
             t.Start();
         }
@@ -1457,10 +1525,10 @@ namespace Cad2D
                 stoneScanPacketCounter = 0;
                 horizonalBoundryCounter = 0;
                 verticalBoundryCounter = 0;
-                sendPacketMutex.WaitOne();
+                 
                 if (lsConnection.Connected)
                     lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
-                sendPacketMutex.ReleaseMutex();
+                 
             }
             else
             {
@@ -1943,10 +2011,10 @@ namespace Cad2D
             
             directionTypePacket = new LS_Connection.Packet<ushort>(201 , dir);
 
-            sendPacketMutex.WaitOne();
+             
             if (lsConnection.Connected)
                 lsConnection.writeToPlc(directionTypePacket.dataType, directionTypePacket.value, directionTypePacket.valueAddress, ref directionTypePacket.writingPacket);
-            sendPacketMutex.ReleaseMutex();
+             
         }
 
         private void setDirectionButtons(Button buttonDir12)

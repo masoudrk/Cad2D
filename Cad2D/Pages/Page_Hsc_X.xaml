@@ -28,8 +28,8 @@
                 <Label Content="Cur pos mm AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="356,6,0,0"/>
                 <TextBox x:Name="textBoxCurPosmm" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="569,16,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="127"/>
                 <Label Content="spd req AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="101,68,0,0"/>
-                <Label Content="ACC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="140,139,0,0"/>
-                <TextBox x:Name="textBoxAcc" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="95" KeyDown="textBoxAcc_KeyDown"/>
+                <Label Content="ACC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="153,123,0,0"/>
+                <TextBox x:Name="textBoxAcc" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="274,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="95" KeyDown="textBoxAcc_KeyDown"/>
                 <Label Content="DEC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="578,123,0,0"/>
                 <TextBox x:Name="textBoxDec"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="703,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="102" KeyDown="textBoxDec_KeyDown"/>
                 <Label Content="MAN max tar pos AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,182,0,0"/>
@@ -200,7 +200,7 @@
                 <Label x:Name="label_Copy37" Content="17" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,629,0,0" VerticalAlignment="Top" Height="37"/>
                 <Label x:Name="label_Copy38" Content="25" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,666,0,0" VerticalAlignment="Top" Height="37"/>
                 <Label x:Name="label_Copy79" Content="33" VerticalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="8,703,0,0" VerticalAlignment="Top" Height="34"/>
-                <TextBox x:Name="textBoxSpdReq"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="101" KeyDown="textBoxSpdReq_KeyDown"/>
+                <TextBox x:Name="textBoxSpdReq"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="276,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="93" KeyDown="textBoxSpdReq_KeyDown"/>
                 <Label Content="Bwd kesh AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="62,250,0,0"/>
                 <TextBox x:Name="textBox_Copy86" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="276,260,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="95"/>
                 <Label Content="MAX bwd disp AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="38,318,0,0"/>

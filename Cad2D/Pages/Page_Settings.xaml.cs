@@ -120,13 +120,58 @@ namespace Cad2D.Pages
 
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.sendPacketMutex.WaitOne();
+                 
                 CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdX);
-                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                 
             }
+            readFirstValues();
             encoderReader = new Thread(PlcInfoReaderTimer_Elapsed);
             encoderReader.Start();
         }
+
+        private void readFirstValues()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                //disk diameter
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.DiskDiameter.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.DiskDiameter.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.DiskDiameter.readingPacket);
+                //ParkPosAXX
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.ParkPosAXX.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.ParkPosAXX.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.ParkPosAXX.readingPacket);
+                //ParkPosAXY
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.ParkPosAXY.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.ParkPosAXY.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.ParkPosAXY.readingPacket);
+                //MinDif
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.MinDif.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.MinDif.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.MinDif.readingPacket);
+                //AXXFeedDist
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.AXXFeedDist.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.AXXFeedDist.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.AXXFeedDist.readingPacket);
+                //AXYFeedDist
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.AXYFeedDist.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.AXYFeedDist.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.AXYFeedDist.readingPacket);
+                //Hashye
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.Hashye.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.Hashye.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.Hashye.readingPacket);
+                //ManSpdAXX
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.ManSpdAXX.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.ManSpdAXX.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.ManSpdAXX.readingPacket);
+                //ManSpdAXY
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.plcUtilitisAndOptions.ManSpdAXY.dataType,
+                    CanvasCad2D.plcUtilitisAndOptions.ManSpdAXY.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.ManSpdAXY.readingPacket);
+            }
+        }
+
         /// <summary>
         /// ///////kar dare
         /// </summary>
@@ -134,9 +179,7 @@ namespace Cad2D.Pages
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.sendPacketMutex.WaitOne();
                 CanvasCad2D.lsConnection.readFromPlc(DataType.WORD ,CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress , ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket);
-                CanvasCad2D.sendPacketMutex.ReleaseMutex();
             }
             else
                 return;
@@ -150,27 +193,27 @@ namespace Cad2D.Pages
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.sendPacketMutex.WaitOne();
+                 
                 CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket);
-                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                 
             }
         }
         public void readPalsY()
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.sendPacketMutex.WaitOne();
+                 
                 CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket);
-                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                 
             }
         }
         public void readPosY()
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.sendPacketMutex.WaitOne();
+                 
                 CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket);
-                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                 
             }
         }
 
@@ -178,9 +221,9 @@ namespace Cad2D.Pages
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.sendPacketMutex.WaitOne();
+                 
                 CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdY);
-                CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                 
             }
         }
 
@@ -327,10 +370,10 @@ namespace Cad2D.Pages
                     int data;
                     if (!Int32.TryParse(textBox_MultY.Text, out data))
                         data = 0;
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
                         , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -344,10 +387,10 @@ namespace Cad2D.Pages
                     int data;
                     if (!Int32.TryParse(textBox_MultX.Text, out data))
                         data = 0;
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
                         , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXMult.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -361,10 +404,10 @@ namespace Cad2D.Pages
                     int data;
                     if (!Int32.TryParse(textBox_DivX.Text, out data))
                         data = 0;
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
                         , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXDiv.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -377,10 +420,10 @@ namespace Cad2D.Pages
                     int data;
                     if (!Int32.TryParse(textBox_DivY.Text, out data))
                         data = 0;
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
                         , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYDiv.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -462,6 +505,78 @@ namespace Cad2D.Pages
             Page_Hsc_Y ps = new Page_Hsc_Y();
             pagesStack.Push(((TransitioningContentControl)Parent).Content);
             ((TransitioningContentControl)Parent).Content = ps;
+        }
+
+        private void text_Man_Spd_AXY_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                
+            }
+        }
+
+        private void text_Man_Spd_AXX_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_Hashye_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_Feed_Dist_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_AXX_Feed_Dist_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_Min_Dif_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_Park_Pos_AXY_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_Park_Pos_AXX_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private void text_Disk_Diameter_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+            }
         }
     }
 }

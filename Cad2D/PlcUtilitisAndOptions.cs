@@ -8,6 +8,15 @@ namespace Cad2D
 {
     public class PlcUtilitisAndOptions
     {
+        public LS_Connection.Packet<ushort> DiskDiameter { set; get; }
+        public LS_Connection.Packet<ushort> ParkPosAXX { set; get; }
+        public LS_Connection.Packet<ushort> ParkPosAXY { set; get; }
+        public LS_Connection.Packet<ushort> MinDif { set; get; }
+        public LS_Connection.Packet<ushort> AXXFeedDist { set; get; }
+        public LS_Connection.Packet<ushort> AXYFeedDist { set; get; }
+        public LS_Connection.Packet<ushort> Hashye { set; get; }
+        public LS_Connection.Packet<ushort> ManSpdAXX { set; get; }
+        public LS_Connection.Packet<ushort> ManSpdAXY { set; get; }
         public _velocity Velocity { set; get; }
         public _BridgeOptions BridgeOptions { set; get; }
         public _ClampOptions ClampOptions { set; get; }
@@ -23,10 +32,20 @@ namespace Cad2D
             BridgeOptions = new _BridgeOptions((ushort)ps.BridgeOptionMem);//960
             Velocity = new _velocity((ushort)ps.Velocity);//955
             Encoder = new _Encoder((ushort)ps.XEncoderMem, (ushort)ps.YEncoderMem);//980,984
+
+            DiskDiameter = new LS_Connection.Packet<ushort>(232);
+            ParkPosAXX = new LS_Connection.Packet<ushort>(237);
+            ParkPosAXY = new LS_Connection.Packet<ushort>(238);
+            MinDif = new LS_Connection.Packet<ushort>(239);
+            AXXFeedDist = new LS_Connection.Packet<ushort>(240);
+            AXYFeedDist = new LS_Connection.Packet<ushort>(241);
+            Hashye = new LS_Connection.Packet<ushort>(242);
+            ManSpdAXX = new LS_Connection.Packet<ushort>(250);
+            ManSpdAXY = new LS_Connection.Packet<ushort>(256);
+
         }
         public class _Encoder
         {
-
             public _Encoder(ushort address1 , ushort address2)
             {//980 , 984
                 PackestIdX = new List<ushort>();

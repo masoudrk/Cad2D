@@ -86,10 +86,10 @@ namespace Cad2D.Pages
             textBox_ClampBottomLeft.Value = s.clampBottomLeft;
 
             //bridge
-            CanvasCad2D.sendPacketMutex.WaitOne();
+             
             if (CanvasCad2D.lsConnection.Connected)
                 CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.delayAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.PackestId);
-            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+             
 
             //clamp
 
@@ -233,11 +233,11 @@ namespace Cad2D.Pages
 
         public void getClampValues()
         {
-            CanvasCad2D.sendPacketMutex.WaitOne();
+             
             if (CanvasCad2D.lsConnection.Connected)
                 CanvasCad2D.lsConnection.readFromPlcContinoues
                 (CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.PackestId);
-            CanvasCad2D.sendPacketMutex.ReleaseMutex();
+             
         }
 
         public void OnGUIActions(Action action)
@@ -251,10 +251,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_TopValue
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -265,10 +265,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_TopDelay
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -279,10 +279,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_RightValue
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -293,10 +293,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_RightDelay
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -307,10 +307,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_BottomValue
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
 
@@ -322,10 +322,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_BottomDelay
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
 
@@ -337,10 +337,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_LeftValue
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
 
@@ -352,10 +352,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_LeftDelay
                         .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.delayAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
 
@@ -371,10 +371,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampAmount
                         .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
 
@@ -386,10 +386,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampTopRight
                         .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -400,10 +400,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampTopLeft
                         .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -414,10 +414,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampBottomRight
                         .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
@@ -428,10 +428,10 @@ namespace Cad2D.Pages
             {
                 if (CanvasCad2D.lsConnection.Connected)
                 {
-                    CanvasCad2D.sendPacketMutex.WaitOne();
+                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampBottomLeft
                         .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.frontClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket);
-                    CanvasCad2D.sendPacketMutex.ReleaseMutex();
+                     
                 }
             }
         }
