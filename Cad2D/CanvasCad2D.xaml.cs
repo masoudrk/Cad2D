@@ -468,9 +468,10 @@ namespace Cad2D
 
         private void setDiskDiameter(ushort diameter)
         {
+            diameter = (ushort)(((endPoint.X - startPoint.X)/3500)*diameter);
             Circle c = (Circle)mainCanvas.Children[headPosition];
             mainCanvas.Children.Remove(c);
-            c.radius = diameter;
+            c.radius = diameter / 2;
             mainCanvas.Children.Insert(headPosition , c);
         }
         private void Ls_connection_OnReadedSuccessfully(object sender, EventArgs e)
@@ -1497,11 +1498,6 @@ namespace Cad2D
 
         private void _sendDataToPlc()
         {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
             Dispatcher.Invoke(() => progressDialog = MainWindow._window.showProgress());
             //progressDialog = MainWindow._window.showProgress();
             Thread t = new Thread(sendingStoneScanToPLC);
@@ -1901,38 +1897,83 @@ namespace Cad2D
                     btn_sendToPlc_back.IsEnabled = true;
                     break;
                 case 1:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_1_2);
                     sendDirectionTypeToPlc(1);
                     break;
                 case 2:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_1_4);
                     sendDirectionTypeToPlc(2);
                     break;
                 case 3:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_2_1);
                     sendDirectionTypeToPlc(4);
                     break;
                 case 4:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_2_3);
                     sendDirectionTypeToPlc(8);
                     break;
                 case 5:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_3_2);
                     sendDirectionTypeToPlc(16);
                     break;
                 case 6:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_3_4);
                     sendDirectionTypeToPlc(32);
                     break;
                 case 7:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_4_1);
                     sendDirectionTypeToPlc(64);
                     break;
                 case 8:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Dir_4_3);
                     sendDirectionTypeToPlc(128);
                     break;
                 case 9:
+                    if (!lsConnection.Connected)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                        return;
+                    }
                     setDirectionButtons(button_Edges);
                     sendDirectionTypeToPlc(256);
                     break;
@@ -1946,6 +1987,11 @@ namespace Cad2D
 
         private void button_Dir_1_2_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_1_2);
             sendDirectionTypeToPlc(1);
@@ -1953,6 +1999,11 @@ namespace Cad2D
 
         private void button_Dir_1_4_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_1_4);
             sendDirectionTypeToPlc(2);
@@ -1960,6 +2011,11 @@ namespace Cad2D
 
         private void button_Dir_2_1_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_2_1);
             sendDirectionTypeToPlc(4);
@@ -1967,6 +2023,11 @@ namespace Cad2D
 
         private void button_Dir_2_3_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_2_3);
             sendDirectionTypeToPlc(8);
@@ -1974,6 +2035,11 @@ namespace Cad2D
 
         private void button_Dir_3_2_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_3_2);
             sendDirectionTypeToPlc(16);
@@ -1981,12 +2047,24 @@ namespace Cad2D
 
         private void button_Dir_3_4_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
+            setDirectionButtons(button_Dir_3_4);
+            sendDirectionTypeToPlc(32);
 
         }
 
         private void button_Dir_4_1_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_4_1);
             sendDirectionTypeToPlc(64);
@@ -1994,6 +2072,11 @@ namespace Cad2D
 
         private void button_Dir_4_3_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Dir_4_3);
             sendDirectionTypeToPlc(128);
@@ -2001,6 +2084,11 @@ namespace Cad2D
 
         private void button_Edges_Click(object sender, RoutedEventArgs e)
         {
+            if (!lsConnection.Connected)
+            {
+                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
+                return;
+            }
             sendingInFirstTime = false;
             setDirectionButtons(button_Edges);
             sendDirectionTypeToPlc(256);
@@ -2008,9 +2096,7 @@ namespace Cad2D
 
         public void sendDirectionTypeToPlc(ushort dir)
         {
-            
             directionTypePacket = new LS_Connection.Packet<ushort>(201 , dir);
-
              
             if (lsConnection.Connected)
                 lsConnection.writeToPlc(directionTypePacket.dataType, directionTypePacket.value, directionTypePacket.valueAddress, ref directionTypePacket.writingPacket);
