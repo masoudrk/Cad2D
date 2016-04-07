@@ -1485,9 +1485,9 @@ namespace Cad2D
             for (int i = 0; i < StoneEdgeVerticalSlice; i++)
             {
                 if (i < stoneEdgeHorizontalSlice)
-                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(array1[i * 2]), val3 = setPericision(array1[i * 2 + 1]), val4 = setPericision(array2[i * 2]), val5 = setPericision(array2[i * 2 + 1]) });
+                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(stoneVerticalEdge[i * 2]), val3 = setPericision(stoneVerticalEdge[i * 2 + 1]), val4 = setPericision(stoneHorizontalEdge[i * 2]), val5 = setPericision(stoneHorizontalEdge[i * 2 + 1]) });
                 else
-                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(array1[i * 2]), val3 = setPericision(array1[i * 2 + 1]), val4 = 0, val5 = 0 });
+                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(stoneVerticalEdge[i * 2]), val3 = setPericision(stoneVerticalEdge[i * 2 + 1]), val4 = 0, val5 = 0 });
             }
         }
 

@@ -25,8 +25,8 @@
                 <CheckBox x:Name="checkBox_Copy" Content="" HorizontalAlignment="Left" Margin="254,442,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
                 <Label Content="MAN min tar pos AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="427,182,0,0"/>
                 <TextBox x:Name="textBoxManMin"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="703,187,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" KeyDown="textBoxManMin_KeyDown"/>
-                <Label Content="Cur pos mm AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="356,6,0,0"/>
-                <TextBox x:Name="textBoxCurPosmm" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="569,16,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="127"/>
+                <Label Content="Cur pos mm AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="484,6,0,0"/>
+                <TextBox x:Name="textBoxCurPosmm" FontSize="20" HorizontalAlignment="Left" IsReadOnly="true" Height="33" Margin="703,10,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" HorizontalContentAlignment="Center"  Width="102"/>
                 <Label Content="spd req AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="101,68,0,0"/>
                 <Label Content="ACC AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="153,123,0,0"/>
                 <TextBox x:Name="textBoxAcc" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="274,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="95" KeyDown="textBoxAcc_KeyDown"/>
@@ -37,8 +37,8 @@
                 <Label Content="jog Array AXX :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="0,499,0,0"/>
                 <Label Content="dec Auto AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="3,826,0,0"/>
                 <CheckBox x:Name="checkBox_Copy1" Content="" HorizontalAlignment="Left" Margin="237,830,0,0" VerticalAlignment="Top" Height="38" Width="80"/>
-                <Label Content="dec stop AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="395,821,0,0"/>
-                <TextBox x:Name="textBoxDecStop" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="592,826,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="61" KeyDown="textBoxDecStop_KeyDown"/>
+                <Label Content="dec stop AXX" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="398,826,0,0"/>
+                <TextBox x:Name="textBoxDecStop" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="613,830,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Width="158" KeyDown="textBoxDecStop_KeyDown" RenderTransformOrigin="0.393,0.5"/>
                 <Label Content="Dec Array AXX :" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Left" Margin="1,892,0,0"/>
                 <TextBox x:Name="textBoxDecArray_1"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="45,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="67" KeyDown="textBoxDecArray_1_KeyDown"/>
                 <TextBox x:Name="textBoxDecArray_2"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="20" Height="32" Margin="153,945,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="68" KeyDown="textBoxDecArray_2_KeyDown"/>

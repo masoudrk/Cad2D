@@ -370,10 +370,8 @@ namespace Cad2D.Pages
                     int data;
                     if (!Int32.TryParse(textBox_MultY.Text, out data))
                         data = 0;
-                     
                     CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, data
                         , CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket);
-                     
                 }
             }
         }
@@ -511,7 +509,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-                
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.ManSpdAXY.dataType, Int32.Parse(text_Man_Spd_AXY.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.ManSpdAXY.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ManSpdAXY.writingPacket);
             }
         }
 
@@ -519,7 +518,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.ManSpdAXX.dataType, Int32.Parse(text_Man_Spd_AXX.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.ManSpdAXX.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ManSpdAXX.writingPacket);
             }
         }
 
@@ -527,7 +527,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.Hashye.dataType, Int32.Parse(text_Hashye.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.Hashye.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Hashye.writingPacket);
             }
         }
 
@@ -535,6 +536,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.AXYFeedDist.dataType, Int32.Parse(text_AXY_Feed_Dist.Text)
+                           , CanvasCad2D.plcUtilitisAndOptions.AXYFeedDist.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.AXYFeedDist.writingPacket);
 
             }
         }
@@ -543,7 +546,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.AXXFeedDist.dataType, Int32.Parse(text_AXX_Feed_Dist.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.AXXFeedDist.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.AXXFeedDist.writingPacket);
             }
         }
 
@@ -551,7 +555,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.MinDif.dataType, Int32.Parse(text_Min_Dif.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.MinDif.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.MinDif.writingPacket);
             }
         }
 
@@ -559,7 +564,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.ParkPosAXY.dataType, Int32.Parse(text_Park_Pos_AXY.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.ParkPosAXY.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ParkPosAXY.writingPacket);
             }
         }
 
@@ -567,7 +573,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.ParkPosAXX.dataType, Int32.Parse(text_Park_Pos_AXX.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.ParkPosAXX.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ParkPosAXX.writingPacket);
             }
         }
 
@@ -575,7 +582,8 @@ namespace Cad2D.Pages
         {
             if (e.Key == Key.Enter)
             {
-
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.DiskDiameter.dataType, Int32.Parse(text_Disk_Diameter.Text)
+                        , CanvasCad2D.plcUtilitisAndOptions.DiskDiameter.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.DiskDiameter.writingPacket);
             }
         }
     }
