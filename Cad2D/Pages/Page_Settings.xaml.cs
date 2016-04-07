@@ -91,7 +91,11 @@ namespace Cad2D.Pages
             VerticalBoundrySegment.Text = s.VerticalBoundrySegment.ToString();
             HorizonalBoundrySegment.Text = s.HorizonalBoundrySegment.ToString();
 
-            registeredTextbox = new KeypadTextBox[25];
+            textBox_FELimit.Text =s.FELimit.ToString();
+            textBox_ScaleFESize.Text = s.ScaleFESize.ToString();
+            textBox_FocalLinPixels.Text = s.FocalLinPixels.ToString();
+            
+            registeredTextbox = new KeypadTextBox[28];
             registeredTextbox[0] = textBox_cameraIp;
             registeredTextbox[1] = textBox_plcIp;
             registeredTextbox[2] = textBox_plcPort;
@@ -117,6 +121,9 @@ namespace Cad2D.Pages
             registeredTextbox[22] = TextBox_YEncoderMem;
             registeredTextbox[23] = TextBox_BridgeOptionMem;
             registeredTextbox[24] = TextBox_clampMem;
+            registeredTextbox[25] = textBox_FELimit;
+            registeredTextbox[26] = textBox_ScaleFESize;
+            registeredTextbox[27] = textBox_FocalLinPixels;
 
             if (CanvasCad2D.lsConnection.Connected)
             {

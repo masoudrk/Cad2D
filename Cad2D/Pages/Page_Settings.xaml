@@ -143,6 +143,19 @@
                         <TextBox x:Name="text_Man_Spd_AXY" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" KeyUp="text_Man_Spd_AXY_KeyUp"/>
                         <Label Margin="0 0 0 0" Content="Man Speed AXX" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" HorizontalContentAlignment="Center"/>
                     </StackPanel>
+                    <Label Margin="0,10,20,0" Content="تنظیمات دوربین" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
+                    <StackPanel Orientation="Horizontal" Margin="0 5 35 0" HorizontalAlignment="Right">
+                        <SiriusMicrotech:TouchNumericBox x:Name="textBox_FocalLinPixels" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                        <Label Margin="0 0 0 0" Content="Focal Lin Pixels" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 5 35 0" HorizontalAlignment="Right">
+                        <SiriusMicrotech:TouchNumericBox x:Name="textBox_ScaleFESize" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                        <Label Margin="0 0 0 0" Content="Scale FE Size" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 5 35 0" HorizontalAlignment="Right">
+                        <SiriusMicrotech:TouchNumericBox x:Name="textBox_FELimit" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                        <Label Margin="0 0 0 0" Content="FE Limit" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
                     <Label Margin="0,10,20,0" Content="تنظیمات پردازشی تصویر" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
                     <StackPanel Orientation="Horizontal" Margin="0 5 35 0" HorizontalAlignment="Right">
                         <SiriusMicrotech:TouchNumericBox x:Name="textBox_sv" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>

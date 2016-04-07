@@ -286,5 +286,41 @@ namespace Cad2D.Properties {
                 this["DiskDiameter"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("565")]
+        public int FocalLinPixels {
+            get {
+                return ((int)(this["FocalLinPixels"]));
+            }
+            set {
+                this["FocalLinPixels"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.9")]
+        public double ScaleFESize {
+            get {
+                return ((double)(this["ScaleFESize"]));
+            }
+            set {
+                this["ScaleFESize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1500")]
+        public int FELimit {
+            get {
+                return ((int)(this["FELimit"]));
+            }
+            set {
+                this["FELimit"] = value;
+            }
+        }
     }
 }
