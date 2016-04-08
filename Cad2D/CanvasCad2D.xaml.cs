@@ -1017,12 +1017,13 @@ namespace Cad2D
 
                 if (pagesStack.Count() < 2)
                 {
-                    Analyzer a = new Analyzer();
                     BitmapSource bs = (BitmapSource)i.Source;
                     if (bs != null)
                     {
+                        PrimarySettings s = Extentions.FromXmlPrimary();
+                        Analyzer a = new Analyzer(s.FELimit);
                         bSrc = Utils.BitmapFromSource(bs);
-                        Bitmap b1 = a.RemoveFisheye(ref bSrc, 565f);
+                        Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
                         mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
                     }
                     clearPath();
@@ -1032,7 +1033,15 @@ namespace Cad2D
                 else
                 {
                     Page_SetOffsets pso = new Page_SetOffsets();
-                    pso.offsetImage.Source = i.Source;
+                    BitmapSource bs = (BitmapSource)i.Source;
+                    if (bs != null)
+                    {
+                        PrimarySettings s = Extentions.FromXmlPrimary();
+                        Analyzer a = new Analyzer(s.FELimit);
+                        bSrc = Utils.BitmapFromSource(bs);
+                        Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
+                        pso.offsetImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                    }
                     contentControl.Content = pso;
                 }
             }
@@ -1065,7 +1074,7 @@ namespace Cad2D
         }
         private void btn_sendToPlc_back_Click(object sender, RoutedEventArgs e)
         {
-            if (contentControl.Content.GetType() == typeof(CameraPage))
+            if (contentControl.Content.GetType() == typeof(CameraPage) || sender ==null)
             {
                 EditMode();
             }
@@ -1371,7 +1380,7 @@ namespace Cad2D
 
         private void CameraNotConnected_Click(object sender, EventArgs e)
         {
-            btn_sendToPlc_back_Click(null, null);
+           // btn_sendToPlc_back_Click(null, null);
         }
 
         private void CaptureMode()
@@ -1430,31 +1439,7 @@ namespace Cad2D
             ((Image)button_switchToCamera.Content).Source =
                 new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/camera.png", UriKind.Absolute));
         }
-
-        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
-
-        private void textBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                int A = 0;
-                if (int.TryParse(textBox.Text.ToString(), out A))
-                {
-                    Analyzer a = new Analyzer();
-                    int ef = 1500;
-                    float s = 0.9f;
-                    int.TryParse(textBox_Copy.Text, out ef);
-                    float.TryParse(textBox_Copy1.Text, out s);
-                    a.mFELimit = ef;
-                    a.mScaleFESize = s;
-                    Bitmap b1 = a.RemoveFisheye(ref bSrc, A);
-
-                    mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
-                }
-            }
-        }
+        
         #endregion
 
         private void calculateAllPoints()

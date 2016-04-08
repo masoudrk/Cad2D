@@ -134,9 +134,6 @@
                     </Button>
                 </StackPanel>
             </Border>
-            <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="26" Margin="564,32,0,0" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
-            <TextBox x:Name="textBox_Copy" HorizontalAlignment="Left" Height="26" Margin="564,63,0,0" Grid.Row="4" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
-            <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Left" Height="26" Margin="564,6,0,0" Grid.Row="5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged" KeyDown="textBox_KeyDown" Visibility="Hidden" Grid.Column="1"/>
         </Grid>
         <StackPanel HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="220" Margin="0 20 0 0">
 

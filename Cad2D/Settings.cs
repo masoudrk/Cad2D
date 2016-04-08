@@ -57,6 +57,10 @@ public class PrimarySettings
     public int XEncoderMem { set; get; }
     public int YEncoderMem { set; get; }
     public int DiskDiameter { set; get; }
+    
+    public int FELimit { set; get; }
+    public double ScaleFESize { set; get; }
+    public int FocalLinPixels { set; get; }
 
 }
 
@@ -139,7 +143,10 @@ public static class Extentions
                 EdgeHorizontalSliceMax = ds.EdgeMax,
                 EdgeVerticalSliceMax = ds.EdgeMax,
                 EdgeVerticalSliceMin = ds.EdgeMin,
-                DiskDiameter = ds.DiskDiameter
+                DiskDiameter = ds.DiskDiameter,
+                ScaleFESize = ds.ScaleFESize,
+                FELimit = ds.FELimit,
+                FocalLinPixels = ds.FocalLinPixels
             };
             return s;
         }

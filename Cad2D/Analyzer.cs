@@ -16,8 +16,9 @@ namespace Cad2D
         //private int mFELimit = 1500;
         //private double mScaleFESize = 0.9;
         
-        public Analyzer()
+        public Analyzer(int mFELimit)
         {
+            this.mFELimit = mFELimit;
             //A lookup table so we don't have to calculate Rdistorted over and over
             //The values will be multiplied by focal length in pixels to 
             //get the Rdistorted

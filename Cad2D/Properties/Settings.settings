@@ -68,5 +68,14 @@
     <Setting Name="DiskDiameter" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
+    <Setting Name="FocalLinPixels" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">565</Value>
+    </Setting>
+    <Setting Name="ScaleFESize" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.9</Value>
+    </Setting>
+    <Setting Name="FELimit" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1500</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
