@@ -6,66 +6,86 @@ using System.Threading.Tasks;
 
 namespace Cad2D
 {
-    public struct _Alert
-    {
-        public int wordNumber { set; get; }
-        public ushort value { set; get; }
-    }
-    public struct _ManualOrAuto
-    {
-        public int wordNumber { set; get; }
-        public ushort value { set; get; }
-    }
-    public struct _ShutDown
-    {
-        public int wordNumber { set; get; }
-        public ushort value { set; get; }
-    }
-    public struct _Positions
-    {
-        public int wordNumberX { set; get; }
-        public int wordNumberY { set; get; }
-        public ushort valueX { set; get; }
-        public ushort valueY { set; get; }
-    }
+  
     public class PlcInformation
     {
         public PlcInformation()
-        {///////////////////////
+        {
             setAddressValues();
         }
 
         public void setAddressValues()
         {
+            positionX = new Packet<ushort>(22);
+            positionY = new Packet<ushort>(23);
+            alert = new Packet<ushort>(2);
+            manualOrAuto = new Packet<ushort>(3);
+            machinPhase = new Packet<ushort>(4);
+            water = new Packet<ushort>(202);
+            waterTOff = new Packet<ushort>(262);
+            waterTOn = new Packet<ushort>(263);
+        }
+        public Packet<ushort> positionX;
+        public Packet<ushort> positionY;
+        public Packet<ushort> alert ;
+        public Packet<ushort> shutdown;
+        public Packet<ushort> manualOrAuto;
+        public Packet<ushort> water;
+        public Packet<ushort> waterTOff;
+        public Packet<ushort> waterTOn;
+        public Packet<ushort> machinPhase;
 
-            PrimarySettings ps = Extentions.FromXmlPrimary();
-            int address = ps.PlcInformation;
-            PackestId = new List<ushort>();
-
-            alert = new _Alert();
-            alert.wordNumber = address++;
-            shutdown = new _ShutDown();
-            shutdown.wordNumber = address++;
-            positions = new _Positions();
-            positions.wordNumberX = address++;
-            positions.wordNumberY = address++;
-            manualOrAuto = new _ManualOrAuto();
-            manualOrAuto.wordNumber = address++;
+        public void writeWater(int data)
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.writeToPlc(water.dataType, data, water.valueAddress, ref water.writingPacket);
+            }
+        }
+        public void writeWaterTOff(int data)
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.writeToPlc(waterTOff.dataType, data, waterTOff.valueAddress, ref waterTOff.writingPacket);
+            }
+        }
+        public void writeWaterTOn(int data)
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.writeToPlc(waterTOn.dataType, data, waterTOn.valueAddress, ref waterTOn.writingPacket);
+            }
         }
 
-        public List<ushort> PackestId;
-        public _Positions positions;
-        public _Alert alert ;
-        public _ShutDown shutdown;
-        public _ManualOrAuto manualOrAuto;
-
-        internal void parse(byte[] continuousData)
+        public void getFirstValues()
         {
-            alert.value = (ushort)(continuousData[1] * 256 + continuousData[0]);
-            shutdown.value = (ushort)(continuousData[3] * 256 + continuousData[2]);
-            positions.valueX = (ushort)(continuousData[5] * 256 + continuousData[4]);
-            positions.valueY = (ushort)(continuousData[7] * 256 + continuousData[6]);
-            manualOrAuto.value = (ushort)(continuousData[9] * 256 + continuousData[8]);
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.readFromPlc(water.dataType, water.valueAddress,
+                       ref water.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(waterTOff.dataType, waterTOff.valueAddress,
+                    ref waterTOff.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(waterTOn.dataType, waterTOn.valueAddress,
+                    ref waterTOn.readingPacket);
+            }
+        }
+
+        public
+            void getAllValues()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.readFromPlc(positionX.dataType, positionX.valueAddress,
+                    ref positionX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(positionY.dataType, positionY.valueAddress,
+                    ref positionY.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(alert.dataType, alert.valueAddress,
+                    ref alert.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(manualOrAuto.dataType, manualOrAuto.valueAddress,
+                    ref manualOrAuto.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(machinPhase.dataType, machinPhase.valueAddress,
+                    ref machinPhase.readingPacket);
+            }
         }
     }
 }

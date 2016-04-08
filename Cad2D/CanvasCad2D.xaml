@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Cad2D"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:ui="clr-namespace:SiriusMicrotech.core.UI"
              x:Class="Cad2D.CanvasCad2D"
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="1100" Padding="5">
@@ -23,7 +24,8 @@
         <Grid Name="mainGrid" Grid.Column="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="33*"/>
+                <ColumnDefinition Width="20*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -36,7 +38,7 @@
                 <RowDefinition Height="65"/>
             </Grid.RowDefinitions>
 
-            <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="2" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
+            <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="3" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
                 <StackPanel Orientation="Vertical">
                     <Button x:Name="btn_CreatePathTool" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" Click="toggle_PenTool_Checked" >
                         <Image Source="Resources/add_path.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="12"  />
@@ -48,7 +50,7 @@
             </Border>
 
 
-            <Border Name="border_tools2" Margin="0 8 0 0" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Column="2" Grid.Row="3" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Height="150">
+            <Border Name="border_tools2" Margin="0 8 0 0" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Column="3" Grid.Row="3" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Height="150">
                 <StackPanel Orientation="Vertical">
                     <Button x:Name="button_switchToCamera" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_switchToCamera_Click" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" >
                         <Image Source="Resources/camera.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
@@ -59,7 +61,7 @@
                 </StackPanel>
             </Border>
             <Border BorderThickness="2" BorderBrush="#FFD6DBE9" Grid.RowSpan="6" 
-                ClipToBounds="True" SnapsToDevicePixels="True" Grid.Column="1">
+                ClipToBounds="True" SnapsToDevicePixels="True" Grid.Column="1" Grid.ColumnSpan="2">
                 <Controls:TransitioningContentControl x:Name="contentControl" Transition="Normal" >
                     <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="White" >-->
                     <Border Background="#282526">
@@ -81,6 +83,24 @@
                     </Border>
                     <!--</ScrollViewer>-->
                 </Controls:TransitioningContentControl>
+            </Border>
+            <Border x:Name="border_WaterOption" FlowDirection="RightToLeft" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="2" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="0,0,10,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="button_water" Click="button_water_Click" Style="{DynamicResource MetroCircleButtonStyle}" >
+                        <Image x:Name="img_water" Source="Resources/WaterOption/Water.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <Button x:Name="button_Water_Timer" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Water_Timer_Click" >
+                        <Image x:Name="img_water_timer" Source="Resources/WaterOption/NotTimer.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    </Button>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Width="80">
+                        <Label Content="T ON" HorizontalAlignment="Center" VerticalAlignment="Top"  FontSize="12" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" FontWeight="Bold"/>
+                        <TextBox x:Name="textBox_Timer_On" TextWrapping="Wrap" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" TextChanged="textBox__TextChanged" Height="35" Margin="4,0,4,0" KeyUp="textBox_Timer_On_KeyUp" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Width="80">
+                        <Label Content="T OFF" HorizontalAlignment="Center" VerticalAlignment="Top"  FontSize="12" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" FontWeight="Bold"/>
+                        <TextBox x:Name="textBox_Timer_Off"  TextWrapping="Wrap" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Height="35" Margin="4,0" TextChanged="textBox__TextChanged" KeyUp="textBox_Timer_Off_KeyUp" />
+                    </StackPanel>
+                </StackPanel>
             </Border>
             <Border x:Name="border_Directions" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="1" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="10,0" >
                 <StackPanel Orientation="Horizontal">
@@ -113,7 +133,7 @@
                     </Button>
                 </StackPanel>
             </Border>
-            <Border Name="border_setting" Width="{StaticResource SmallIconSize}" HorizontalAlignment="Left" CornerRadius="0 6 6 6" Margin="0,0,0,16" Grid.Row="5" Grid.Column="2" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Grid.RowSpan="2" >
+            <Border Name="border_setting" Width="{StaticResource SmallIconSize}" HorizontalAlignment="Left" CornerRadius="0 6 6 6" Margin="0,0,0,16" Grid.Row="5" Grid.Column="3" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Grid.RowSpan="2" >
                 <StackPanel Orientation="Vertical">
                     <Image Name="image_alarm" Source="Resources/alarm_off.png" RenderOptions.BitmapScalingMode="HighQuality" MouseDown="button_alarm_click" Margin="7,5,8,0" />
 
@@ -145,7 +165,7 @@
             <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0" >
                 <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                     <Image x:Name="image_AutoOrManual" Source="Resources/manual.png" RenderOptions.BitmapScalingMode="HighQuality" Width="75" Margin="5" />
-                    <Label x:Name="label_AutoOrManual" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="اتوماتیک" FontSize="20" FontFamily="Microsoft YaHei" Height="78"/>
+                    <Label x:Name="label_Phase" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Hold" FontSize="30" FontFamily="Microsoft YaHei" Height="78" RenderTransformOrigin="0.55,0.609"/>
                 </StackPanel>
             </Border>
             <Border Width="220" x:Name="border_monitors" RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Margin="0,10,0,0">

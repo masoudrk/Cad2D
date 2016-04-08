@@ -16,100 +16,89 @@
             <System:Double x:Key="labelWidth">160</System:Double>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ScrollViewer FlowDirection="RightToLeft">
-        <Grid FlowDirection="LeftToRight">
-            <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,0,10" >
-                <Label Content="تنظیمات" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+    <Grid>
+        <ScrollViewer FlowDirection="RightToLeft" x:Name="PageScroller">
+            <Grid FlowDirection="LeftToRight">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Top" Margin="10,0,0,10" >
+                    <Label Content="تنظیمات" VerticalAlignment="Top"  FontSize="25" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Margin="0,0,10,0"/>
 
-                <Label Margin="15,10,20,0" Content="حساسیت به اعلان ها" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
-                <CheckBox x:Name="checkBox_alarm1" Margin="0,5,35,5" Content="خطای قطعی برق فرمان" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm2" Margin="0,5,35,5" Content="خطای Emergency" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm3" Margin="0,5,35,5" Content="خطای آب" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm4" Margin="0,5,35,5" Content="خطای فشار باد" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm5" Margin="0,5,35,5" Content="خطای اینورتر محور X" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm6" Margin="0,5,35,5" Content="خطای اینورتر محور Y" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm7" Margin="0,5,35,5" Content="خطای انکودر محور X" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm8" Margin="0,5,35,5" Content="خطای انکودر محور Y" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm9" Margin="0,5,35,5" Content="خطای اتصال به PLC" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm10" Margin="0,5,35,5" Content="خطای اتصال به دوربین" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm11" Margin="0,5,35,5" Content="خطای بی متال موتور" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-                <CheckBox x:Name="checkBox_alarm12" Margin="0,5,35,5" Content="خطای لقمه" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
 
-                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right" >
 
-                    <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="48 0 14 0" HorizontalAlignment="Right"/>
-                    <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="0 0 10 0" HorizontalAlignment="Right"/>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right" >
+
+                        <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="48 0 14 0" HorizontalAlignment="Right"/>
+                        <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="0 0 10 0" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                    <Label Margin="0,10,20,0" Content="تنظیمات پل" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
+                    <Grid Height="300" Margin="0 5 35 0" HorizontalAlignment="Right" Width="741">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="label1" Content="بیرون رفتن از سنگ" Margin="0,13,158,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" HorizontalAlignment="Right" />
+                        <Custom:NumericUpDown x:Name="textBox_TopValue" HorizontalAlignment="Right" Margin="0,13,285,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" ValueChanged="textBox_TopValue_ValueChanged"/>
+                        <Label x:Name="label_Copy1" Content="بیرون رفتن از سنگ" Margin="0,20,5,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="1" HorizontalAlignment="Right" />
+                        <Custom:NumericUpDown x:Name="textBox_RightValue" HorizontalAlignment="Right" Margin="0,20,129,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" Grid.Row="1" ValueChanged="textBox_RightValue_ValueChanged"/>
+                        <Image Source="../Resources/arrowDown.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,10,388,0" HorizontalAlignment="Right" Width="56" Height="56" VerticalAlignment="Top" Grid.Row="2" />
+                        <Image Source="../Resources/arrowUp.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,0,388,0" HorizontalAlignment="Right" Width="56" Height="56" VerticalAlignment="Top" />
+                        <Label x:Name="label_Copy3" Content="بیرون رفتن از سنگ" Margin="0,20,509,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="1" HorizontalAlignment="Right" />
+                        <Custom:NumericUpDown x:Name="textBox_LeftValue" HorizontalAlignment="Right" Margin="0,19,407,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" Grid.Row="1" ValueChanged="textBox_LeftValue_ValueChanged"/>
+                        <Image Source="../Resources/arrowLeft.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,10,644,0" HorizontalAlignment="Right" Width="56" Height="56" VerticalAlignment="Top" Grid.Row="1" />
+                        <Label x:Name="label_Copy5" Content="بیرون رفتن از سنگ" Margin="0,17,158,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="2" HorizontalAlignment="Right" />
+                        <Custom:NumericUpDown x:Name="textBox_BottomValue" HorizontalAlignment="Right" Margin="0,17,285,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" Grid.Row="2" ValueChanged="textBox_BottomValue_ValueChanged"/>
+                        <Image Source="../Resources/arrowRight.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="0,10,232,0" HorizontalAlignment="Right" Width="56" Height="56" VerticalAlignment="Top" Grid.Row="1" />
+                    </Grid>
+                    <Label Margin="0,10,20,0" Content="تنظیمات کلمپ" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}"/>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right" >
+
+                        <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="26 0 14 0" HorizontalAlignment="Right"/>
+                        <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="0 0 10 0" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                    <Grid Height="230" Margin="0,10,30,0" HorizontalAlignment="Right" Width="500">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="150"/>
+                        </Grid.ColumnDefinitions>
+                        <Custom:NumericUpDown x:Name="textBox_ClampAmount" HorizontalAlignment="Right" Margin="0,10,37,0" VerticalAlignment="Top" Width="113" Grid.Column="1" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampAmount_ValueChanged"/>
+                        <Custom:NumericUpDown x:Name="textBox_ClampBottomRight" HorizontalAlignment="Left" Margin="50,166,0,0" VerticalAlignment="Top" Width="113" Grid.Column="1" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampBottomRight_ValueChanged"/>
+                        <Custom:NumericUpDown x:Name="textBox_ClampTopLeft" Grid.Column="0" HorizontalAlignment="Right" Margin="0,71,10,0" VerticalAlignment="Top" Width="113" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampTopLeft_ValueChanged"/>
+                        <Custom:NumericUpDown x:Name="textBox_ClampTopRight" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="113" Grid.Column="2" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampTopRight_ValueChanged"/>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="9" Margin="0,105,10,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/slab_stone_side.jpg" HorizontalAlignment="Right" Width="180"/>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="29" Margin="0,73,0,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/up_arrow.png" HorizontalAlignment="Left" Width="31"/>
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="29" Margin="0,72,0,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/down_arrow.png" HorizontalAlignment="Right" Width="31"/>
+                        <Label x:Name="label" Content="مقدار کلمپ" Grid.Column="2" HorizontalAlignment="Left" Margin="2,7,0,0" VerticalAlignment="Top" FontSize="17.333"/>
+                        <Label x:Name="label_Copy" Content="حاشیه لبه" Grid.Column="2" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" FontSize="17.333"/>
+                    </Grid>
+
+                    <Label Margin="15,10,20,0" Content="تغییر رمز عبور" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}"/>
+                    <CheckBox x:Name="checkBox_usePass" Margin="0,5,35,5" Content="استفاده از رمز عبور برای ورود به برنامه" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
+
+                    <StackPanel x:Name="panel_pass" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                        <PasswordBox PasswordChar="•" x:Name="textBox_nowPass" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                        <Label Margin="30 0 0 0" Content="رمز عبور فعلی" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
+                    </StackPanel>
+                    <StackPanel x:Name="panel_newPass" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                        <PasswordBox  PasswordChar="•" x:Name="textBox_newPass" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                        <Label Margin="30 0 0 0" Content="رمز جدید" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
+                    </StackPanel>
+                    <StackPanel x:Name="panel_newConfirmPass" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
+                        <PasswordBox PasswordChar="•" x:Name="textBox_newPassConfirm" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                        <Label Margin="30 0 0 0" Content="تکرار رمز عبور جدید" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
+                    </StackPanel>
+                    <Button x:Name="button_save" Content="اعمال تغییرات" Height="36" Margin="0,10,251,0" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="174" Foreground="{DynamicResource MainColor}" FontWeight="Normal" Click="button_save_Click"/>
+
                 </StackPanel>
-                <Label Margin="0,10,20,0" Content="تنظیمات پل ها" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
-                <Grid Height="300" Margin="0 5 35 0" HorizontalAlignment="Right" Width="663">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="100"/>
-                        <RowDefinition Height="100"/>
-                    </Grid.RowDefinitions>
-                    <Label x:Name="label1" Content="بیرون رفتن از سنگ" Margin="0,13,158,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" HorizontalAlignment="Right" />
-                    <Custom:NumericUpDown x:Name="textBox_TopValue" HorizontalAlignment="Right" Margin="0,13,285,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" ValueChanged="textBox_TopValue_ValueChanged"/>
-                    <Label x:Name="label_Copy" Content="تاخیر" Margin="0,52,240,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" HorizontalAlignment="Right" Width="38"/>
-                    <Custom:NumericUpDown x:Name="textBox_TopDelay" HorizontalAlignment="Right" Margin="0,52,285,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="21" Minimum="0" ValueChanged="textBox_TopDelay_ValueChanged"/>
-                    <Label x:Name="label_Copy1" Content="بیرون رفتن از سنگ" Margin="0,20,5,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="1" HorizontalAlignment="Right" />
-                    <Custom:NumericUpDown x:Name="textBox_RightValue" HorizontalAlignment="Right" Margin="0,20,129,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" Grid.Row="1" ValueChanged="textBox_RightValue_ValueChanged"/>
-                    <Label x:Name="label_Copy2" Content="تاخیر" Margin="0,59,89,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="1" HorizontalAlignment="Right" Width="38"/>
-                    <Custom:NumericUpDown x:Name="textBox_RightDelay" Margin="0,59,129,0" VerticalAlignment="Top" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="21" Minimum="0" Grid.Row="1" HorizontalAlignment="Right" Width="98" ValueChanged="textBox_RightDelay_ValueChanged"/>
-                    <Label x:Name="label_Copy3" Content="بیرون رفتن از سنگ" Margin="0,21,534,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="1" HorizontalAlignment="Right" />
-                    <Custom:NumericUpDown x:Name="textBox_LeftValue" HorizontalAlignment="Right" Margin="0,20,432,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" Grid.Row="1" ValueChanged="textBox_LeftValue_ValueChanged"/>
-                    <Label x:Name="label_Copy4" Content="تاخیر" Margin="0,62,534,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="1" HorizontalAlignment="Right" Width="38"/>
-                    <Custom:NumericUpDown x:Name="textBox_LeftDelay" HorizontalAlignment="Right" Margin="0,59,432,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="21" Minimum="0" Grid.Row="1" ValueChanged="textBox_LeftDelay_ValueChanged"/>
-                    <Label x:Name="label_Copy5" Content="بیرون رفتن از سنگ" Margin="0,17,158,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="2" HorizontalAlignment="Right" />
-                    <Custom:NumericUpDown x:Name="textBox_BottomValue" HorizontalAlignment="Right" Margin="0,17,285,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-20" Grid.Row="2" ValueChanged="textBox_BottomValue_ValueChanged"/>
-                    <Label x:Name="label_Copy6" Content="تاخیر" Margin="0,56,240,0" VerticalAlignment="Top" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Grid.Row="2" HorizontalAlignment="Right" Width="38"/>
-                    <Custom:NumericUpDown x:Name="textBox_BottomDelay" HorizontalAlignment="Right" Margin="0,56,285,0" VerticalAlignment="Top" Width="98" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="21" Minimum="0" Grid.Row="2" ValueChanged="textBox_BottomDelay_ValueChanged"/>
-                </Grid>
-                <Label Margin="0,10,20,0" Content="تنظیمات کلمپ" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}"/>
-                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right" >
+                <Image RenderOptions.BitmapScalingMode="HighQuality" x:Name="imageKeyboard" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="79" Margin="0,0,451,119" MouseDown="imageKeyboard_MouseDown" Source="/Cad2D;component/Resources/keyboard.png"  Width="80"/>
 
-                    <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="26 0 14 0" HorizontalAlignment="Right"/>
-                    <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="0 0 10 0" HorizontalAlignment="Right"/>
-                </StackPanel>
-                <Grid Height="230" Margin="0,10,30,0" HorizontalAlignment="Right" Width="500">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="150"/>
-                    </Grid.ColumnDefinitions>
-                    <Custom:NumericUpDown x:Name="textBox_ClampAmount" HorizontalAlignment="Right" Margin="0,10,37,0" VerticalAlignment="Top" Width="113" Grid.Column="1" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampAmount_ValueChanged"/>
-                    <Custom:NumericUpDown x:Name="textBox_ClampBottomRight" HorizontalAlignment="Left" Margin="10,175,0,0" VerticalAlignment="Top" Width="113" Grid.Column="2" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampBottomRight_ValueChanged"/>
-                    <Custom:NumericUpDown x:Name="textBox_ClampTopLeft" Grid.Column="0" HorizontalAlignment="Right" Margin="0,71,10,0" VerticalAlignment="Top" Width="113" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampTopLeft_ValueChanged"/>
-                    <Custom:NumericUpDown x:Name="textBox_ClampBottomLeft" Grid.Column="0" HorizontalAlignment="Right" Margin="0,175,10,0" VerticalAlignment="Top" Width="113" Height="34" FontSize="18.667" Maximum="99" Minimum="0" Value="0" TextAlignment="Center" ValueChanged="textBox_ClampBottomLeft_ValueChanged"/>
-                    <Custom:NumericUpDown x:Name="textBox_ClampTopRight" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="113" Grid.Column="2" Height="34" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="99" Minimum="0" ValueChanged="textBox_ClampTopRight_ValueChanged"/>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="70" Margin="36,150,41,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/slab_stone_up.jpg"/>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="9" Margin="0,105,10,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/slab_stone_side.jpg" HorizontalAlignment="Right" Width="180"/>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="29" Margin="0,73,0,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/up_arrow.png" HorizontalAlignment="Left" Width="31"/>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="29" Margin="0,72,0,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/down_arrow.png" HorizontalAlignment="Right" Width="31"/>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="29" Margin="0,176,0,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/up_arrow.png" HorizontalAlignment="Left" Width="31"/>
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Grid.Column="1" Height="29" Margin="0,176,0,0" VerticalAlignment="Top" Source="/Cad2D;component/Resources/down_arrow.png" HorizontalAlignment="Right" Width="31"/>
-                    <Label x:Name="label" Content="مقدار کلمپ" Grid.Column="2" HorizontalAlignment="Left" Margin="2,7,0,0" VerticalAlignment="Top" FontSize="17.333"/>
-                </Grid>
-
-                <Label Margin="15,10,20,0" Content="تغییر رمز عبور" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}"/>
-                <CheckBox x:Name="checkBox_usePass" Margin="0,5,35,5" Content="استفاده از رمز عبور برای ورود به برنامه" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" Checked="checkBox_usePass_Checked" Unchecked="checkBox_usePass_Unchecked"/>
-
-                <StackPanel x:Name="panel_pass" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
-                    <PasswordBox PasswordChar="•" x:Name="textBox_nowPass" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
-                    <Label Margin="30 0 0 0" Content="رمز عبور فعلی" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
-                </StackPanel>
-                <StackPanel x:Name="panel_newPass" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
-                    <PasswordBox  PasswordChar="•" x:Name="textBox_newPass" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
-                    <Label Margin="30 0 0 0" Content="رمز جدید" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
-                </StackPanel>
-                <StackPanel x:Name="panel_newConfirmPass" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right">
-                    <PasswordBox PasswordChar="•" x:Name="textBox_newPassConfirm" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
-                    <Label Margin="30 0 0 0" Content="تکرار رمز عبور جدید" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{StaticResource labelWidth}" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
-                </StackPanel>
-                <Button x:Name="button_save" Content="اعمال تغییرات" Height="36" Margin="0,10,251,0" Style="{DynamicResource SquareButtonStyle}" FontFamily="Tahoma" FontSize="16" HorizontalAlignment="Right" Width="174" Foreground="{DynamicResource MainColor}" FontWeight="Normal" Click="button_save_Click"/>
-
-            </StackPanel>
-            <Image RenderOptions.BitmapScalingMode="HighQuality" x:Name="imageKeyboard" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="79" Margin="0,0,451,119" MouseDown="imageKeyboard_MouseDown" Source="/Cad2D;component/Resources/keyboard.png"  Width="80"/>
-
-        </Grid>
-    </ScrollViewer>
+            </Grid>
+        </ScrollViewer>
+        <Button x:Name="button_Scroll_Down" Width="100" Style="{DynamicResource MetroCircleButtonStyle}"  Margin="20,0,0,20" HorizontalAlignment="Left" Height="100" VerticalAlignment="Bottom" Click="button_Scroll_Down_Click" >
+            <Image Source="../Resources/arrowDown.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+        </Button>
+        <Button  x:Name="button_Scroll_Up" Height="100" Style="{DynamicResource MetroCircleButtonStyle}" Margin="20,0,0,125" HorizontalAlignment="Left" Width="100" VerticalAlignment="Bottom" Click="button_Scroll_Up_Click"  >
+            <Image Source="../Resources/arrowUp.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+        </Button>
+    </Grid>
 </UserControl>

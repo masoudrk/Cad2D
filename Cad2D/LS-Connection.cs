@@ -106,8 +106,9 @@ namespace Cad2D
                 tcpClient = new TcpClient();
                 tcpClient.BeginConnect(Ip, portNumber, new AsyncCallback(onCompleteConnect), tcpClient);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
                 Disconnect();
                 return false;
             }
@@ -126,8 +127,9 @@ namespace Cad2D
                 serverRec = new byte[2048];
                 tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
             }
-            catch (Exception e)
-            {
+            catch (Exception ex)
+            {   //when the target machin is 127.0.0.1 it throw exception
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
                 Thread.Sleep(1000);
                 Disconnect();
             }
@@ -156,9 +158,9 @@ namespace Cad2D
                 Thread.Sleep(1);
                 tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
                 Disconnect();
             }
         }
@@ -266,8 +268,9 @@ namespace Cad2D
                 readToServerMutex.ReleaseMutex();
                 tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
                 Disconnect();
             }
         }

@@ -20,6 +20,7 @@ using Image = System.Windows.Controls.Image;
 using Point = System.Windows.Point;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 
 namespace Cad2D
 {
@@ -97,6 +98,10 @@ namespace Cad2D
         private int horizonalBoundryCount;
         Page_Tools pageToolsObject;
         Page_Settings pageSettingObject;
+        public static HscXHelper hscXHelper;
+        public static HscYHelper hscYHelper;
+        public static Page_Hsc_X pageHscX;
+        public static Page_Hsc_Y pageHscY;
         IPAddress ip;
         int portNumber;
         int maxAddress = 8000;
@@ -154,6 +159,8 @@ namespace Cad2D
                     UriKind.Absolute));
 
             plcInformation = new PlcInformation();
+            hscXHelper =new HscXHelper();
+            hscYHelper = new HscYHelper();
             PrimarySettings ps = checkPrimarySettings();
             getSensitiveAlarms();
 
@@ -198,6 +205,8 @@ namespace Cad2D
             if(ps.captureModeWhenStart)
                 CaptureMode();
             
+
+
             initDataGrid(dataGrid);
 
         }
@@ -244,8 +253,7 @@ namespace Cad2D
         {
             if (lsConnection.Connected)
             {
-                lsConnection.readFromPlcContinoues(plcInformation.alert.wordNumber * 2, plcInformation.manualOrAuto.wordNumber * 2 + 2, ref plcInformation.PackestId);
-             
+                plcInformation.getAllValues();
             }
             else
             {
@@ -289,71 +297,6 @@ namespace Cad2D
             }
         }
 
-        private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)
-        {
-            readingPacketCountinus repi = (readingPacketCountinus)sender;
-            int i = plcInformation.PackestId.FindIndex(x => x == repi.order);
-            if ( i>= 0)
-            {
-                plcInformation.PackestId.RemoveAt(i);
-                plcInformation.parse(repi.continuousData);
-                OnGUIActions(() => changeMainUi());
-                if (plcInformation.shutdown.value != 0 && plcInformation.shutdown.value != 4)
-                {
-                    shoutDownThePanelPC(plcInformation.shutdown.value);
-                }
-                return;
-            }
-
-            i = plcUtilitisAndOptions.Encoder.PackestIdX.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.Encoder.PackestIdX.RemoveAt(i);
-                plcUtilitisAndOptions.Encoder.updateEncoderXValues(repi.continuousData);
-                if (pageSettingObject == null) return;
-                pageSettingObject.readEncoderYValues();
-                return;
-            }
-
-            i = plcUtilitisAndOptions.Encoder.PackestIdY.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.Encoder.PackestIdY.RemoveAt(i);
-                plcUtilitisAndOptions.Encoder.updateEncoderYValues(repi.continuousData);
-                if (pageSettingObject == null) return;
-                return;
-            }
-
-            i = plcUtilitisAndOptions.Velocity.PackestId.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.Velocity.PackestId.RemoveAt(i);
-                plcUtilitisAndOptions.Velocity.updateValues(repi.continuousData);
-                OnGUIActions(() => setSlidersValues());
-                //////////
-                return;
-            }
-
-            i = plcUtilitisAndOptions.BridgeOptions.PackestId.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.BridgeOptions.PackestId.RemoveAt(i);
-                plcUtilitisAndOptions.BridgeOptions.updateValues(repi.continuousData);
-                pageToolsObject.getClampValues();
-                pageToolsObject.OnGUIActions(() => pageToolsObject.updateBridgeValues());
-                //////////
-                return;
-            }
-
-            i = plcUtilitisAndOptions.ClampOptions.PackestId.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.ClampOptions.PackestId.RemoveAt(i);
-                plcUtilitisAndOptions.ClampOptions.updateValues(repi.continuousData);
-                pageToolsObject.OnGUIActions(() => pageToolsObject.updateClampValues());
-                return;
-            }
-        }
 
         public void setSlidersValues()
         {
@@ -363,72 +306,6 @@ namespace Cad2D
         private void OnGUIActions(Action action)
         {
             Dispatcher.Invoke(action);
-        }
-        private void changeMainUi()
-        {
-
-            bool[] array = Convert.ToString(plcInformation.alert.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
-            bool[] boolArray = createBoolArray(array);
-
-            for (int i = 0; i < 16; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        if (boolArray[i]) { alarm |= 1; } else { alarm &= 65534; }
-                        break;
-                    case 1:
-                        if (boolArray[i]) { alarm |= 2; } else { alarm &= 65533; }
-                        break;
-                    case 2:
-                        if (boolArray[i]) { alarm |= 4; } else { alarm &= 65531; }
-                        break;
-                    case 3:
-                        if (boolArray[i]) { alarm |= 8; } else { alarm &= 65527; }
-                        break;
-                    case 4:
-                        if (boolArray[i]) { alarm |= 16; } else { alarm &= 65519; }
-                        break;
-                    case 5:
-                        if (boolArray[i]) { alarm |= 32; } else { alarm &= 65503; }
-                        break;
-                    case 6:
-                        if (boolArray[i]) { alarm |= 64; } else { alarm &= 65471; }
-                        break;
-                    case 7:
-                        if (boolArray[i]) { alarm |= 128; } else { alarm &= 65407; }
-                        break;
-                    case 11:
-                        if (boolArray[i]) { alarm |= 2048; } else { alarm &= 63487; }
-                        break;
-                    case 10:
-                        if (boolArray[i]) { alarm |= 1024; } else { alarm &= 64511; }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            labelPosX.Content = plcInformation.positions.valueX;
-            labelPosY.Content = plcInformation.positions.valueY;
-            if (label_AutoOrManual.Content.Equals("اتوماتیک") && plcInformation.manualOrAuto.value == 0)
-            {
-                label_AutoOrManual.Content = "دستی";
-                image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/manual.png"));
-            }
-            if (label_AutoOrManual.Content.Equals("دستی") && plcInformation.manualOrAuto.value == 1)
-            {
-                label_AutoOrManual.Content = "اتوماتیک"; image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/auto.png"));
-            }
-
-            
-            double zaribx = (maxHorizontalSlice - minHorizontalSlice) / (endPoint.X - startPoint.X);
-            double xPos = (plcInformation.positions.valueX/zaribx) + startPoint.X - (minHorizontalSlice/zaribx);
-
-            double zaribY = (maxVerticalSlice - minVerticalSlice) / (endPoint.Y - startPoint.Y);
-            double yPos = (plcInformation.positions.valueY / zaribY) + startPoint.Y - (minVerticalSlice / zaribY);
-            
-            Canvas.SetTop(mainCanvas.Children[headPosition], yPos);
-            Canvas.SetLeft(mainCanvas.Children[headPosition], xPos);
         }
 
         private bool[] createBoolArray(bool[] array)
@@ -474,307 +351,6 @@ namespace Cad2D
             c.radius = diameter / 2;
             mainCanvas.Children.Insert(headPosition , c);
         }
-        private void Ls_connection_OnReadedSuccessfully(object sender, EventArgs e)
-        {
-            readingPacketInfo p = (readingPacketInfo)sender;
-            try
-            {
-                if (plcUtilitisAndOptions.DiskDiameter.readingPacket != null && plcUtilitisAndOptions.DiskDiameter.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Disk_Diameter.Text = p.value.ToString());
-                    plcUtilitisAndOptions.DiskDiameter.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ParkPosAXX.readingPacket != null && plcUtilitisAndOptions.ParkPosAXX.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Park_Pos_AXX.Text = p.value.ToString());
-                    plcUtilitisAndOptions.ParkPosAXX.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ParkPosAXY.readingPacket != null && plcUtilitisAndOptions.ParkPosAXY.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Park_Pos_AXY.Text = p.value.ToString());
-                    plcUtilitisAndOptions.ParkPosAXY.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.MinDif.readingPacket != null && plcUtilitisAndOptions.MinDif.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Min_Dif.Text = p.value.ToString());
-                    plcUtilitisAndOptions.MinDif.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.AXXFeedDist.readingPacket != null && plcUtilitisAndOptions.AXXFeedDist.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_AXX_Feed_Dist.Text = p.value.ToString());
-                    plcUtilitisAndOptions.AXXFeedDist.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.AXYFeedDist.readingPacket != null && plcUtilitisAndOptions.AXYFeedDist.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_AXY_Feed_Dist.Text = p.value.ToString());
-                    plcUtilitisAndOptions.AXYFeedDist.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.Hashye.readingPacket != null && plcUtilitisAndOptions.Hashye.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Hashye.Text = p.value.ToString());
-                    plcUtilitisAndOptions.Hashye.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ManSpdAXX.readingPacket != null && plcUtilitisAndOptions.ManSpdAXX.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Man_Spd_AXX.Text = p.value.ToString());
-                    plcUtilitisAndOptions.ManSpdAXX.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ManSpdAXY.readingPacket != null && plcUtilitisAndOptions.ManSpdAXY.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => pageSettingObject.text_Man_Spd_AXY.Text = p.value.ToString());
-                    plcUtilitisAndOptions.ManSpdAXY.readingPacket = null;
-                    return;
-                }
-                if (diskDiameter.readingPacket != null && diskDiameter.readingPacket.order == p.order)
-                {
-                    OnGUIActions(() => setDiskDiameter((ushort)p.value));
-                    diskDiameter.readingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderXPals.value = (ushort)p.value;
-                    plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket = null;
-                    if (pageSettingObject != null)
-                        pageSettingObject.readPosX();
-                }
-                if (plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderXPos.value = (ushort)p.value;
-                    plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket = null;
-                    if (pageSettingObject != null)
-                        pageSettingObject.readPalsY();
-                }
-                if (plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderYPals.value = (ushort)p.value;
-                    plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket = null;
-                    if (pageSettingObject != null)
-                        pageSettingObject.readPosY();
-                }
-                if (plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderYPos.value = (ushort)p.value;
-                    plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket = null;
-                    if (pageSettingObject != null)
-                        pageSettingObject.OnGUIActions(() => pageSettingObject.setNewChanges());
-                }
-            }
-            catch (Exception error)
-            {
-
-            }
-        }
-
-        private void Ls_connection_OnWritedSuccessfully(object sender, EventArgs e)
-        {
-            writingPacketInfo p = (writingPacketInfo)sender;
-            try
-            {
-                ///////////// 
-                if (directionTypePacket != null && directionTypePacket.writingPacket != null && directionTypePacket.writingPacket.order == p.order)
-                {
-                    directionTypePacket.writingPacket = null;
-                    if(sendingInFirstTime)
-                        _sendDataToPlc();
-                    return;
-                }
-                //////////////////encoder /////////////////////
-                if (plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderXMult.writingPacket = null;
-                    if (pageSettingObject != null)
-                        pageSettingObject.OnGUIActions(() => pageSettingObject.sendingDivXValueToPlc());
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderYMult.writingPacket = null;
-                    if (pageSettingObject != null)
-                        pageSettingObject.OnGUIActions(() => pageSettingObject.sendingDivYValueToPlc());
-                    return;
-                }
-                if (plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderXDiv.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket = null;
-                    return;
-                }
-                ///////////////clamp options writed//////////////////
-                if (plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket != null && plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket = null;
-                    return;
-                }
-                ///////////////bridge options writed//////////////////
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay = null;
-                    return;
-                }
-
-
-                if (shutDownPacketId != null && shutDownPacketId.order == p.order)
-                {
-                    shutDownPacketId = null;
-                    shoutDownThePanelPC(4);
-                    return;
-                }
-                if (positionxPacketInfo != null && positionxPacketInfo.order == p.order)
-                {
-                    is_inSendingx = false;
-                    return;
-                }
-                if (positionyPacketInfo != null && positionyPacketInfo.order == p.order)
-                {
-                    is_inSendingy = false;
-                    return;
-                }
-
-                foreach (writingPacketInfo packet in writingPackets)
-                {
-                    if (p.order == packet.order)
-                    {
-                        writingPackets.Remove(packet);
-                        if (stoneScanPacketCounter < stoneScanPacketCount)
-                        {
-                            stoneScanPacketCounter++;
-                            break;
-                        }
-                        else
-                        {
-                            if (horizonalBoundryCounter < horizonalBoundryCount)
-                            {
-                                horizonalBoundryCounter++;
-                                break;
-                            }
-                            else
-                            {
-                                if (verticalBoundryCounter < verticalBoundryCount)
-                                {
-                                    verticalBoundryCounter++;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (stoneScanPacketCounter < stoneScanPacketCount)
-                {
-                     
-                    if (lsConnection.Connected)
-                        lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
-                     
-                }
-                else
-                {
-                    if (horizonalBoundryCounter < horizonalBoundryCount)
-                    {
-                         
-                        lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
-                         
-                    }
-                    else
-                    {
-                        if (verticalBoundryCounter < verticalBoundryCount)
-                        {
-                             
-                            if (lsConnection.Connected)
-                                lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
-                             
-                        }
-                        else
-                        {
-                            if (pagesStack.Count == 0)
-                            {
-                                OnGUIActions(() => writeToPlcFinished());
-                            }
-
-                        }
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                Console.Write(exc);
-            }
-        }
 
         private void writeToPlcFinished()
         {
@@ -784,13 +360,13 @@ namespace Cad2D
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
             alarm = alarm & 1048319;
-             
+
             if (lsConnection.Connected)
+            {
                 lsConnection.readFromPlc(diskDiameter.dataType, diskDiameter.valueAddress, ref diskDiameter.readingPacket);
-             
-             
-            lsConnection.readFromPlcContinoues(plcUtilitisAndOptions.Velocity.velocityXAddress * 2, plcUtilitisAndOptions.Velocity.velocityYAddress * 2 + 2, ref plcUtilitisAndOptions.Velocity.PackestId);
-             
+                lsConnection.readFromPlcContinoues(plcUtilitisAndOptions.Velocity.velocityXAddress * 2, plcUtilitisAndOptions.Velocity.velocityYAddress * 2 + 2, ref plcUtilitisAndOptions.Velocity.PackestId);
+            }
+            plcInformation.getFirstValues();
         }
         private void Ls_connection_OnDisconnceted(object sender, EventArgs e)
         {
@@ -1070,6 +646,7 @@ namespace Cad2D
                     btn_sendToPlc_back.Visibility = Visibility.Visible;
                     border_tools2.Visibility = Visibility.Hidden;
                     border_Directions.Visibility = Visibility.Hidden;
+                    border_WaterOption.Visibility = Visibility.Hidden;
                 }
                 else
                 {
@@ -1328,6 +905,7 @@ namespace Cad2D
             {
                 border_tools2.Visibility = Visibility.Collapsed;
                 border_Directions.Visibility = Visibility.Collapsed;
+                border_WaterOption.Visibility = Visibility.Collapsed;
             }
 
             if (pagesStack.Count == 0)
@@ -1370,9 +948,8 @@ namespace Cad2D
 
         public void setupMainPanels(bool en)
         {
-            border_Directions.Visibility = border_tools1.Visibility = border_tools2.Visibility =
+            border_WaterOption.Visibility = border_Directions.Visibility = border_tools1.Visibility = border_tools2.Visibility =
                 (en) ? Visibility.Visible : Visibility.Collapsed;
-
             button_back_from_down.Visibility = (!en) ? Visibility.Visible : Visibility.Collapsed;
         }
 
@@ -1396,7 +973,7 @@ namespace Cad2D
         {
             //border_tools.Visibility = Visibility.Collapsed;
             //border_tools1.Visibility = Visibility.Collapsed;
-            //border_setting.Visibility = Visibility.Collapsed;
+            //border_Directions.Visibility = Visibility.Collapsed;
             //border_monitors.Visibility = Visibility.Collapsed;
             pagesStack.Push(contentControl.Content);
             CameraPage c = new CameraPage();
@@ -1736,7 +1313,7 @@ namespace Cad2D
             {
                 for (int k = 0; k < (stoneScanHorizontalSlice / 16); k++)
                 {
-                    for (int j = 0; j < 16; j++)
+                    for (int j = 15; j >=0 ; j--)
                     {
                         stoneScan[((stoneScanHorizontalSlice / 16) * i) + k] *= 2;
                         if (array[(16 * k) + j, i])
@@ -2086,6 +1663,75 @@ namespace Cad2D
             sendingInFirstTime = false;
             setDirectionButtons(button_Edges);
             sendDirectionTypeToPlc(256);
+        }
+
+        private void textBox__TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox t = (TextBox) sender;
+            Regex regex = new Regex("[^0-9.-]+");
+
+            if (regex.IsMatch(t.Text))
+                t.Text = "";
+            short x;
+            Int16.TryParse(t.Text, out x);
+            if (x > 10)
+                t.Text = "10";
+            if (x <0)
+                t.Text = "0";
+
+        }
+
+        private void button_water_Click(object sender, RoutedEventArgs e)
+        {
+            bool x = (plcInformation.water.value & (1 << 1 - 1)) != 0;
+            if (x)
+            {
+                plcInformation.water.value = (ushort)(plcInformation.water.value & 65534);
+            }
+            else
+            {
+                plcInformation.water.value = (ushort)(plcInformation.water.value | 1);
+            }
+            plcInformation.writeWater(plcInformation.water.value);
+        }
+
+        private void button_Water_Timer_Click(object sender, RoutedEventArgs e)
+        {
+            bool x = (plcInformation.water.value & (1 << 1 - 1)) != 0;
+            if (x)
+            {
+                plcInformation.water.value = (ushort)(plcInformation.water.value | 1);
+            }
+            else
+            {
+                plcInformation.water.value = (ushort)(plcInformation.water.value & 65534);
+            }
+            x = (plcInformation.water.value & (1 << 2 - 1)) != 0;
+            if (x)
+            {
+                plcInformation.water.value = (ushort)(plcInformation.water.value & 65533);
+            }
+            else
+            {
+                plcInformation.water.value = (ushort)(plcInformation.water.value | 2);
+            }
+            plcInformation.writeWater(plcInformation.water.value);
+        }
+
+        private void textBox_Timer_On_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                plcInformation.writeWaterTOn(Int32.Parse(textBox_Timer_On.Text));
+            }
+        }
+
+        private void textBox_Timer_Off_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                plcInformation.writeWaterTOff(Int32.Parse(textBox_Timer_Off.Text));
+            }
         }
 
         public void sendDirectionTypeToPlc(ushort dir)

@@ -61,6 +61,7 @@ namespace Cad2D
                         //find index for lookup table
                         int index = (int) (Math.Sqrt(Rusquare)/aFocalLinPixels*1000);
                         if (index >= mFELimit) index = mFELimit - 1;
+                        if (index <0 ) index =0;
                         //calculated Rdistorted
                         _index = index;
                         double Rd = aFocalLinPixels*(double) mFisheyeCorrect[index]

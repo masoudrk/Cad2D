@@ -200,9 +200,7 @@ namespace Cad2D.Pages
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                 
                 CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket);
-                 
             }
         }
         public void readPalsY()
@@ -503,16 +501,14 @@ namespace Cad2D.Pages
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            Page_Hsc_X ps = new Page_Hsc_X();
-            pagesStack.Push(((TransitioningContentControl)Parent).Content);
-            ((TransitioningContentControl)Parent).Content = ps;
+            CanvasCad2D.pageHscX = new Page_Hsc_X();
+            ((TransitioningContentControl)Parent).Content = CanvasCad2D.pageHscX;
         }
 
         private void button_Click_2(object sender, RoutedEventArgs e)
         {
-            Page_Hsc_Y ps = new Page_Hsc_Y();
-            pagesStack.Push(((TransitioningContentControl)Parent).Content);
-            ((TransitioningContentControl)Parent).Content = ps;
+            CanvasCad2D.pageHscY = new Page_Hsc_Y();
+            ((TransitioningContentControl)Parent).Content = CanvasCad2D.pageHscY;
         }
 
         private void text_Man_Spd_AXY_KeyUp(object sender, KeyEventArgs e)

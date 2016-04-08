@@ -26,48 +26,50 @@ namespace Cad2D.Pages
     /// </summary>
     public partial class Page_Hsc_X : UserControl
     {
-        private HscXHelper hscXHelper;
         public Page_Hsc_X()
         {
             InitializeComponent();
             load();
-
         }
 
         private void load()
-        {/*
-            hscXHelper= new HscXHelper();
+        {
+            
             if (CanvasCad2D.lsConnection.Connected)
             {
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.testModeAXX.dataType,
-                    hscXHelper.testModeAXX.valueAddress, ref hscXHelper.testModeAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.curPosMMAXX.dataType,
-                    hscXHelper.curPosMMAXX.valueAddress, ref hscXHelper.curPosMMAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.spdReqAXX.dataType,
-                    hscXHelper.spdReqAXX.valueAddress, ref hscXHelper.spdReqAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.accAXX.dataType,
-                    hscXHelper.accAXX.valueAddress, ref hscXHelper.accAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.decModeAXX.dataType,
-                    hscXHelper.decModeAXX.valueAddress, ref hscXHelper.decModeAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.manMaxTarPosAXX.dataType,
-                    hscXHelper.manMaxTarPosAXX.valueAddress, ref hscXHelper.manMaxTarPosAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.manMinTarPosAXX.dataType,
-                    hscXHelper.manMinTarPosAXX.valueAddress, ref hscXHelper.manMinTarPosAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.bwdKeshAXX.dataType,
-                    hscXHelper.bwdKeshAXX.valueAddress, ref hscXHelper.bwdKeshAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.fwdKeshAXX.dataType,
-                  hscXHelper.fwdKeshAXX.valueAddress, ref hscXHelper.fwdKeshAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.bwdMaxDispAXX.dataType,
-                    hscXHelper.bwdMaxDispAXX.valueAddress, ref hscXHelper.bwdMaxDispAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.fwdMaxDispAXX.dataType,
-                    hscXHelper.fwdMaxDispAXX.valueAddress, ref hscXHelper.fwdMaxDispAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.jogCalcAutoAXX.dataType,
-                    hscXHelper.jogCalcAutoAXX.valueAddress, ref hscXHelper.jogCalcAutoAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.decAutoAXX.dataType,
-                    hscXHelper.decAutoAXX.valueAddress, ref hscXHelper.decAutoAXX.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(hscXHelper.decStopAXX.dataType,
-                    hscXHelper.decStopAXX.valueAddress, ref hscXHelper.decStopAXX.readingPacket);
-            }*/
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.testModeAXX.dataType,
+                    CanvasCad2D.hscXHelper.testModeAXX.valueAddress, ref CanvasCad2D.hscXHelper.testModeAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.curPosMMAXX.dataType,
+                    CanvasCad2D.hscXHelper.curPosMMAXX.valueAddress, ref CanvasCad2D.hscXHelper.curPosMMAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.spdReqAXX.dataType,
+                    CanvasCad2D.hscXHelper.spdReqAXX.valueAddress, ref CanvasCad2D.hscXHelper.spdReqAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.accAXX.dataType,
+                    CanvasCad2D.hscXHelper.accAXX.valueAddress, ref CanvasCad2D.hscXHelper.accAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.decModeAXX.dataType,
+                    CanvasCad2D.hscXHelper.decModeAXX.valueAddress, ref CanvasCad2D.hscXHelper.decModeAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.manMaxTarPosAXX.dataType,
+                    CanvasCad2D.hscXHelper.manMaxTarPosAXX.valueAddress, ref CanvasCad2D.hscXHelper.manMaxTarPosAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.manMinTarPosAXX.dataType,
+                    CanvasCad2D.hscXHelper.manMinTarPosAXX.valueAddress, ref CanvasCad2D.hscXHelper.manMinTarPosAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.bwdKeshAXX.dataType,
+                    CanvasCad2D.hscXHelper.bwdKeshAXX.valueAddress, ref CanvasCad2D.hscXHelper.bwdKeshAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.fwdKeshAXX.dataType,
+                  CanvasCad2D.hscXHelper.fwdKeshAXX.valueAddress, ref CanvasCad2D.hscXHelper.fwdKeshAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.bwdMaxDispAXX.dataType,
+                    CanvasCad2D.hscXHelper.bwdMaxDispAXX.valueAddress, ref CanvasCad2D.hscXHelper.bwdMaxDispAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.fwdMaxDispAXX.dataType,
+                    CanvasCad2D.hscXHelper.fwdMaxDispAXX.valueAddress, ref CanvasCad2D.hscXHelper.fwdMaxDispAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.jogCalcAutoAXX.dataType,
+                    CanvasCad2D.hscXHelper.jogCalcAutoAXX.valueAddress, ref CanvasCad2D.hscXHelper.jogCalcAutoAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.decAutoAXX.dataType,
+                    CanvasCad2D.hscXHelper.decAutoAXX.valueAddress, ref CanvasCad2D.hscXHelper.decAutoAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.decStopAXX.dataType,
+                    CanvasCad2D.hscXHelper.decStopAXX.valueAddress, ref CanvasCad2D.hscXHelper.decStopAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.decStopAXX.dataType,
+                    CanvasCad2D.hscXHelper.decStopAXX.valueAddress, ref CanvasCad2D.hscXHelper.decStopAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.decStopAXX.dataType,
+                    CanvasCad2D.hscXHelper.decStopAXX.valueAddress, ref CanvasCad2D.hscXHelper.decStopAXX.readingPacket);
+            }
         }
 
         private void textBoxSpdReq_KeyDown(object sender, KeyEventArgs e)

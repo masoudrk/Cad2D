@@ -119,6 +119,7 @@
     <Compile Include="LineGeometry.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LS-Connection.cs" />
+    <Compile Include="lsEvents.cs" />
     <Compile Include="MyStartDirectionDialog.xaml.cs">
       <DependentUpon>MyStartDirectionDialog.xaml</DependentUpon>
     </Compile>
@@ -381,6 +382,35 @@
     <Resource Include="Resources\4-1.png" />
     <Resource Include="Resources\4-3.png" />
     <Resource Include="Resources\Edges.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrowDown.png" />
+    <Resource Include="Resources\arrowUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrowLeft.png" />
+    <Resource Include="Resources\arrowRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\WaterOption\NotTimer.png" />
+    <Resource Include="Resources\WaterOption\NotWater.png" />
+    <Resource Include="Resources\WaterOption\Timer.png" />
+    <Resource Include="Resources\WaterOption\Water.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NotTimer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NotWater.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Timer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Water.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\power.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
