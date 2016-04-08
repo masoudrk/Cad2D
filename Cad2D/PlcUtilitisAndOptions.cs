@@ -18,9 +18,19 @@ namespace Cad2D
         public Packet<ushort> ManSpdAXX { set; get; }
         public Packet<ushort> ManSpdAXY { set; get; }
         public _velocity Velocity { set; get; }
-        public _BridgeOptions BridgeOptions { set; get; }
-        public _ClampOptions ClampOptions { set; get; }
         public _Encoder Encoder { get; set; }
+
+        public Packet<ushort> DiskOutOfStnFstAXY { set; get; }
+        public Packet<ushort> DiskOutOfStnEndAXY { set; get; }
+        public Packet<ushort> DiskOutOfStnFstAXX { set; get; }
+        public Packet<ushort> DiskOutOfStnEndAXX { set; get; }
+        public Packet<uint> ClampAmount { set; get; }
+        public Packet<ushort> HashyeBack { set; get; }
+        public Packet<ushort> HashyeFront { set; get; }
+        public Packet<ushort> HashyeEdge { set; get; }
+
+        
+
         public PlcUtilitisAndOptions()
         {
             setNewValues();
@@ -28,11 +38,17 @@ namespace Cad2D
         public void setNewValues()
         {
             PrimarySettings ps = Extentions.FromXmlPrimary();
-            ClampOptions = new _ClampOptions((ushort)ps.ClampMem);//970
-            BridgeOptions = new _BridgeOptions((ushort)ps.BridgeOptionMem);//960
             Velocity = new _velocity((ushort)ps.Velocity);//955
             Encoder = new _Encoder((ushort)ps.XEncoderMem, (ushort)ps.YEncoderMem);//980,984
 
+            DiskOutOfStnFstAXY = new Packet<ushort>(233);
+            DiskOutOfStnEndAXY = new Packet<ushort>(234);
+            DiskOutOfStnFstAXX = new Packet<ushort>(235);
+            DiskOutOfStnEndAXX = new Packet<ushort>(236);
+            HashyeBack = new Packet<ushort>(258);
+            HashyeFront = new Packet<ushort>(257);
+            HashyeEdge = new Packet<ushort>(259);
+            ClampAmount = new Packet<uint>(135);
             DiskDiameter = new Packet<ushort>(232);
             ParkPosAXX = new Packet<ushort>(237);
             ParkPosAXY = new Packet<ushort>(238);
@@ -43,6 +59,28 @@ namespace Cad2D
             ManSpdAXX = new Packet<ushort>(250);
             ManSpdAXY = new Packet<ushort>(256);
 
+        }
+        public void getAllClapAndBridge()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnFstAXY.dataType, DiskOutOfStnFstAXY.valueAddress,
+                    ref DiskOutOfStnFstAXY.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnEndAXY.dataType, DiskOutOfStnEndAXY.valueAddress,
+                    ref DiskOutOfStnEndAXY.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnFstAXX.dataType, DiskOutOfStnFstAXX.valueAddress,
+                    ref DiskOutOfStnFstAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnEndAXX.dataType, DiskOutOfStnEndAXX.valueAddress,
+                    ref DiskOutOfStnEndAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(HashyeFront.dataType, HashyeFront.valueAddress,
+                    ref HashyeFront.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(HashyeBack.dataType, HashyeBack.valueAddress,
+                    ref HashyeBack.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(HashyeEdge.dataType, HashyeEdge.valueAddress,
+                    ref HashyeEdge.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(ClampAmount.dataType, ClampAmount.valueAddress,
+                    ref ClampAmount.readingPacket);
+            }
         }
         public class _Encoder
         {
@@ -104,103 +142,6 @@ namespace Cad2D
                 EncoderYPos.value = (ushort)(dataArray[7] * 256 + dataArray[6]);
             }
         }
-
-        public class _ClampOptions
-        {
-            public _ClampOptions(ushort address)
-            {//970
-                PackestId = new List<ushort>();
-                clampValue = new clamp();
-                upClamp = new clamp();
-                downClamp = new clamp();
-                frontClamp = new clamp();
-                behindClamp = new clamp();
-
-                clampValue.valueAddress = address++;
-                upClamp.valueAddress = address++;
-                downClamp.valueAddress = address++;
-                frontClamp.valueAddress = address++;
-                behindClamp.valueAddress = address++;
-            }
-            public List<ushort> PackestId;
-            public clamp clampValue { set; get; }
-            public clamp upClamp { set; get; }
-            public clamp downClamp { set; get; }
-            public clamp frontClamp { set; get; }
-            public clamp behindClamp { set; get; }
-            public class clamp
-            {
-                public writingPacketInfo writingPacket;
-                public ushort value { set; get; }
-                public int valueAddress { set; get; }
-            }
-
-            public void updateValues(byte[] dataArray)
-            {
-                clampValue.value = (ushort)(dataArray[1] * 256 + dataArray[0]);
-
-                upClamp.value = (ushort)(dataArray[3] * 256 + dataArray[2]);
-                downClamp.value = (ushort)(dataArray[5] * 256 + dataArray[4]);
-
-                frontClamp.value = (ushort)(dataArray[7] * 256 + dataArray[6]);
-                behindClamp.value = (ushort)(dataArray[9] * 256 + dataArray[8]);
-
-            }
-        }
-
-
-        public class _BridgeOptions
-        {
-            public _BridgeOptions (int address)
-            {
-                PackestId = new List<ushort>();
-                stoneOffsetUp = new stoneOffset();
-                stoneOffsetRight = new stoneOffset();
-                stoneOffsetDown = new stoneOffset();
-                stoneOffsetLeft = new stoneOffset();
-                //shoud assinge addreses
-                stoneOffsetUp.valueAddress = address++;
-                stoneOffsetRight.valueAddress = address++;
-                stoneOffsetDown.valueAddress = address++;
-                stoneOffsetLeft.valueAddress = address++;
-                //shoud assinge addreses
-                stoneOffsetUp.delayAddress = address++;
-                stoneOffsetRight.delayAddress = address++;
-                stoneOffsetDown.delayAddress = address++;
-                stoneOffsetLeft.delayAddress = address++;
-            }
-            public List<ushort> PackestId;
-            public stoneOffset stoneOffsetUp { set; get; }
-            public stoneOffset stoneOffsetRight { set; get; }
-            public stoneOffset stoneOffsetDown { set; get; }
-            public stoneOffset stoneOffsetLeft { set; get; }
-            public class stoneOffset
-            {
-                public writingPacketInfo writingPacketValue;
-                public writingPacketInfo writingPacketDelay;
-                public ushort value { set; get; }
-                public ushort delay { set; get; }
-                public int valueAddress { set; get; }
-                public int delayAddress { set; get; }
-            }
-
-            public void updateValues(byte [] dataArray)
-            {
-                stoneOffsetUp.value = (ushort)(dataArray[1] * 256 + dataArray[0]);
-                stoneOffsetUp.delay = (ushort)(dataArray[3] * 256 + dataArray[2]);
-
-                stoneOffsetRight.value = (ushort)(dataArray[5] * 256 + dataArray[4]);
-                stoneOffsetRight.delay = (ushort)(dataArray[7] * 256 + dataArray[6]);
-
-                stoneOffsetDown.value = (ushort)(dataArray[9] * 256  + dataArray [8]);
-                stoneOffsetDown.delay = (ushort)(dataArray[11] * 256 + dataArray[10]);
-
-                stoneOffsetLeft.value = (ushort)(dataArray[13] * 256 + dataArray[12]);
-                stoneOffsetLeft.delay = (ushort)(dataArray[15] * 256 + dataArray[14]);
-
-            }
-        }
-
         public class _velocity
         {
             public _velocity(int address)

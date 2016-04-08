@@ -67,7 +67,55 @@ namespace Cad2D
                     plcInformation.machinPhase.readingPacket = null;
                     return;
                 }
-
+                ///
+                if(plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_TopValue.Value = p.value);
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_LeftValue.Value = p.value);
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_BottomValue.Value = p.value);
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_RightValue.Value = p.value);
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.ClampAmount.readingPacket != null && plcUtilitisAndOptions.ClampAmount.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_ClampAmount.Value = p.value);
+                    plcUtilitisAndOptions.ClampAmount.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.HashyeFront.readingPacket != null && plcUtilitisAndOptions.HashyeFront.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_ClampTopLeft.Value = p.value);
+                    plcUtilitisAndOptions.HashyeFront.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.HashyeBack.readingPacket != null && plcUtilitisAndOptions.HashyeBack.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_ClampTopRight.Value = p.value);
+                    plcUtilitisAndOptions.HashyeBack.readingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.HashyeEdge.readingPacket != null && plcUtilitisAndOptions.HashyeEdge.readingPacket.order == p.order)
+                {
+                    OnGUIActions(() => pageToolsObject.textBox_ClampBottomRight.Value = p.value);
+                    plcUtilitisAndOptions.HashyeEdge.readingPacket = null;
+                    return;
+                }
                 //////
                 if (hscXHelper.testModeAXX.readingPacket != null && hscXHelper.testModeAXX.readingPacket.order == p.order)
                 {
@@ -242,6 +290,7 @@ namespace Cad2D
                     plcUtilitisAndOptions.Encoder.EncoderXPals.readingPacket = null;
                     if (pageSettingObject != null)
                         pageSettingObject.readPosX();
+                    return;
                 }
                 if (plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket.order == p.order)
                 {
@@ -249,6 +298,7 @@ namespace Cad2D
                     plcUtilitisAndOptions.Encoder.EncoderXPos.readingPacket = null;
                     if (pageSettingObject != null)
                         pageSettingObject.readPalsY();
+                    return;
                 }
                 if (plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket.order == p.order)
                 {
@@ -256,6 +306,7 @@ namespace Cad2D
                     plcUtilitisAndOptions.Encoder.EncoderYPals.readingPacket = null;
                     if (pageSettingObject != null)
                         pageSettingObject.readPosY();
+                    return;
                 }
                 if (plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket != null && plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket.order == p.order)
                 {
@@ -263,6 +314,7 @@ namespace Cad2D
                     plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket = null;
                     if (pageSettingObject != null)
                         pageSettingObject.OnGUIActions(() => pageSettingObject.setNewChanges());
+                    return;
                 }
 
             }
@@ -319,82 +371,7 @@ namespace Cad2D
                     plcUtilitisAndOptions.Encoder.EncoderYDiv.writingPacket = null;
                     return;
                 }
-                ///////////////clamp options writed//////////////////
-                if (plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket != null && plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.frontClamp.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket != null && plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket.order == p.order)
-                {
-                    plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket = null;
-                    return;
-                }
-                ///////////////bridge options writed//////////////////
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketDelay = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketDelay = null;
-                    return;
-                }
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketDelay = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue = null;
-                    return;
-                }
-
-                if (plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay != null && plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay.order == p.order)
-                {
-                    plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketDelay = null;
-                    return;
-                }
-
-
+               
                 if (shutDownPacketId != null && shutDownPacketId.order == p.order)
                 {
                     shutDownPacketId = null;
@@ -512,26 +489,6 @@ namespace Cad2D
                 plcUtilitisAndOptions.Velocity.updateValues(repi.continuousData);
                 OnGUIActions(() => setSlidersValues());
                 //////////
-                return;
-            }
-
-            i = plcUtilitisAndOptions.BridgeOptions.PackestId.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.BridgeOptions.PackestId.RemoveAt(i);
-                plcUtilitisAndOptions.BridgeOptions.updateValues(repi.continuousData);
-                pageToolsObject.getClampValues();
-                pageToolsObject.OnGUIActions(() => pageToolsObject.updateBridgeValues());
-                //////////
-                return;
-            }
-
-            i = plcUtilitisAndOptions.ClampOptions.PackestId.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.ClampOptions.PackestId.RemoveAt(i);
-                plcUtilitisAndOptions.ClampOptions.updateValues(repi.continuousData);
-                pageToolsObject.OnGUIActions(() => pageToolsObject.updateClampValues());
                 return;
             }
         }

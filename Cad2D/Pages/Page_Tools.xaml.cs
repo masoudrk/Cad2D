@@ -25,7 +25,6 @@ namespace Cad2D.Pages
     {
         public EventHandler backPageHandler;
         private CanvasCad2D cc2d;
-        public static bool readingFromPlcFinished = false;
 
         public Page_Tools(CanvasCad2D cc2d)
         {
@@ -66,10 +65,8 @@ namespace Cad2D.Pages
             textBox_ClampBottomRight.Value = s.clampBottomRight;
 
             //bridge
-             
-            if (CanvasCad2D.lsConnection.Connected)
-                CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.delayAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.PackestId);
-             
+
+            CanvasCad2D.plcUtilitisAndOptions.getAllClapAndBridge();
 
             //clamp
 
@@ -172,97 +169,51 @@ namespace Cad2D.Pages
                                    "/osk.exe");
         }
 
-        public void updateClampValues()
-        {
-            textBox_ClampAmount.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.value;
-            textBox_ClampTopRight.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.value;
-            textBox_ClampTopLeft.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.value;
-            textBox_ClampBottomRight.Value = CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.value;
-            readingFromPlcFinished = true;
-        }
 
-        public void updateBridgeValues()
-        {
-            textBox_TopValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.value;
-            textBox_RightValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.value;
-            textBox_BottomValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.value;
-            textBox_LeftValue.Value = CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.value;
-        }
-
-        public void getClampValues()
-        {
-             
-            if (CanvasCad2D.lsConnection.Connected)
-                CanvasCad2D.lsConnection.readFromPlcContinoues
-                (CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.PackestId);
-             
-        }
-
-        public void OnGUIActions(Action action)
-        {
-            Dispatcher.Invoke(action);
-        }
 
         private void textBox_TopValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if(readingFromPlcFinished)
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_TopValue
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetUp.writingPacketValue);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnFstAXY.dataType,(int)textBox_TopValue.Value, 
+                    CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnFstAXY.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket);
             }
         }
 
 
         private void textBox_RightValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (readingFromPlcFinished)
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_RightValue
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetRight.writingPacketValue);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnEndAXX.dataType, (int)textBox_RightValue.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnEndAXX.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket);
             }
         }
 
 
         private void textBox_BottomValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (readingFromPlcFinished)
-            {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_BottomValue
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetDown.writingPacketValue);
-                     
-                }
-            }
 
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnEndAXY.dataType, (int)textBox_BottomValue.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnEndAXY.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket);
+            }
         }
 
 
 
         private void textBox_LeftValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (readingFromPlcFinished)
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_LeftValue
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.BridgeOptions.stoneOffsetLeft.writingPacketValue);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnFstAXX.dataType, (int)textBox_LeftValue.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnFstAXX.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket);
             }
-
         }
 
         /// <summary>
@@ -272,58 +223,41 @@ namespace Cad2D.Pages
         /// <param name="e"></param>
         private void textBox_ClampAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (readingFromPlcFinished)
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampAmount
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.clampValue.writingPacket);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.ClampAmount.dataType, (int)textBox_ClampAmount.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.ClampAmount.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.ClampAmount.writingPacket);
             }
-
         }
 
         private void textBox_ClampTopRight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (readingFromPlcFinished)
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampTopRight
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.downClamp.writingPacket);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.HashyeBack.dataType, (int)textBox_ClampTopRight.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.HashyeBack.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.HashyeBack.writingPacket);
             }
         }
 
         private void textBox_ClampTopLeft_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            if (readingFromPlcFinished)
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampTopLeft
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.upClamp.writingPacket);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.HashyeFront.dataType, (int)textBox_ClampTopLeft.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.HashyeFront.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.HashyeFront.writingPacket);
             }
         }
 
         private void textBox_ClampBottomRight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
-        {
-            if (readingFromPlcFinished)
+        {//edge
+            if (CanvasCad2D.lsConnection.Connected)
             {
-                if (CanvasCad2D.lsConnection.Connected)
-                {
-                     
-                    CanvasCad2D.lsConnection.writeToPlc(DataType.WORD, (int)textBox_ClampBottomRight
-                        .Value, CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.ClampOptions.behindClamp.writingPacket);
-                     
-                }
+                CanvasCad2D.lsConnection.writeToPlc(CanvasCad2D.plcUtilitisAndOptions.HashyeEdge.dataType, (int)textBox_ClampBottomRight.Value,
+                    CanvasCad2D.plcUtilitisAndOptions.HashyeEdge.valueAddress,
+                    ref CanvasCad2D.plcUtilitisAndOptions.HashyeEdge.writingPacket);
             }
         }
 

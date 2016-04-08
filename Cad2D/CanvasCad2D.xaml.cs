@@ -765,7 +765,6 @@ namespace Cad2D
             else if (sender.Equals("TOOLS"))
             {
                 getSensitiveAlarms();
-                Page_Tools.readingFromPlcFinished = false;
                 pageToolsObject = null;
             }
             button_back_ex_click(null, null);
@@ -897,7 +896,6 @@ namespace Cad2D
             }
             if (contentControl.Content.GetType() == typeof(Page_Tools))
             {
-                Page_Tools.readingFromPlcFinished = false;
                 pageToolsObject = null;
             }
             contentControl.Content = pagesStack.Pop();
