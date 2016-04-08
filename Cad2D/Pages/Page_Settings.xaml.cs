@@ -320,6 +320,9 @@ namespace Cad2D.Pages
             s.ClampMem = int.Parse(TextBox_clampMem.Text);
             s.XEncoderMem = int.Parse(TextBox_XEncoderMem.Text);
             s.YEncoderMem = int.Parse(TextBox_YEncoderMem.Text);
+            s.FELimit = int.Parse(textBox_FELimit.Text);
+            s.ScaleFESize = double.Parse(textBox_ScaleFESize.Text);
+            s.FocalLinPixels = int.Parse(textBox_FocalLinPixels.Text);
 
             s.writeToXmlFile(Env.PrimarySettingsFile);
 
