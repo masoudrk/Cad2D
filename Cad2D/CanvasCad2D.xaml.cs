@@ -1024,7 +1024,7 @@ namespace Cad2D
                         if (bs != null)
                         {
                             PrimarySettings s = Extentions.FromXmlPrimary();
-                            Analyzer a = new Analyzer(s.FELimit);
+                            Analyzer a = new Analyzer(s.FELimit,s.ScaleFESize);
                             bSrc = Utils.BitmapFromSource(bs);
                             Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
                             mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
@@ -1041,7 +1041,7 @@ namespace Cad2D
                         if (bs != null)
                         {
                             PrimarySettings s = Extentions.FromXmlPrimary();
-                            Analyzer a = new Analyzer(s.FELimit);
+                            Analyzer a = new Analyzer(s.FELimit, s.ScaleFESize);
                             bSrc = Utils.BitmapFromSource(bs);
                             Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
                             pso.offsetImage.Source = Utils.ConvertBitmapToBitmapSource(b1);

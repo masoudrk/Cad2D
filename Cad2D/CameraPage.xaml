@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
     <Grid Background="#282828" >
-        <Image x:Name="image" Margin="0" Height="576" Width="704" Stretch="Uniform" />
+        <Image x:Name="image" Margin="0" Height="576" Width="704" Stretch="Uniform" Source="Resources/about1.png" />
     </Grid>
 </UserControl>

@@ -16,9 +16,10 @@ namespace Cad2D
         //private int mFELimit = 1500;
         //private double mScaleFESize = 0.9;
         
-        public Analyzer(int mFELimit)
+        public Analyzer(int mFELimit,double mScaleFESize)
         {
             this.mFELimit = mFELimit;
+            this.mScaleFESize = mScaleFESize;
             //A lookup table so we don't have to calculate Rdistorted over and over
             //The values will be multiplied by focal length in pixels to 
             //get the Rdistorted
@@ -33,46 +34,58 @@ namespace Cad2D
 
         public Bitmap RemoveFisheye(ref Bitmap aImage, double aFocalLinPixels)
         {
-            Bitmap correctedImage = new Bitmap(aImage.Width, aImage.Height);
-            //The center points of the image
-            double xc = aImage.Width / 2.0;
-            double yc = aImage.Height / 2.0;
-            Boolean xpos, ypos;
-            //Move through the pixels in the corrected image; 
-            //set to corresponding pixels in distorted image
-            for (int i = 0; i < correctedImage.Width; i++)
+            int _index =0;
+            try
             {
-                for (int j = 0; j < correctedImage.Height; j++)
+                Bitmap correctedImage = new Bitmap(aImage.Width, aImage.Height);
+                //The center points of the image
+                double xc = aImage.Width/2.0;
+                double yc = aImage.Height/2.0;
+                Boolean xpos, ypos;
+                //Move through the pixels in the corrected image; 
+                //set to corresponding pixels in distorted image
+                for (int i = 0; i < correctedImage.Width; i++)
                 {
-                    //which quadrant are we in?
-                    xpos = i > xc;
-                    ypos = j > yc;
-                    //Find the distance from the center
-                    double xdif = i - xc;
-                    double ydif = j - yc;
-                    //The distance squared
-                    double Rusquare = xdif * xdif + ydif * ydif;
-                    //the angle from the center
-                    double theta = Math.Atan2(ydif, xdif);
-                    //find index for lookup table
-                    int index = (int)(Math.Sqrt(Rusquare) / aFocalLinPixels * 1000);
-                    if (index >= mFELimit) index = mFELimit - 1;
-                    //calculated Rdistorted
-                    double Rd = aFocalLinPixels * (double)mFisheyeCorrect[index]
-                                          / mScaleFESize;
-                    //calculate x and y distances
-                    double xdelta = Math.Abs(Rd * Math.Cos(theta));
-                    double ydelta = Math.Abs(Rd * Math.Sin(theta));
-                    //convert to pixel coordinates
-                    int xd = (int)(xc + (xpos ? xdelta : -xdelta));
-                    int yd = (int)(yc + (ypos ? ydelta : -ydelta));
-                    xd = Math.Max(0, Math.Min(xd, aImage.Width - 1));
-                    yd = Math.Max(0, Math.Min(yd, aImage.Height - 1));
-                    //set the corrected pixel value from the distorted image
-                    correctedImage.SetPixel(i, j, aImage.GetPixel(xd, yd));
+                    for (int j = 0; j < correctedImage.Height; j++)
+                    {
+                        //which quadrant are we in?
+                        xpos = i > xc;
+                        ypos = j > yc;
+                        //Find the distance from the center
+                        double xdif = i - xc;
+                        double ydif = j - yc;
+                        //The distance squared
+                        double Rusquare = xdif*xdif + ydif*ydif;
+                        //the angle from the center
+                        double theta = Math.Atan2(ydif, xdif);
+                        //find index for lookup table
+                        int index = (int) (Math.Sqrt(Rusquare)/aFocalLinPixels*1000);
+                        if (index >= mFELimit) index = mFELimit - 1;
+                        //calculated Rdistorted
+                        _index = index;
+                        double Rd = aFocalLinPixels*(double) mFisheyeCorrect[index]
+                                    /mScaleFESize;
+                        //calculate x and y distances
+                        double xdelta = Math.Abs(Rd*Math.Cos(theta));
+                        double ydelta = Math.Abs(Rd*Math.Sin(theta));
+                        //convert to pixel coordinates
+                        int xd = (int) (xc + (xpos ? xdelta : -xdelta));
+                        int yd = (int) (yc + (ypos ? ydelta : -ydelta));
+                        xd = Math.Max(0, Math.Min(xd, aImage.Width - 1));
+                        yd = Math.Max(0, Math.Min(yd, aImage.Height - 1));
+                        //set the corrected pixel value from the distorted image
+                        correctedImage.SetPixel(i, j, aImage.GetPixel(xd, yd));
+                    }
                 }
+                return correctedImage;
             }
-            return correctedImage;
+            catch (Exception ex)
+            {
+                Logger.LogError("Fisheye (all->" + mFisheyeCorrect.Count + "[" + _index + "])\n" + "params("+ aFocalLinPixels + ")\n"
+                    + "_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Bitmap correctedImage = new Bitmap(aImage.Width, aImage.Height);
+                return correctedImage;
+            }
         }
     }
 }
