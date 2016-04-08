@@ -24,7 +24,7 @@ namespace Cad2D.Pages
         public Page_SetOffsets()
         {
             InitializeComponent();
-            
+
             points = new Point[2];
             _pointCount = 0;
         }

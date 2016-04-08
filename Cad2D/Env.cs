@@ -21,6 +21,10 @@ namespace Cad2D
         {
             get { return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MgCad\"; }
         }
+        public static string ErrorFolderPath
+        {
+            get { return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MgCadErrorLog.txt"; }
+        }
 
     }
 }

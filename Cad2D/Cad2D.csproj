@@ -117,6 +117,7 @@
     <Compile Include="HscYHelper.cs" />
     <Compile Include="HscXHelper.cs" />
     <Compile Include="LineGeometry.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LS-Connection.cs" />
     <Compile Include="MyStartDirectionDialog.xaml.cs">
       <DependentUpon>MyStartDirectionDialog.xaml</DependentUpon>

@@ -132,7 +132,7 @@ namespace Cad2D
             pagesStack = new Stack<object>();
             plcUtilitisAndOptions = new PlcUtilitisAndOptions();
             this.Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
-
+            
 
             head.mouseActionsEnable = false;
             head.radius = 50;
@@ -1006,70 +1006,79 @@ namespace Cad2D
 
         private void button_switchToCamera_Click(object sender, RoutedEventArgs e)
         {
-            Type t = contentControl.Content.GetType();
-
-            if (t == typeof(CameraPage))
+            try
             {
-                contentControl.Transition = TransitionType.RightReplace;
-                CameraPage cp = (CameraPage)contentControl.Content;
-                cp.hv.stopCapturing();
-                Image i = cp.image;
+            
+                Type t = contentControl.Content.GetType();
 
-                if (pagesStack.Count() < 2)
+                if (t == typeof(CameraPage))
                 {
-                    BitmapSource bs = (BitmapSource)i.Source;
-                    if (bs != null)
+                    contentControl.Transition = TransitionType.RightReplace;
+                    CameraPage cp = (CameraPage)contentControl.Content;
+                    cp.hv.stopCapturing();
+                    Image i = cp.image;
+
+                    if (pagesStack.Count() < 2)
                     {
-                        PrimarySettings s = Extentions.FromXmlPrimary();
-                        Analyzer a = new Analyzer(s.FELimit);
-                        bSrc = Utils.BitmapFromSource(bs);
-                        Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
-                        mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                        BitmapSource bs = (BitmapSource)i.Source;
+                        if (bs != null)
+                        {
+                            PrimarySettings s = Extentions.FromXmlPrimary();
+                            Analyzer a = new Analyzer(s.FELimit);
+                            bSrc = Utils.BitmapFromSource(bs);
+                            Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
+                            mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                        }
+                        clearPath();
+                        EditMode();
+                        contentControl.Transition = TransitionType.Normal;
                     }
-                    clearPath();
-                    EditMode();
-                    contentControl.Transition = TransitionType.Normal;
+                    else
+                    {
+
+                        Page_SetOffsets pso = new Page_SetOffsets();
+                        BitmapSource bs = (BitmapSource)i.Source;
+                        if (bs != null)
+                        {
+                            PrimarySettings s = Extentions.FromXmlPrimary();
+                            Analyzer a = new Analyzer(s.FELimit);
+                            bSrc = Utils.BitmapFromSource(bs);
+                            Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
+                            pso.offsetImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                        }
+                        contentControl.Content = pso;
+                    }
+                }
+                else if (t == typeof(Page_SetOffsets))
+                {
+                    Page_SetOffsets pso = (Page_SetOffsets)contentControl.Content;
+                    Point[] pns = pso.points;
+                    if (pso._pointCount != 2)
+                    {
+                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "حتما بایستی 2 نقطه بالا چپ و پایین راست میز تعیین شود.");
+                        return;
+                    }
+                    Page_Settings ps = (Page_Settings)pagesStack.Pop();
+                    ps.setOffsets(pns);
+
+                    contentControl.Content = ps;
+
+                    ((Image)button_switchToCamera.Content).Source =
+                        new BitmapImage(
+                            new Uri("pack://application:,,,/Cad2D;component/Resources/camera.png",
+                            UriKind.Absolute));
+                    btn_sendToPlc_back.Visibility = Visibility.Visible;
+                    border_tools2.Visibility = Visibility.Hidden;
+                    border_Directions.Visibility = Visibility.Hidden;
                 }
                 else
                 {
-                    Page_SetOffsets pso = new Page_SetOffsets();
-                    BitmapSource bs = (BitmapSource)i.Source;
-                    if (bs != null)
-                    {
-                        PrimarySettings s = Extentions.FromXmlPrimary();
-                        Analyzer a = new Analyzer(s.FELimit);
-                        bSrc = Utils.BitmapFromSource(bs);
-                        Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
-                        pso.offsetImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
-                    }
-                    contentControl.Content = pso;
+                    CaptureMode();
                 }
             }
-            else if (t == typeof(Page_SetOffsets))
+            catch (Exception ex)
             {
-                Page_SetOffsets pso = (Page_SetOffsets)contentControl.Content;
-                Point[] pns = pso.points;
-                if (pso._pointCount != 2)
-                {
-                    ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "حتما بایستی 2 نقطه بالا چپ و پایین راست میز تعیین شود.");
-                    return;
-                }
-                Page_Settings ps = (Page_Settings)pagesStack.Pop();
-                ps.setOffsets(pns);
-
-                contentControl.Content = ps;
-
-                ((Image)button_switchToCamera.Content).Source =
-                    new BitmapImage(
-                        new Uri("pack://application:,,,/Cad2D;component/Resources/camera.png",
-                        UriKind.Absolute));
-                btn_sendToPlc_back.Visibility = Visibility.Visible;
-                border_tools2.Visibility = Visibility.Hidden;
-                border_Directions.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                CaptureMode();
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
             }
         }
         private void btn_sendToPlc_back_Click(object sender, RoutedEventArgs e)
