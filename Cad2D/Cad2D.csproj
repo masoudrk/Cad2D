@@ -114,6 +114,8 @@
     </ApplicationDefinition>
     <Compile Include="Analyzer.cs" />
     <Compile Include="Env.cs" />
+    <Compile Include="HscYHelper.cs" />
+    <Compile Include="HscXHelper.cs" />
     <Compile Include="LineGeometry.cs" />
     <Compile Include="LS-Connection.cs" />
     <Compile Include="MyStartDirectionDialog.xaml.cs">

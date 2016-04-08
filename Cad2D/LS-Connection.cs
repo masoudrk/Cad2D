@@ -896,89 +896,90 @@ namespace Cad2D
             return pingable;
         }
         #endregion
-        public class Packet<T>
+    }
+
+    public class Packet<T>
+    {
+        public Packet()
         {
-            public Packet()
-            {
 
-                if (typeof(T) == typeof(bool))
-                {
-                    dataType = DataType.BIT;
-                }
-                else if (typeof(T) == typeof(byte))
-                {
-                    dataType = DataType.BYTE;
-                }
-                else if (typeof(T) == typeof(ushort))
-                {
-                    dataType = DataType.WORD;
-                }
-                else if (typeof(T) == typeof(uint))
-                {
-                    dataType = DataType.DWORD;
-                }
-                else
-                {
-                    dataType = DataType.WORD;
-                }
-            }
-            public Packet(int _address)
+            if (typeof(T) == typeof(bool))
             {
-
-                if (typeof(T) == typeof(bool))
-                {
-                    dataType = DataType.BIT;
-                }
-                else if (typeof(T) == typeof(byte))
-                {
-                    dataType = DataType.BYTE;
-                }
-                else if (typeof(T) == typeof(ushort))
-                {
-                    dataType = DataType.WORD;
-                }
-                else if (typeof(T) == typeof(uint))
-                {
-                    dataType = DataType.DWORD;
-                }
-                else
-                {
-                    dataType = DataType.WORD;
-                }
-
-                valueAddress = _address;
+                dataType = DataType.BIT;
             }
-            public Packet(int _address , T _value)
+            else if (typeof(T) == typeof(byte))
             {
-                
-                if (typeof(T) == typeof(bool))
-                {
-                    dataType = DataType.BIT;
-                }
-                else if (typeof(T) == typeof(byte))
-                {
-                    dataType = DataType.BYTE;
-                }
-                else if (typeof(T) == typeof(ushort))
-                {
-                    dataType = DataType.WORD;
-                }
-                else if (typeof(T) == typeof(uint))
-                {
-                    dataType = DataType.DWORD;
-                }
-                else
-                {
-                    dataType = DataType.WORD;
-                }
-                value = _value;
-                valueAddress = _address;
+                dataType = DataType.BYTE;
             }
-            public writingPacketInfo writingPacket;
-            public readingPacketInfo readingPacket;
-            public T value { set; get; }
-            public int valueAddress { set; get; }
-            public DataType dataType { set; get; }
+            else if (typeof(T) == typeof(ushort))
+            {
+                dataType = DataType.WORD;
+            }
+            else if (typeof(T) == typeof(uint))
+            {
+                dataType = DataType.DWORD;
+            }
+            else
+            {
+                dataType = DataType.WORD;
+            }
         }
+        public Packet(int _address)
+        {
+
+            if (typeof(T) == typeof(bool))
+            {
+                dataType = DataType.BIT;
+            }
+            else if (typeof(T) == typeof(byte))
+            {
+                dataType = DataType.BYTE;
+            }
+            else if (typeof(T) == typeof(ushort))
+            {
+                dataType = DataType.WORD;
+            }
+            else if (typeof(T) == typeof(uint))
+            {
+                dataType = DataType.DWORD;
+            }
+            else
+            {
+                dataType = DataType.WORD;
+            }
+
+            valueAddress = _address;
+        }
+        public Packet(int _address, T _value)
+        {
+
+            if (typeof(T) == typeof(bool))
+            {
+                dataType = DataType.BIT;
+            }
+            else if (typeof(T) == typeof(byte))
+            {
+                dataType = DataType.BYTE;
+            }
+            else if (typeof(T) == typeof(ushort))
+            {
+                dataType = DataType.WORD;
+            }
+            else if (typeof(T) == typeof(uint))
+            {
+                dataType = DataType.DWORD;
+            }
+            else
+            {
+                dataType = DataType.WORD;
+            }
+            value = _value;
+            valueAddress = _address;
+        }
+        public writingPacketInfo writingPacket;
+        public readingPacketInfo readingPacket;
+        public T value { set; get; }
+        public int valueAddress { set; get; }
+        public DataType dataType { set; get; }
     }
 }

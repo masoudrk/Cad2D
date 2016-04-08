@@ -125,7 +125,7 @@ namespace Cad2D
 
         private Window_DisplaySendData _windowDisplaySendData;
 
-        private LS_Connection.Packet<ushort> diskDiameter;
+        private Packet<ushort> diskDiameter;
         public CanvasCad2D()
         {
             InitializeComponent();
@@ -188,7 +188,7 @@ namespace Cad2D
             stoneScanPacketCount = 0;
             verticalBoundryCount = 0;
             horizonalBoundryCount = 0;
-            diskDiameter = new LS_Connection.Packet<ushort>(232);
+            diskDiameter = new Packet<ushort>(232);
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
 
@@ -1968,7 +1968,7 @@ namespace Cad2D
         }
 
         private bool sendingInFirstTime = true;
-        private LS_Connection.Packet<ushort> directionTypePacket;
+        private Packet<ushort> directionTypePacket;
 
         private void button_Dir_1_2_Click(object sender, RoutedEventArgs e)
         {
@@ -2081,7 +2081,7 @@ namespace Cad2D
 
         public void sendDirectionTypeToPlc(ushort dir)
         {
-            directionTypePacket = new LS_Connection.Packet<ushort>(201 , dir);
+            directionTypePacket = new Packet<ushort>(201 , dir);
              
             if (lsConnection.Connected)
                 lsConnection.writeToPlc(directionTypePacket.dataType, directionTypePacket.value, directionTypePacket.valueAddress, ref directionTypePacket.writingPacket);
