@@ -83,7 +83,7 @@ namespace Cad2D
             catch (Exception ex)
             {
                 Logger.LogError("Fisheye (all->" + mFisheyeCorrect.Count + "[" + _index + "])\n" + "params("+ aFocalLinPixels + ")\n"
-                    + "_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                    + "_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error , ex);
                 Bitmap correctedImage = new Bitmap(aImage.Width, aImage.Height);
                 return correctedImage;
             }

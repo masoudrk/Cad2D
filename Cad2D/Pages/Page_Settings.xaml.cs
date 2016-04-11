@@ -125,12 +125,6 @@ namespace Cad2D.Pages
             registeredTextbox[26] = textBox_ScaleFESize;
             registeredTextbox[27] = textBox_FocalLinPixels;
 
-            if (CanvasCad2D.lsConnection.Connected)
-            {
-                 
-                CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderXPos.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdX);
-                 
-            }
             readFirstValues();
             encoderReader = new Thread(PlcInfoReaderTimer_Elapsed);
             encoderReader.Start();
@@ -216,19 +210,7 @@ namespace Cad2D.Pages
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
-                 
                 CanvasCad2D.lsConnection.readFromPlc(DataType.WORD, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.readingPacket);
-                 
-            }
-        }
-
-        public void readEncoderYValues()
-        {
-            if (CanvasCad2D.lsConnection.Connected)
-            {
-                 
-                CanvasCad2D.lsConnection.readFromPlcContinoues(CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPals.valueAddress * 2, CanvasCad2D.plcUtilitisAndOptions.Encoder.EncoderYPos.valueAddress * 2 + 2, ref CanvasCad2D.plcUtilitisAndOptions.Encoder.PackestIdY);
-                 
             }
         }
 

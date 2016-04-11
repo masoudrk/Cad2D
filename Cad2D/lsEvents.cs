@@ -320,7 +320,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error,ex);
             }
         }
 
@@ -455,42 +455,42 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error ,ex);
             }
         }
         private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)
         {
             readingPacketCountinus repi = (readingPacketCountinus)sender;
+            return;
 
+            //int i = plcUtilitisAndOptions.Encoder.PackestIdX.FindIndex(x => x == repi.order);
+            //if (i >= 0)
+            //{
+            //    plcUtilitisAndOptions.Encoder.PackestIdX.RemoveAt(i);
+            //    plcUtilitisAndOptions.Encoder.updateEncoderXValues(repi.continuousData);
+            //    if (pageSettingObject == null) return;
+            //    pageSettingObject.readEncoderYValues();
+            //    return;
+            //}
 
-            int i = plcUtilitisAndOptions.Encoder.PackestIdX.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.Encoder.PackestIdX.RemoveAt(i);
-                plcUtilitisAndOptions.Encoder.updateEncoderXValues(repi.continuousData);
-                if (pageSettingObject == null) return;
-                pageSettingObject.readEncoderYValues();
-                return;
-            }
+            //i = plcUtilitisAndOptions.Encoder.PackestIdY.FindIndex(x => x == repi.order);
+            //if (i >= 0)
+            //{
+            //    plcUtilitisAndOptions.Encoder.PackestIdY.RemoveAt(i);
+            //    plcUtilitisAndOptions.Encoder.updateEncoderYValues(repi.continuousData);
+            //    if (pageSettingObject == null) return;
+            //    return;
+            //}
 
-            i = plcUtilitisAndOptions.Encoder.PackestIdY.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.Encoder.PackestIdY.RemoveAt(i);
-                plcUtilitisAndOptions.Encoder.updateEncoderYValues(repi.continuousData);
-                if (pageSettingObject == null) return;
-                return;
-            }
-
-            i = plcUtilitisAndOptions.Velocity.PackestId.FindIndex(x => x == repi.order);
-            if (i >= 0)
-            {
-                plcUtilitisAndOptions.Velocity.PackestId.RemoveAt(i);
-                plcUtilitisAndOptions.Velocity.updateValues(repi.continuousData);
-                OnGUIActions(() => setSlidersValues());
-                //////////
-                return;
-            }
+            //i = plcUtilitisAndOptions.Velocity.PackestId.FindIndex(x => x == repi.order);
+            //if (i >= 0)
+            //{
+            //    plcUtilitisAndOptions.Velocity.PackestId.RemoveAt(i);
+            //    plcUtilitisAndOptions.Velocity.updateValues(repi.continuousData);
+            //    OnGUIActions(() => setSlidersValues());
+            //    //////////
+            //    return;
+            //}
         }
 
         void setAlarm()

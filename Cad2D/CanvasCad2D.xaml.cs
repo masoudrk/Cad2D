@@ -364,7 +364,6 @@ namespace Cad2D
             if (lsConnection.Connected)
             {
                 lsConnection.readFromPlc(diskDiameter.dataType, diskDiameter.valueAddress, ref diskDiameter.readingPacket);
-                lsConnection.readFromPlcContinoues(plcUtilitisAndOptions.Velocity.velocityXAddress * 2, plcUtilitisAndOptions.Velocity.velocityYAddress * 2 + 2, ref plcUtilitisAndOptions.Velocity.PackestId);
             }
             plcInformation.getFirstValues();
         }
@@ -655,7 +654,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error,ex);
             }
         }
         private void btn_sendToPlc_back_Click(object sender, RoutedEventArgs e)

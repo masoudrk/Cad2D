@@ -69,7 +69,6 @@ namespace Cad2D
                     OnDisconnceted(this, null);
             }
         }
-        //private Mutex sendingDataMutex;
         public event EventHandler OnDisconnceted;
         public event EventHandler OnConnect;
         public event EventHandler OnWritedSuccessfully;
@@ -90,7 +89,6 @@ namespace Cad2D
         public LS_Connection(int ma)
         {
             maxAddress = ma;
-            // sendingDataMutex = new Mutex();
             writingPacketInfoList = new List<writingPacketInfo>();
             readingPacketInfoList = new List<readingPacketInfo>();
             readingPackeCountinusOrder = new List<ushort>();
@@ -108,7 +106,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error , ex);
                 Disconnect();
                 return false;
             }
@@ -129,7 +127,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {   //when the target machin is 127.0.0.1 it throw exception
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error ,ex);
                 Thread.Sleep(1000);
                 Disconnect();
             }
@@ -160,7 +158,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error ,ex);
                 Disconnect();
             }
         }
@@ -178,13 +176,13 @@ namespace Cad2D
             }
             catch (Exception e)
             {
+                writeToServerMutex.ReleaseMutex();
                 Disconnect();
             }
         }
 
         private void onCompleteReadFromServer(IAsyncResult ar)
         {
-
             try
             {
                 readToServerMutex.WaitOne();
@@ -270,7 +268,8 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error);
+                readToServerMutex.ReleaseMutex();
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error , ex);
                 Disconnect();
             }
         }
@@ -281,14 +280,11 @@ namespace Cad2D
             {
                 if (_serverRec[22] != 0x14)
                 {
-                    foreach (readingPacketInfo pp in readingPacketInfoList)
+                    int i = readingPacketInfoList.FindIndex(x => x.order == _serverRec[14]);
+                    if (i >= 0)
                     {
-                        if (pp.order == _serverRec[14])
-                        {
-                            parseData(pp, _serverRec, countBytes);
-                            readingPacketInfoList.Remove(pp);
-                            break;
-                        }
+                        parseData(readingPacketInfoList.ElementAt(i), _serverRec, countBytes);
+                        readingPacketInfoList.RemoveAt(i);
                     }
                 }
                 else
@@ -311,15 +307,12 @@ namespace Cad2D
             {
                 if (_serverRec[countBytes - 2] == 1)
                 {
-                    foreach (writingPacketInfo p in writingPacketInfoList)
+                    int i = writingPacketInfoList.FindIndex(x => x.order == _serverRec[14]);
+                    if (i >= 0)
                     {
-                        if (p.order == _serverRec[14])
-                        {
-                            if (OnWritedSuccessfully != null)
-                                OnWritedSuccessfully(p, null);
-                            writingPacketInfoList.Remove(p);
-                            break;
-                        }
+                        if (OnWritedSuccessfully != null)
+                            OnWritedSuccessfully(writingPacketInfoList.ElementAt(i), null);
+                        writingPacketInfoList.RemoveAt(i);
                     }
                 }
             }
@@ -613,7 +606,7 @@ namespace Cad2D
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
             }
-            { sendPacketMutex.ReleaseMutex(); return true; }
+             sendPacketMutex.ReleaseMutex(); return true; 
         }
 
 

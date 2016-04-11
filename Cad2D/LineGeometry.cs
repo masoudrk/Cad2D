@@ -1,5 +1,6 @@
 ﻿
 using System.Windows.Shapes;
+using  System;
 
 namespace Cad2D
 {
@@ -7,6 +8,7 @@ namespace Cad2D
     {
         private Line line;
         public double minX, minY, maxX, maxY;
+        public double angleX, AngleY;
         private double Tilt, arzAzMabda;
         public bool HorizonalStright { set; get; }
         public bool verticalStright { set; get; }
@@ -23,8 +25,31 @@ namespace Cad2D
             else
                 HorizonalStright = false;
             calculateTilt();
+            calculateAngleXY();
         }
 
+        private void calculateAngleXY()
+        {
+            if (HorizonalStright)
+            {
+                this.angleX = degreesToRadians(0);
+                this.AngleY = degreesToRadians(90);
+            }else if (verticalStright)
+            {
+                this.angleX = degreesToRadians(90);
+                this.AngleY = degreesToRadians(0);
+            }
+            else
+            {
+                this.angleX = Math.Atan(Tilt);
+                this.AngleY = (Math.PI/4) - this.angleX;
+            }
+        }
+        private double degreesToRadians(double degrees)
+        {
+            double radians = (Math.PI / 180) * degrees;
+            return (radians);
+        }
         private void calculateTilt()
         {
 

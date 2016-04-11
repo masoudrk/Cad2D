@@ -58,7 +58,6 @@ namespace Cad2D
             Hashye = new Packet<ushort>(242);
             ManSpdAXX = new Packet<ushort>(250);
             ManSpdAXY = new Packet<ushort>(256);
-
         }
         public void getAllClapAndBridge()
         {
