@@ -343,6 +343,7 @@ namespace Cad2D
                     directionTypePacket.writingPacket = null;
                     if (sendingInFirstTime)
                         _sendDataToPlc();
+                    Logger.LogError("direction writed succesfuly\t"+sendingInFirstTime.ToString(), LogType.Info, null);
                     return;
                 }
                 //////////////////encoder /////////////////////

@@ -78,16 +78,24 @@ namespace Cad2D
         }
         public async Task<MyStartDirectionDialog> showDirections()
         {
-            MyStartDirectionDialog m = new MyStartDirectionDialog();
-            m.ClosingFinished += MOnClosed;
-            await this.ShowChildWindowAsync(m);
-            return m;
+                MyStartDirectionDialog m = new MyStartDirectionDialog();
+                m.ClosingFinished += MOnClosed;
+                await this.ShowChildWindowAsync(m);
+                return m;
         }
 
         private void MOnClosed(object sender, EventArgs eventArgs)
         {
-            MyStartDirectionDialog m = (MyStartDirectionDialog) sender;
-            cc2d.setDirection(m.direction);
+            try
+            {
+                MyStartDirectionDialog m = (MyStartDirectionDialog)sender;
+                cc2d.setDirection(m.direction);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+            }
         }
 
         public void showAdminPasswordReq()

@@ -659,16 +659,23 @@ namespace Cad2D
         }
         private void btn_sendToPlc_back_Click(object sender, RoutedEventArgs e)
         {
-            if (contentControl.Content.GetType() == typeof(CameraPage) || sender ==null)
+            try
             {
-                EditMode();
+                if (contentControl.Content.GetType() == typeof(CameraPage) || sender == null)
+                {
+                    EditMode();
+                }
+                else
+                {
+                    if (!connectedsList.loop)
+                        endDrawVertex();
+                    sendDataToPlc();
+                    setEnable(btn_sendToPlc_back, false);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                if(!connectedsList.loop)
-                    endDrawVertex();
-                sendDataToPlc();
-                setEnable(btn_sendToPlc_back, false);
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
             }
         }
 
@@ -1004,9 +1011,6 @@ namespace Cad2D
             contentControl.Content = pagesStack.Pop();
             border_tools1.Visibility = Visibility.Visible;
             border_setting.Visibility = Visibility.Visible;
-            //border_monitors.Visibility = Visibility.Visible;
-
-            /// setEnable(btn_help, true);
             setEnable(button_about, true);
             setEnable(button_setting, true);
             setEnable(button_tools, true);
@@ -1036,7 +1040,7 @@ namespace Cad2D
             foreach (ConnectedLine c in connectedsList)
                 lineGeometryList.Add(new LineGeometry(c.line));
 
-            // 1500 + (2 * vertical slice) = y
+            calculateInnerPoints(40);
             double[] array1;
             array1 = calCulateVerticalPoints();
             stoneVerticalEdge = calculateStoneVerticalPoints(array1);
@@ -1059,6 +1063,74 @@ namespace Cad2D
             }
         }
 
+        private void calculateInnerPoints(float offset)
+        {
+            LinkedList<System.Drawing.PointF> points = new LinkedList<System.Drawing.PointF>();
+            for (int i = 0 ; i < lineGeometryList.Count ; i++)
+            {
+                LineGeometry line1 = lineGeometryList[i];
+                LineGeometry line2 = (i+1) < lineGeometryList.Count ? lineGeometryList[i+1] : lineGeometryList[0];
+
+                double angle = Math.Abs((line2.angleX - line1.angleX) / 2) +
+                                        Math.Min(line2.angleX, line1.angleX);
+                if (line2.angleX > line1.angleX)
+                    angle += (Math.PI/2);
+                PointF center = new PointF();
+
+                if(line1.X1 == line2.X1 && line1.Y1 == line2.Y1)
+                    center = new PointF((float)line1.X1 , (float)line1.Y1);
+                else if (line1.X1 == line2.X2 && line1.Y1 == line2.Y2)
+                    center = new PointF((float)line1.X1, (float)line1.Y1);
+                else if (line1.X2 == line2.X1 && line1.Y2 == line2.Y1)
+                    center = new PointF((float)line2.X1, (float)line2.Y1);
+                else if (line1.X2 == line2.X2 && line1.Y2 == line2.Y2)
+                    center = new PointF((float)line1.X2, (float)line1.Y2);
+
+                LineGeometry newLine =new LineGeometry(angle , center.X, center.Y);
+                PointF [] point= newLine.calculatePonits(offset);
+                Circle c1 = cloneCircle();
+                c1.mouseActionsEnable = false;
+                c1.radius = 2;
+                c1.X = point[0].X;
+                c1.defaultColor = Brushes.MediumPurple;
+                c1.Y = point[0].Y;
+                guids.Add(c1);
+                mainCanvas.Children.Add(c1);
+                        
+                Circle c = cloneCircle();
+                c.mouseActionsEnable = false;
+                c.radius = 2;
+                c.X = point[1].X;
+                c.defaultColor = Brushes.Yellow;
+                c.Y = point[1].Y;
+                guids.Add(c);
+                mainCanvas.Children.Add(c);
+                
+            }
+        }
+
+        private bool checkIsInnerPoint(PointF point )
+        {
+            int biger = 0;
+            int smaller =0;
+            foreach (LineGeometry lg in lineGeometryList)
+            {
+                if (lg.verticalStright && lg.checkVerticalColision(point.X) && (point.Y < lg.maxY || point.Y > lg.minX))
+                    return true;
+
+                if (lg.checkVerticalColision(point.X))
+                {
+                    if (lg.calculateLineY(point.X) < point.Y)
+                        biger++;
+                    else
+                        smaller++;
+                }
+            }
+            if (biger % 2 != 0 && (biger + smaller) % 2 == 0)
+                return true;
+            return false;
+        }
+
         private void sendDataToPlc()
         {
             directionDialog = MainWindow._window.showDirections();
@@ -1066,10 +1138,16 @@ namespace Cad2D
 
         private void _sendDataToPlc()
         {
-            Dispatcher.Invoke(() => progressDialog = MainWindow._window.showProgress());
-            //progressDialog = MainWindow._window.showProgress();
-            Thread t = new Thread(sendingStoneScanToPLC);
-            t.Start();
+            try
+            {
+                Dispatcher.Invoke(() => progressDialog = MainWindow._window.showProgress());
+                Thread t = new Thread(sendingStoneScanToPLC);
+                t.Start();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+            }
         }
         public double setPericision(double v)
         {
@@ -1178,7 +1256,6 @@ namespace Cad2D
 
                         if (lg.checkVerticalColision(WOffset))
                         {
-
                             if (lg.calculateLineY(WOffset) < HOffset)
                                 biger++;
                             else
@@ -1733,11 +1810,11 @@ namespace Cad2D
 
         public void sendDirectionTypeToPlc(ushort dir)
         {
+            //ta inja call mishavad
             directionTypePacket = new Packet<ushort>(201 , dir);
              
             if (lsConnection.Connected)
                 lsConnection.writeToPlc(directionTypePacket.dataType, directionTypePacket.value, directionTypePacket.valueAddress, ref directionTypePacket.writingPacket);
-             
         }
 
         private void setDirectionButtons(Button buttonDir12)

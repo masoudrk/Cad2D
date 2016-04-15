@@ -116,7 +116,6 @@ namespace Cad2D
         public void onCompleteConnect(IAsyncResult iar)
         {
             TcpClient tcpc;
-
             try
             {
                 tcpc = (TcpClient)iar.AsyncState;
@@ -174,9 +173,10 @@ namespace Cad2D
                     tcpc.GetStream().EndWrite(ar);
                 writeToServerMutex.ReleaseMutex();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 writeToServerMutex.ReleaseMutex();
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
                 Disconnect();
             }
         }
