@@ -53,8 +53,8 @@ namespace Cad2D
 
     public class LS_Connection
     {
-        private Mutex writeToServerMutex = new Mutex();
-        private Mutex readToServerMutex = new Mutex();
+        //private Mutex writeToServerMutex = new Mutex();
+        private Mutex connectMutex = new Mutex();
         private Mutex readEventMutex = new Mutex();
         public static Mutex sendPacketMutex = new Mutex();
         public bool Connected
@@ -96,16 +96,26 @@ namespace Cad2D
 
         public bool connect(IPAddress ip, int port)
         {
+            connectMutex.WaitOne(500);
+            if (Connected)
+            {
+                connectMutex.ReleaseMutex();
+                return true;
+            }
+
             Ip = ip;
             portNumber = port;
             if (!PingHost()) return false;
             try
             {
                 tcpClient = new TcpClient();
+                if (tcpClient == null) return false;
                 tcpClient.BeginConnect(Ip, portNumber, new AsyncCallback(onCompleteConnect), tcpClient);
+                connectMutex.ReleaseMutex();
             }
             catch (Exception ex)
             {
+                connectMutex.ReleaseMutex();
                 Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error , ex);
                 Disconnect();
                 return false;
@@ -119,10 +129,14 @@ namespace Cad2D
             try
             {
                 tcpc = (TcpClient)iar.AsyncState;
+                if(tcpc == null) return;
                 tcpc.EndConnect(iar);
                 Connected = true;
                 serverRec = new byte[2048];
-                tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
+                if(tcpc.Connected)
+                    tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
+                else 
+                    Disconnect();
             }
             catch (Exception ex)
             {   //when the target machin is 127.0.0.1 it throw exception
@@ -140,7 +154,6 @@ namespace Cad2D
             if (tcpClient == null)
             {
                 connect(Ip, portNumber);
-                while (tcpClient == null);
             }
 
             try
@@ -152,8 +165,11 @@ namespace Cad2D
                 //sorate ersal vaghti bala bashee lsdsim nemitone sari pars kone vase hamin chandta packet 
                 //ba ham merg mishan ke in baes mishe yekish khonde beshe . vase hamin
                 //in sleeep ro gozashtam . shayad vase khode plc lazem nabashe
-                Thread.Sleep(1);
-                tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
+                Thread.Sleep(10);
+                if(tcpClient != null && tcpClient.Connected)
+                    tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
+                else
+                    Disconnect();
             }
             catch (Exception ex)
             {
@@ -164,18 +180,14 @@ namespace Cad2D
 
         private void onCompleteWriteToServer(IAsyncResult ar)
         {
-
             try
             {
-                writeToServerMutex.WaitOne();
                 TcpClient tcpc;
                 tcpc = (TcpClient)ar.AsyncState;
                     tcpc.GetStream().EndWrite(ar);
-                writeToServerMutex.ReleaseMutex();
             }
             catch (Exception ex)
             {
-                writeToServerMutex.ReleaseMutex();
                 Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
                 Disconnect();
             }
@@ -185,17 +197,16 @@ namespace Cad2D
         {
             try
             {
-                readToServerMutex.WaitOne();
+             
                 TcpClient tcpc;
                 int countBytes;
-                tcpc = (TcpClient)ar.AsyncState;
+                tcpc = (TcpClient) ar.AsyncState;
 
                 countBytes = tcpc.GetStream().EndRead(ar);
 
                 if (countBytes == 0)
                 {
                     Disconnect();
-                    readToServerMutex.ReleaseMutex();
                     return;
                 }
                 List<byte[]> rawPackets = new List<byte[]>();
@@ -203,13 +214,14 @@ namespace Cad2D
                 int i = 0;
                 while (i < countBytes)
                 {
-                    if (serverRec[i + 0] == 0x4C && serverRec[i + 1] == 0x47 && serverRec[i + 2] == 0x49 && serverRec[i + 3] == 0x53)
+                    if (serverRec[i + 0] == 0x4C && serverRec[i + 1] == 0x47 && serverRec[i + 2] == 0x49 &&
+                        serverRec[i + 3] == 0x53)
                     {
                         if (serverRec[i + 20] == 0x55)
                         {
                             if (serverRec[22 + i] != 0x14)
                             {
-                                if (serverRec[30 +i] == 0x2)
+                                if (serverRec[30 + i] == 0x2)
                                 {
                                     byte[] _array;
                                     _array = new byte[34];
@@ -237,7 +249,7 @@ namespace Cad2D
                             else
                             {
                                 byte[] _array;
-                                _array = new byte[32 + serverRec[30+i]];
+                                _array = new byte[32 + serverRec[30 + i]];
                                 Buffer.BlockCopy(serverRec, i, _array, 0, _array.Length);
                                 rawPackets.Add(_array);
                                 i += _array.Length;
@@ -247,7 +259,7 @@ namespace Cad2D
                         {
                             byte[] _array;
                             _array = new byte[30];
-                            Buffer.BlockCopy(serverRec ,i,_array,0,_array.Length);
+                            Buffer.BlockCopy(serverRec, i, _array, 0, _array.Length);
                             rawPackets.Add(_array);
                             i += _array.Length;
                         }
@@ -263,15 +275,22 @@ namespace Cad2D
                 }
 
                 serverRec = new byte[2048];
-                readToServerMutex.ReleaseMutex();
-                tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
+                if(tcpc.Connected)
+                    tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
+                else 
+                    Disconnect();
             }
             catch (Exception ex)
             {
-                readToServerMutex.ReleaseMutex();
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error , ex);
+                Logger.LogError(
+                    "_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite +
+                    "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
                 Disconnect();
             }
+            //finally
+            //{
+            //    readToServerMutex.ReleaseMutex();
+            //}
         }
 
         private void managePacket(int countBytes , byte[] _serverRec)
@@ -338,10 +357,9 @@ namespace Cad2D
                     p.value = BitConverter.ToInt32(data, dataLength - 4);
                     break;
             }
-            readEventMutex.WaitOne();
             if (OnReadedSuccessfully != null)
                 OnReadedSuccessfully(p, null);
-            readEventMutex.ReleaseMutex();
+            
         }
 
         public void Disconnect()
@@ -357,7 +375,7 @@ namespace Cad2D
 
         public bool readFromPlc(DataType dt, int address ,ref readingPacketInfo rpi)
         {
-            sendPacketMutex.WaitOne();
+            sendPacketMutex.WaitOne(100);
             if (dt == DataType.CONTINUOUS)
             {sendPacketMutex.ReleaseMutex();return false;}
             if (dt == DataType.BIT)
@@ -468,7 +486,7 @@ namespace Cad2D
 
         public bool readFromPlcContinoues(int address, int address_end, ref List<ushort> PackestId)
         {
-            sendPacketMutex.WaitOne(); 
+            sendPacketMutex.WaitOne(100); 
             if (address < 0 || address > maxAddress * 2)
             { sendPacketMutex.ReleaseMutex(); return false; }
             if (address > address_end)
@@ -499,7 +517,7 @@ namespace Cad2D
 
         public bool writeToPlc(DataType dt, int value, int address, ref writingPacketInfo wpi)
         {
-            sendPacketMutex.WaitOne(); 
+            sendPacketMutex.WaitOne(100); 
             if (dt == DataType.CONTINUOUS)
             { sendPacketMutex.ReleaseMutex(); return false; }
             if (dt == DataType.BIT)
@@ -613,7 +631,7 @@ namespace Cad2D
 
         public bool writeToPlc(DataType dt, int value, int address, ref List<writingPacketInfo> wpiList)
         {
-            sendPacketMutex.WaitOne();
+            sendPacketMutex.WaitOne(100);
             if (dt == DataType.CONTINUOUS)
             { sendPacketMutex.ReleaseMutex(); return false; }
             if (dt == DataType.BIT)

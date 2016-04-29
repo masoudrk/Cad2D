@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cad2D
@@ -15,8 +16,10 @@ namespace Cad2D
 
     class Logger
     {
+        static Mutex writeMutex = new Mutex();
         public static void LogError(string msg , LogType lt , Exception ex)
         {
+            writeMutex.WaitOne();
             System.IO.StreamWriter file = new System.IO.StreamWriter(Env.ErrorFolderPath, true);
             file.WriteLine(lt.ToString() + ":");
             string[] lines = msg.Split('\n');
@@ -40,7 +43,7 @@ namespace Cad2D
             }
             file.WriteLine("---------------------------------------------------------END----------------------------------------------------------");
             file.Close();
-            
+            writeMutex.ReleaseMutex();
         }
     }
 }

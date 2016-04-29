@@ -31,7 +31,65 @@ namespace Cad2D
             readingPacketInfo p = (readingPacketInfo)sender;
             try
             {
+                ////////plc information new /////
 
+                if (plcInformation.verticalSobCount.readingPacket != null && plcInformation.verticalSobCount.readingPacket.order == p.order)
+                {
+                    plcInformation.verticalSobCount.value = (ushort)p.value;
+                    OnGUIActions(() => lbl_veticalSubDone.Content = plcInformation.verticalSobCount.value);
+                    plcInformation.verticalSobCount.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.horizontalSobCount.readingPacket != null && plcInformation.horizontalSobCount.readingPacket.order == p.order)
+                {
+                    plcInformation.horizontalSobCount.value = (ushort)p.value;
+                    OnGUIActions(() => lbl_horizontalSubDone.Content = plcInformation.horizontalSobCount.value);
+                    plcInformation.horizontalSobCount.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.edgeSobCount.readingPacket != null && plcInformation.edgeSobCount.readingPacket.order == p.order)
+                {
+                    plcInformation.edgeSobCount.value = (ushort)p.value;
+                    OnGUIActions(() => lbl_edgeSubDone.Content = plcInformation.edgeSobCount.value);
+                    plcInformation.edgeSobCount.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.sobPhase.readingPacket != null && plcInformation.sobPhase.readingPacket.order == p.order)
+                {
+                    plcInformation.sobPhase.value = (ushort)p.value;
+                    OnGUIActions(() => setSobPhase());
+                    plcInformation.sobPhase.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.edgeEndStart.readingPacket != null && plcInformation.edgeEndStart.readingPacket.order == p.order)
+                {
+                    plcInformation.edgeEndStart.value = (ushort)p.value;
+                    OnGUIActions(() => setEndStart());
+                    plcInformation.edgeEndStart.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.verticalSob.readingPacket != null && plcInformation.verticalSob.readingPacket.order == p.order)
+                {
+                    plcInformation.verticalSob.value = (ushort)p.value;
+                    OnGUIActions(() => textBox_verticalSob.Value = (double)plcInformation.verticalSob.value);
+                    plcInformation.verticalSob.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.horizontalSob.readingPacket != null && plcInformation.horizontalSob.readingPacket.order == p.order)
+                {
+                    plcInformation.horizontalSob.value = (ushort)p.value;
+                    OnGUIActions(() => textBox_horizontalSob.Value = (double)plcInformation.horizontalSob.value);
+                    plcInformation.horizontalSob.readingPacket = null;
+                    return;
+                }
+                if (plcInformation.edgeSob.readingPacket != null && plcInformation.edgeSob.readingPacket.order == p.order)
+                {
+                    plcInformation.edgeSob.value = (ushort)p.value;
+                    OnGUIActions(() => textBox_edgeSob.Value = (double)plcInformation.edgeSob.value);
+                    plcInformation.edgeSob.readingPacket = null;
+                    return;
+                }
+                ////////plc information old /////
                 if (plcInformation.positionX.readingPacket != null && plcInformation.positionX.readingPacket.order == p.order)
                 {
                     plcInformation.positionX.value = (ushort)p.value;
@@ -323,27 +381,44 @@ namespace Cad2D
                 Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error,ex);
             }
         }
-
-
+        
         private void Ls_connection_OnWritedSuccessfully(object sender, EventArgs e)
         {
             writingPacketInfo p = (writingPacketInfo)sender;
             try
             {
-                
                 if (plcInformation.water.writingPacket != null && plcInformation.water.writingPacket.order == p.order)
                 {
                     plcInformation.water.writingPacket = null;
-                       OnGUIActions(() => setWaterSetting());
+                    OnGUIActions(setWaterSetting);
                     return;
                 }
-                ///////////// 
-                if (directionTypePacket != null && directionTypePacket.writingPacket != null && directionTypePacket.writingPacket.order == p.order)
+                if (plcInformation.edgeEndStart.writingPacket != null && plcInformation.edgeEndStart.writingPacket.order == p.order)
                 {
-                    directionTypePacket.writingPacket = null;
-                    if (sendingInFirstTime)
-                        _sendDataToPlc();
-                    Logger.LogError("direction writed succesfuly\t"+sendingInFirstTime.ToString(), LogType.Info, null);
+                    plcInformation.edgeEndStart.writingPacket = null;
+                    plcInformation.edgeEndStart.value = (ushort)p.value;
+                    OnGUIActions(setEndStart);
+                    return;
+                }
+                if (plcInformation.edgeSob.writingPacket != null && plcInformation.edgeSob.writingPacket.order == p.order)
+                {
+                    plcInformation.edgeSob.writingPacket = null;
+                    plcInformation.edgeSob.value = (ushort)p.value;
+                    OnGUIActions(()=> textBox_edgeSob.Value = plcInformation.edgeSob.value);
+                    return;
+                }
+                if (plcInformation.verticalSob.writingPacket != null && plcInformation.verticalSob.writingPacket.order == p.order)
+                {
+                    plcInformation.verticalSob.writingPacket = null;
+                    plcInformation.verticalSob.value = (ushort)p.value;
+                    OnGUIActions(() => textBox_verticalSob.Value = plcInformation.verticalSob.value);
+                    return;
+                }
+                if (plcInformation.horizontalSob.writingPacket != null && plcInformation.horizontalSob.writingPacket.order == p.order)
+                {
+                    plcInformation.horizontalSob.writingPacket = null;
+                    plcInformation.horizontalSob.value = (ushort)p.value;
+                    OnGUIActions(() => textBox_horizontalSob.Value = plcInformation.horizontalSob.value);
                     return;
                 }
                 //////////////////encoder /////////////////////
@@ -492,6 +567,22 @@ namespace Cad2D
             //    //////////
             //    return;
             //}
+        }
+
+        private void setSobPhase()
+        {
+            bool[] array = Convert.ToString(plcInformation.sobPhase.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
+            bool[] boolArray = createBoolArray(array);
+            button_edgeStartFinished.Visibility = boolArray[0] ? Visibility.Visible : Visibility.Hidden;
+            button_edgeEndFinished.Visibility = boolArray[3] ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void setEndStart()
+        {
+            bool[] array = Convert.ToString(plcInformation.edgeEndStart.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
+            bool[] boolArray = createBoolArray(array);
+            button_edgeStart.Source = boolArray[0] ? new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/stop.png")) : new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/play.png"));
+            button_edgeEnd.Source = boolArray[1] ? new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/stop.png")) : new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/play.png"));
         }
 
         void setAlarm()

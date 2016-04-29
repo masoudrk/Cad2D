@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Cad2D"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:ui="clr-namespace:SiriusMicrotech.core.UI"
              x:Class="Cad2D.CanvasCad2D"
              mc:Ignorable="d" 
@@ -24,8 +25,7 @@
         <Grid Name="mainGrid" Grid.Column="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="33*"/>
-                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -38,7 +38,7 @@
                 <RowDefinition Height="65"/>
             </Grid.RowDefinitions>
 
-            <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="3" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
+            <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="2" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
                 <StackPanel Orientation="Vertical">
                     <Button x:Name="btn_CreatePathTool" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" Click="toggle_PenTool_Checked" >
                         <Image Source="Resources/add_path.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="12"  />
@@ -50,7 +50,7 @@
             </Border>
 
 
-            <Border Name="border_tools2" Margin="0 8 0 0" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Column="3" Grid.Row="3" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Height="150">
+            <Border Name="border_tools2" Margin="0 8 0 0" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Column="2" Grid.Row="3" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Height="150">
                 <StackPanel Orientation="Vertical">
                     <Button x:Name="button_switchToCamera" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_switchToCamera_Click" HorizontalAlignment="Left" Width="{StaticResource LargeIconSize}" >
                         <Image Source="Resources/camera.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
@@ -61,7 +61,7 @@
                 </StackPanel>
             </Border>
             <Border BorderThickness="2" BorderBrush="#FFD6DBE9" Grid.RowSpan="6" 
-                ClipToBounds="True" SnapsToDevicePixels="True" Grid.Column="1" Grid.ColumnSpan="2">
+                ClipToBounds="True" SnapsToDevicePixels="True" Grid.Column="1">
                 <Controls:TransitioningContentControl x:Name="contentControl" Transition="Normal" >
                     <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="White" >-->
                     <Border Background="#282526">
@@ -84,7 +84,8 @@
                     <!--</ScrollViewer>-->
                 </Controls:TransitioningContentControl>
             </Border>
-            <Border x:Name="border_WaterOption" FlowDirection="RightToLeft" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="2" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="0,0,10,0" >
+            <Border x:Name="border_WaterOption" FlowDirection="RightToLeft" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="1" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="11,0,10,0" >
+
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="button_water" Click="button_water_Click" Style="{DynamicResource MetroCircleButtonStyle}" >
                         <Image x:Name="img_water" Source="Resources/WaterOption/Water.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
@@ -100,40 +101,21 @@
                         <Label Content="T OFF" HorizontalAlignment="Center" VerticalAlignment="Top"  FontSize="12" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" FontWeight="Bold"/>
                         <TextBox x:Name="textBox_Timer_Off"  TextWrapping="Wrap" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Height="35" Margin="4,0" TextChanged="textBox__TextChanged" KeyUp="textBox_Timer_Off_KeyUp" />
                     </StackPanel>
-                </StackPanel>
-            </Border>
-            <Border x:Name="border_Directions" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="1" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="10,0" >
-                <StackPanel Orientation="Horizontal">
-                    <Button x:Name="button_Dir_1_2" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_1_2_Click"   >
-                        <Image Source="Resources/1-2.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Dir_1_4" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_1_4_Click"   >
-                        <Image Source="Resources/1-4.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Dir_2_1" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_2_1_Click"   >
-                        <Image Source="Resources/2-1.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Dir_2_3" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_2_3_Click"   >
-                        <Image Source="Resources/2-3.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Dir_3_2" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_3_2_Click"   >
-                        <Image Source="Resources/3-2.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Dir_3_4" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_3_4_Click"   >
-                        <Image Source="Resources/3-4.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Dir_4_1" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_4_1_Click"   >
-                        <Image Source="Resources/4-1.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button  x:Name="button_Dir_4_3" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Dir_4_3_Click"  >
-                        <Image Source="Resources/4-3.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
-                    <Button x:Name="button_Edges" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Edges_Click" >
-                        <Image Source="Resources/Edges.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="محور X :" FontSize="17.333" VerticalContentAlignment="Center"/>
+                        <Label x:Name="labelPosX" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="10000" FontSize="23" VerticalContentAlignment="Center" Foreground="#FF009BE2"/>
+                    </StackPanel>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="محور Y :" FontSize="17.333" VerticalContentAlignment="Center"/>
+                        <Label x:Name="labelPosY" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="99999" FontSize="23" VerticalContentAlignment="Center" Foreground="#FF009BE2"/>
+                    </StackPanel>
+                    <Button x:Name="graph" Click="button_showData_Click" Style="{DynamicResource MetroCircleButtonStyle}" >
+                        <Image Source="Resources/grid.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="18" />
                     </Button>
                 </StackPanel>
             </Border>
-            <Border Name="border_setting" Width="{StaticResource SmallIconSize}" HorizontalAlignment="Left" CornerRadius="0 6 6 6" Margin="0,0,0,16" Grid.Row="5" Grid.Column="3" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Grid.RowSpan="2" >
+
+            <Border Name="border_setting" Width="{StaticResource SmallIconSize}" HorizontalAlignment="Left" CornerRadius="0 6 6 6" Margin="0,0,0,16" Grid.Row="5" Grid.Column="2" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Grid.RowSpan="2" >
                 <StackPanel Orientation="Vertical">
                     <Image Name="image_alarm" Source="Resources/alarm_off.png" RenderOptions.BitmapScalingMode="HighQuality" MouseDown="button_alarm_click" Margin="7,5,8,0" />
 
@@ -156,11 +138,8 @@
             </Border>
         </Grid>
         <StackPanel HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="220" Margin="0 20 0 0">
-
-
             <Border HorizontalAlignment="Center" RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0" Height="40" VerticalAlignment="Top"  >
                 <Label x:Name="label_clock" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Time" FontSize="23" FontFamily="Microsoft JhengHei UI Light"/>
-
             </Border>
             <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0" >
                 <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
@@ -182,26 +161,45 @@
                             <Label x:Name="label_y" Content="50x" Width="50" HorizontalContentAlignment="Center" FontSize="18.667"/>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
-                        <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="موقعیت محور X :" FontSize="17.333" VerticalContentAlignment="Center"/>
-                        <Label x:Name="labelPosX" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="10000" FontSize="23" VerticalContentAlignment="Center" Foreground="#FF009BE2"/>
-                    </StackPanel>
-                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
-                        <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="موقعیت محور Y :" FontSize="17.333" VerticalContentAlignment="Center"/>
-                        <Label x:Name="labelPosY" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="99999" FontSize="23" VerticalContentAlignment="Center" Foreground="#FF009BE2"/>
-                    </StackPanel>
+
                 </StackPanel>
             </Border>
-            <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 6 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0"  Height="258" Padding="5" >
-                <Grid Margin="0,0,0,30">
-
-                    <DataGrid x:Name="dataGrid" Background="Transparent" ColumnWidth="*" HorizontalAlignment="Stretch" 
+            <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Margin="0,10,0,0"  Padding="5" >
+                <Grid Margin="0,0,0,0" >
+                    <DataGrid Visibility="Collapsed" x:Name="dataGrid" Background="Transparent" ColumnWidth="*" HorizontalAlignment="Stretch" 
    HorizontalContentAlignment="Stretch" GridLinesVisibility="All" Margin="0,45,0,10" BeginningEdit="dataGrid_BeginningEdit" RowDetailsVisibilityMode="Visible" 
 />
-                    <Button Style="{DynamicResource SquareButtonStyle}" x:Name="button_showData" Content="نمایش مجزا" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="210" Height="35" FontSize="14.667" Click="button_showData_Click"/>
+                    <StackPanel Orientation="Vertical" >
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                            <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                            <Image MouseDown="button_edgeStart_MouseDown" x:Name="button_edgeStart" Source="Resources/func/stop.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
+                            <Image x:Name="button_edgeStartFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
+                        </StackPanel>
+                        <Line Stretch="Fill" Stroke="Gray" X2="1" Margin="0 5 0 5"/>
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                            <Image Source="Resources/1-4.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                            <Custom:NumericUpDown x:Name="textBox_verticalSob" ValueChanged="textBox_verticalSob_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="98" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="10" Minimum="0"/>
+                            <Label x:Name="lbl_veticalSubDone" Content="1" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                            <Image Source="Resources/1-2.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                            <Custom:NumericUpDown x:Name="textBox_horizontalSob" ValueChanged="textBox_horizontalSob_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="98" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="10" Minimum="0"/>
+                            <Label x:Name="lbl_horizontalSubDone" Content="1" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                            <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                            <Custom:NumericUpDown x:Name="textBox_edgeSob" ValueChanged="textBox_edgeSob_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="98" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="10" Minimum="0"/>
+                            <Label x:Name="lbl_edgeSubDone" Content="1" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        <Line Stretch="Fill" Stroke="Gray" X2="1" Margin="0 5 0 5"/>
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                            <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                            <Image MouseDown="button_edgeEnd_MouseDown"  Source="Resources/func/stop.png" x:Name="button_edgeEnd" Width="60" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
+                            <Image x:Name="button_edgeEndFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
+                        </StackPanel>
+                    </StackPanel>
                 </Grid>
             </Border>
-
         </StackPanel>
     </Grid>
 </UserControl>

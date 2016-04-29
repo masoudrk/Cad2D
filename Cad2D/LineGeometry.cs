@@ -57,7 +57,7 @@ namespace Cad2D
             center = new PointF((float)x, (float)y);
         }
 
-        public PointF[] calculatePonits(float offset)
+        public PointF[] calculateTestPonits(float offset)
         {
             PointF []array = new PointF[2];
             if (verticalStright)
@@ -87,6 +87,19 @@ namespace Cad2D
                 return array;
             }
         }
+        public PointF[] calculatePonits(float offset, double angle)
+        {
+            PointF[] array = new PointF[2];
+            double distance = offset / Math.Sin(angle);
+
+            double offsetX = Math.Cos(angleX) * distance;
+            double offsetY = Math.Sin(angleX) * distance;
+            array[0].X = (float)(center.X + offsetX);
+            array[0].Y = (float)(center.Y + offsetY);
+            array[1].X = (float)(center.X - offsetX);
+            array[1].Y = (float)(center.Y - offsetY);
+            return array;
+        }
         private void calculateAngleXY()
         {
             if (HorizonalStright)
@@ -101,13 +114,11 @@ namespace Cad2D
             else
             {
                 this.angleX = Math.Atan(Tilt);
-                while(this.angleX < 0 )
-                    this.angleX += Math.PI * 2;
-                if (this.angleX >= Math.PI)
-                    this.angleX -= Math.PI;
                 this.AngleY = Math.Abs((Math.PI / 2) - this.angleX);
             }
         }
+
+
         private double degreesToRadians(double degrees)
         {return (Math.PI / 180) * degrees;}
 
@@ -221,6 +232,19 @@ namespace Cad2D
             if (minY < max && minY > min && maxY < max && maxY > min)
                 return true;
             return false;
+        }
+
+        static public double CalculateAngle3Point(PointF c, PointF p1, PointF p2 )
+        {
+            return
+                Math.Acos((Math.Pow(CalculateDistance(c, p1), 2) +
+                Math.Pow(CalculateDistance(c, p2), 2) -
+                          Math.Pow(CalculateDistance(p2, p1), 2)) 
+                          / (2 * CalculateDistance(c, p1)* CalculateDistance(c, p2)));
+        }
+        static public double CalculateDistance(PointF p1, PointF p2)
+        {
+           return Math.Sqrt(Math.Pow((p1.X - p2.X),2) +Math.Pow((p1.Y - p2.Y),2));
         }
     }
 }

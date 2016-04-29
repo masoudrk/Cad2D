@@ -27,7 +27,6 @@ namespace Cad2D
     public partial class CanvasCad2D : UserControl
     {
 
-
         [DllImport("PowrProf.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern bool SetSuspendState(bool hiberate, bool forceCritical, bool disableWakeEvent);
 
@@ -84,6 +83,7 @@ namespace Cad2D
         Point endPoint = new Point(704, 576);
         public List<LineGeometry> lineGeometryList;
         private List<Circle> guids;
+        private List<Line> innerLines;
         Thread plcInfoReaderTimer;
         Circle head = cloneCircle();
         ////////////////
@@ -137,7 +137,8 @@ namespace Cad2D
             pagesStack = new Stack<object>();
             plcUtilitisAndOptions = new PlcUtilitisAndOptions();
             this.Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
-            
+
+            System.Net.ServicePointManager.Expect100Continue = false;
 
             head.mouseActionsEnable = false;
             head.radius = 50;
@@ -184,6 +185,7 @@ namespace Cad2D
             //@milad
             lineGeometryList = new List<LineGeometry>();
             guids = new List<Circle>();
+            innerLines = new List<Line>();
             lsConnection = new LS_Connection(maxAddress);
 
             lsConnection.OnDisconnceted += Ls_connection_OnDisconnceted;
@@ -204,12 +206,23 @@ namespace Cad2D
 
             if(ps.captureModeWhenStart)
                 CaptureMode();
-            
-
-
+            //this.ContextMenuClosing +=OnContextMenuClosing;
             initDataGrid(dataGrid);
 
         }
+
+        //private void OnContextMenuClosing(object sender, ContextMenuEventArgs contextMenuEventArgs)
+        //{
+        //    alarmThread.Abort();
+        //    cameraCheckerTimer.Stop();
+        //    cameraCheckerTimer.Close();
+        //    cameraCheckerTimer.Dispose();
+        //    plcInfoReaderTimer.Abort();
+        //    lsConnection.Disconnect();
+        //    clockTimer.Stop();
+        //    clockTimer.Close();
+        //    clockTimer.Dispose();
+        //}
 
         public static void initDataGrid(DataGrid d)
         {
@@ -251,24 +264,33 @@ namespace Cad2D
 
         private void PlcInfoReaderTimer_Elapsed()
         {
-            if (lsConnection.Connected)
+            try
             {
-                plcInformation.getAllValues();
-            }
-            else
-            {
-                Thread.Sleep(2000);
-                if (!lsConnection.Connected)
+                if (lsConnection.Connected)
                 {
-                    bool ping = lsConnection.PingHost();
-                    if (ping)
+                    plcInformation.getAllValues();
+                }
+                else
+                {
+                    Thread.Sleep(2000);
+                    if (!lsConnection.Connected)
                     {
-                        lsConnection.connect(ip, portNumber);
+                        bool ping = lsConnection.PingHost();
+                        if (ping)
+                        {
+                            lsConnection.connect(ip, portNumber);
+                        }
                     }
                 }
+                if(Thread.CurrentThread.IsAlive)
+                    Thread.Sleep(1000);
+                PlcInfoReaderTimer_Elapsed();
             }
-            Thread.Sleep(1000);
-            PlcInfoReaderTimer_Elapsed();
+            catch (Exception ex)
+            {
+                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                PlcInfoReaderTimer_Elapsed();
+            }
         }
 
         private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
@@ -278,6 +300,7 @@ namespace Cad2D
             cameraCheckerTimer.Close();
             cameraCheckerTimer.Dispose();
             plcInfoReaderTimer.Abort();
+            lsConnection.Disconnect();
             clockTimer.Stop();
             clockTimer.Close();
             clockTimer.Dispose();
@@ -454,6 +477,16 @@ namespace Cad2D
             Line l = new Line();
             l.Fill = Brushes.Gray;
             l.Stroke = Brushes.Gray;
+            l.StrokeThickness = 1;
+            l.HorizontalAlignment = HorizontalAlignment.Center;
+            l.VerticalAlignment = VerticalAlignment.Center;
+            return l;
+        }
+        public static Line InnerLine()
+        {
+            Line l = new Line();
+            l.Fill = Brushes.OrangeRed;
+            l.Stroke = Brushes.OrangeRed;
             l.StrokeThickness = 1;
             l.HorizontalAlignment = HorizontalAlignment.Center;
             l.VerticalAlignment = VerticalAlignment.Center;
@@ -644,7 +677,6 @@ namespace Cad2D
                             UriKind.Absolute));
                     btn_sendToPlc_back.Visibility = Visibility.Visible;
                     border_tools2.Visibility = Visibility.Hidden;
-                    border_Directions.Visibility = Visibility.Hidden;
                     border_WaterOption.Visibility = Visibility.Hidden;
                 }
                 else
@@ -669,7 +701,7 @@ namespace Cad2D
                 {
                     if (!connectedsList.loop)
                         endDrawVertex();
-                    sendDataToPlc();
+                    _sendDataToPlc();
                     setEnable(btn_sendToPlc_back, false);
                 }
             }
@@ -699,6 +731,10 @@ namespace Cad2D
             foreach (Circle c in guids)
                 mainCanvas.Children.Remove(c);
 
+            foreach (Line line in innerLines)
+                mainCanvas.Children.Remove(line);
+
+            innerLines.Clear();
             guids.Clear();
             ///////////////////
 
@@ -908,7 +944,6 @@ namespace Cad2D
             if (contentControl.Content.GetType() == typeof(Page_Settings))
             {
                 border_tools2.Visibility = Visibility.Collapsed;
-                border_Directions.Visibility = Visibility.Collapsed;
                 border_WaterOption.Visibility = Visibility.Collapsed;
             }
 
@@ -952,7 +987,7 @@ namespace Cad2D
 
         public void setupMainPanels(bool en)
         {
-            border_WaterOption.Visibility = border_Directions.Visibility = border_tools1.Visibility = border_tools2.Visibility =
+            border_WaterOption.Visibility = border_tools1.Visibility = border_tools2.Visibility =
                 (en) ? Visibility.Visible : Visibility.Collapsed;
             button_back_from_down.Visibility = (!en) ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -1073,39 +1108,79 @@ namespace Cad2D
 
                 double angle = Math.Abs((line2.angleX - line1.angleX) / 2) +
                                         Math.Min(line2.angleX, line1.angleX);
-                if (line2.angleX > line1.angleX)
-                    angle += (Math.PI/2);
-                PointF center = new PointF();
 
-                if(line1.X1 == line2.X1 && line1.Y1 == line2.Y1)
+                PointF center = new PointF();
+                PointF p1PointF = new PointF();
+                PointF p2PointF = new PointF();
+                if (line1.X1 == line2.X1 && line1.Y1 == line2.Y1)
+                {
                     center = new PointF((float)line1.X1 , (float)line1.Y1);
+                    p1PointF = new PointF((float)line1.X2 , (float)line1.Y2);
+                    p2PointF =new PointF((float)line2.X2, (float)line2.Y2);
+                }
                 else if (line1.X1 == line2.X2 && line1.Y1 == line2.Y2)
+                {
                     center = new PointF((float)line1.X1, (float)line1.Y1);
+                    p1PointF = new PointF((float)line1.X2, (float)line1.Y2);
+                    p2PointF = new PointF((float)line2.X1, (float)line2.Y1);
+                }
                 else if (line1.X2 == line2.X1 && line1.Y2 == line2.Y1)
+                {
                     center = new PointF((float)line2.X1, (float)line2.Y1);
+                    p1PointF = new PointF((float)line1.X1, (float)line1.Y1);
+                    p2PointF = new PointF((float)line2.X2, (float)line2.Y2);
+                }
                 else if (line1.X2 == line2.X2 && line1.Y2 == line2.Y2)
+                {
                     center = new PointF((float)line1.X2, (float)line1.Y2);
+                    p1PointF = new PointF((float)line1.X1, (float)line1.Y1);
+                    p2PointF = new PointF((float)line2.X1, (float)line2.Y1);
+                }
 
                 LineGeometry newLine =new LineGeometry(angle , center.X, center.Y);
-                PointF [] point= newLine.calculatePonits(offset);
-                Circle c1 = cloneCircle();
-                c1.mouseActionsEnable = false;
-                c1.radius = 2;
-                c1.X = point[0].X;
-                c1.defaultColor = Brushes.MediumPurple;
-                c1.Y = point[0].Y;
-                guids.Add(c1);
-                mainCanvas.Children.Add(c1);
-                        
-                Circle c = cloneCircle();
-                c.mouseActionsEnable = false;
-                c.radius = 2;
-                c.X = point[1].X;
-                c.defaultColor = Brushes.Yellow;
-                c.Y = point[1].Y;
-                guids.Add(c);
-                mainCanvas.Children.Add(c);
-                
+                PointF [] point= newLine.calculateTestPonits(4);
+                int count = point.Count(t => checkIsInnerPoint(t));
+                if (count%2 == 0)
+                    newLine = new LineGeometry(angle +(Math.PI/2), center.X, center.Y);
+
+                double angelBetBisectorAndLine = LineGeometry.CalculateAngle3Point(center, p1PointF, p2PointF);
+                point = newLine.calculatePonits(offset, (angelBetBisectorAndLine/2));
+                if (checkIsInnerPoint(point[0]))
+                {
+                    Circle c1 = cloneCircle();
+                    c1.mouseActionsEnable = false;
+                    c1.radius = 2;
+                    c1.X = point[0].X;
+                    c1.defaultColor = Brushes.MediumPurple;
+                    c1.Y = point[0].Y;
+                    guids.Add(c1);
+                    mainCanvas.Children.Add(c1);
+                    points.AddLast(point[0]);
+                }
+                if (checkIsInnerPoint(point[1]))
+                {
+                    Circle c = cloneCircle();
+                    c.mouseActionsEnable = false;
+                    c.radius = 2;
+                    c.X = point[1].X;
+                    c.defaultColor = Brushes.Yellow;
+                    c.Y = point[1].Y;
+                    guids.Add(c);
+                    mainCanvas.Children.Add(c);
+                    points.AddLast(point[1]);
+                }
+            }
+            for (int i = 0; i < points.Count; i++)
+            {
+                Line newLine = InnerLine();
+                PointF p1 = points.ElementAt(i);
+                PointF p2 = ((i + 1) < points.Count) ? points.ElementAt(i+1) : points.ElementAt(0);
+                newLine.X1 = p1.X;
+                newLine.Y1 = p1.Y;
+                newLine.X2 = p2.X;
+                newLine.Y2 = p2.Y;
+                mainCanvas.Children.Add(newLine);
+                innerLines.Add(newLine);
             }
         }
 
@@ -1131,10 +1206,11 @@ namespace Cad2D
             return false;
         }
 
-        private void sendDataToPlc()
-        {
-            directionDialog = MainWindow._window.showDirections();
-        }
+        //private void sendDataToPlc()
+        //{
+        //    _sendDataToPlc();
+        //    //directionDialog = MainWindow._window.showDirections();
+        //}
 
         private void _sendDataToPlc()
         {
@@ -1532,213 +1608,11 @@ namespace Cad2D
         }
 
         #endregion
-
-        public void setDirection(int dir)
-        {
-            sendingInFirstTime = true;
-            switch (dir)
-            {
-                case 0:
-                    btn_sendToPlc_back.IsEnabled = true;
-                    break;
-                case 1:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_1_2);
-                    sendDirectionTypeToPlc(1);
-                    break;
-                case 2:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_1_4);
-                    sendDirectionTypeToPlc(2);
-                    break;
-                case 3:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_2_1);
-                    sendDirectionTypeToPlc(4);
-                    break;
-                case 4:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_2_3);
-                    sendDirectionTypeToPlc(8);
-                    break;
-                case 5:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_3_2);
-                    sendDirectionTypeToPlc(16);
-                    break;
-                case 6:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_3_4);
-                    sendDirectionTypeToPlc(32);
-                    break;
-                case 7:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_4_1);
-                    sendDirectionTypeToPlc(64);
-                    break;
-                case 8:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Dir_4_3);
-                    sendDirectionTypeToPlc(128);
-                    break;
-                case 9:
-                    if (!lsConnection.Connected)
-                    {
-                        ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                        return;
-                    }
-                    setDirectionButtons(button_Edges);
-                    sendDirectionTypeToPlc(256);
-                    break;
-                default:
-                    break;
-            }
-        }
+        
 
         private bool sendingInFirstTime = true;
         private Packet<ushort> directionTypePacket;
-
-        private void button_Dir_1_2_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_1_2);
-            sendDirectionTypeToPlc(1);
-        }
-
-        private void button_Dir_1_4_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_1_4);
-            sendDirectionTypeToPlc(2);
-        }
-
-        private void button_Dir_2_1_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_2_1);
-            sendDirectionTypeToPlc(4);
-        }
-
-        private void button_Dir_2_3_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_2_3);
-            sendDirectionTypeToPlc(8);
-        }
-
-        private void button_Dir_3_2_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_3_2);
-            sendDirectionTypeToPlc(16);
-        }
-
-        private void button_Dir_3_4_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_3_4);
-            sendDirectionTypeToPlc(32);
-
-        }
-
-        private void button_Dir_4_1_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_4_1);
-            sendDirectionTypeToPlc(64);
-        }
-
-        private void button_Dir_4_3_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Dir_4_3);
-            sendDirectionTypeToPlc(128);
-        }
-
-        private void button_Edges_Click(object sender, RoutedEventArgs e)
-        {
-            if (!lsConnection.Connected)
-            {
-                ((MainWindow)Application.Current.MainWindow).showMsg("خطا", "پی ال سی قطع می باشد . لطفا ابتدا به آن متصل شوید.");
-                return;
-            }
-            sendingInFirstTime = false;
-            setDirectionButtons(button_Edges);
-            sendDirectionTypeToPlc(256);
-        }
-
+        
         private void textBox__TextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox t = (TextBox) sender;
@@ -1792,6 +1666,8 @@ namespace Cad2D
             plcInformation.writeWater(plcInformation.water.value);
         }
 
+
+
         private void textBox_Timer_On_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -1808,27 +1684,63 @@ namespace Cad2D
             }
         }
 
-        public void sendDirectionTypeToPlc(ushort dir)
+        private void button_edgeStart_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //ta inja call mishavad
-            directionTypePacket = new Packet<ushort>(201 , dir);
-             
-            if (lsConnection.Connected)
-                lsConnection.writeToPlc(directionTypePacket.dataType, directionTypePacket.value, directionTypePacket.valueAddress, ref directionTypePacket.writingPacket);
+            int data = 0;
+            if (plcInformation.edgeEndStart.value == 0)
+                data = 1;
+            else if (plcInformation.edgeEndStart.value == 1)
+                data = 0;
+            else if (plcInformation.edgeEndStart.value == 2)
+                data = 3;
+            else if (plcInformation.edgeEndStart.value == 3)
+                data = 2;
+            plcInformation.edgeEndStart.value = (ushort)data;
+            plcInformation.writeEdgeStartEnd(data);
         }
 
-        private void setDirectionButtons(Button buttonDir12)
+        private void button_edgeEnd_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            button_Edges.Background = null;
-            button_Dir_4_3.Background = null;
-            button_Dir_4_1.Background = null;
-            button_Dir_3_4.Background = null;
-            button_Dir_3_2.Background = null;
-            button_Dir_2_3.Background = null;
-            button_Dir_2_1.Background = null;
-            button_Dir_1_2.Background = null;
-            button_Dir_1_4.Background = null;
-            buttonDir12.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0xff, 0x41, 0x57, 0x85));
+            int data = 0;
+            if (plcInformation.edgeEndStart.value == 0)
+                data = 2;
+            else if (plcInformation.edgeEndStart.value == 1)
+                data = 3;
+            else if (plcInformation.edgeEndStart.value == 2)
+                data = 0;
+            else if (plcInformation.edgeEndStart.value == 3)
+                data = 1;
+            plcInformation.edgeEndStart.value = (ushort)data;
+            plcInformation.writeEdgeStartEnd(data);
+        }
+
+        private void textBox_horizontalSob_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (lsConnection == null) return;
+            if (lsConnection.Connected)
+            {
+                if (textBox_horizontalSob.Value != null)
+                    lsConnection.writeToPlc(plcInformation.horizontalSob.dataType, (int)textBox_horizontalSob.Value, plcInformation.horizontalSob.valueAddress, ref plcInformation.horizontalSob.writingPacket);
+            }
+        }
+
+        private void textBox_verticalSob_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (lsConnection == null) return;
+            if (lsConnection.Connected)
+            {
+                if (textBox_verticalSob.Value != null)
+                    lsConnection.writeToPlc(plcInformation.verticalSob.dataType, (int)textBox_verticalSob.Value, plcInformation.verticalSob.valueAddress, ref plcInformation.verticalSob.writingPacket);
+            }
+        }
+
+        private void textBox_edgeSob_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if(lsConnection == null) return;
+            if (lsConnection.Connected)
+            {
+                lsConnection.writeToPlc(plcInformation.edgeSob.dataType, (int)textBox_edgeSob.Value, plcInformation.edgeSob.valueAddress, ref plcInformation.edgeSob.writingPacket);
+            }
         }
     }
 }

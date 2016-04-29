@@ -89,7 +89,6 @@ namespace Cad2D
             try
             {
                 MyStartDirectionDialog m = (MyStartDirectionDialog)sender;
-                cc2d.setDirection(m.direction);
 
             }
             catch (Exception ex)
