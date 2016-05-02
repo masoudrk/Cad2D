@@ -94,7 +94,6 @@ namespace Cad2D
                     ref waterTOff.readingPacket);
                 CanvasCad2D.lsConnection.readFromPlc(waterTOn.dataType, waterTOn.valueAddress,
                     ref waterTOn.readingPacket);
-
                 CanvasCad2D.lsConnection.readFromPlc(edgeEndStart.dataType, edgeEndStart.valueAddress,
                     ref edgeEndStart.readingPacket);
                 CanvasCad2D.lsConnection.readFromPlc(verticalSob.dataType, verticalSob.valueAddress,

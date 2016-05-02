@@ -322,5 +322,17 @@ namespace Cad2D.Properties {
                 this["FELimit"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("175")]
+        public int edgeOffset {
+            get {
+                return ((int)(this["edgeOffset"]));
+            }
+            set {
+                this["edgeOffset"] = value;
+            }
+        }
     }
 }

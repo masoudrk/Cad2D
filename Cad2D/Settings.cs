@@ -61,7 +61,7 @@ public class PrimarySettings
     public int FELimit { set; get; }
     public double ScaleFESize { set; get; }
     public int FocalLinPixels { set; get; }
-
+    public int edgeOffset { set; get; }
 }
 
 public static class Extentions
@@ -146,7 +146,8 @@ public static class Extentions
                 DiskDiameter = ds.DiskDiameter,
                 ScaleFESize = ds.ScaleFESize,
                 FELimit = ds.FELimit,
-                FocalLinPixels = ds.FocalLinPixels
+                FocalLinPixels = ds.FocalLinPixels,
+                edgeOffset = ds.edgeOffset
             };
             return s;
         }

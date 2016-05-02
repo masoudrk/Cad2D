@@ -473,6 +473,7 @@ namespace Cad2D
                         if (stoneScanPacketCounter < stoneScanPacketCount)
                         {
                             stoneScanPacketCounter++;
+                            OnGUIActions(() => MainWindow._window.setMValue(100 * stoneScanPacketCounter /(stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount)));
                             break;
                         }
                         else
@@ -480,6 +481,7 @@ namespace Cad2D
                             if (horizonalBoundryCounter < horizonalBoundryCount)
                             {
                                 horizonalBoundryCounter++;
+                                OnGUIActions(() => MainWindow._window.setMValue(100 * (horizonalBoundryCounter + stoneScanPacketCount) / (stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount)));
                                 break;
                             }
                             else
@@ -487,6 +489,7 @@ namespace Cad2D
                                 if (verticalBoundryCounter < verticalBoundryCount)
                                 {
                                     verticalBoundryCounter++;
+                                    OnGUIActions(() => MainWindow._window.setMValue(100*(verticalBoundryCounter + stoneScanPacketCount + horizonalBoundryCount) / (stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount)));
                                     break;
                                 }
                             }

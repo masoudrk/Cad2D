@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Cad2D
 {
@@ -24,6 +25,10 @@ namespace Cad2D
         {
             InitializeComponent();
         }
-        
+
+        public void setProgressValue(int value)
+        {
+            progressBar.Value = value;
+        }
     }
 }

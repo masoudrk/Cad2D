@@ -77,5 +77,8 @@
     <Setting Name="FELimit" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1500</Value>
     </Setting>
+    <Setting Name="edgeOffset" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">175</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

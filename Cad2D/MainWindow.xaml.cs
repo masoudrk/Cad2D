@@ -28,6 +28,7 @@ namespace Cad2D
     {
         public static MainWindow _window;
         private CanvasCad2D cc2d;
+        private MyProgressDialog m;
         public MainWindow()
         {
             InitializeComponent();
@@ -42,6 +43,7 @@ namespace Cad2D
                 cc2d = new CanvasCad2D();
                 contentControl.Content = cc2d;
             }
+            this.Closed +=OnClosed;
             /*
             if (!FileAssociation.IsAssociated(".c2d"))
                 FileAssociation.Associate(".c2d", "ClassID.ProgID", "2D Cad design files", 
@@ -54,8 +56,22 @@ namespace Cad2D
                 openDesignFile(allArgs[1]);
             }
             openImageFile(@"C:\Users\-MR-\Desktop\image.jpg");*/
-           
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
         }
+
+        public void MyHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception ex = (Exception)args.ExceptionObject;
+            Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+        }
+
+        private void OnClosed(object sender, EventArgs eventArgs)
+        {
+            cc2d.ShutDown();
+
+        }
+
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
@@ -72,10 +88,19 @@ namespace Cad2D
         }
         public async Task<MyProgressDialog> showProgress()
         {
-            MyProgressDialog m = new MyProgressDialog();
+            m = new MyProgressDialog();
             await this.ShowChildWindowAsync(m);
             return m;
         }
+
+        public void setMValue(int i)
+        {
+            if (m != null)
+            {
+                m.setProgressValue(i);
+            }    
+        }
+
         public async Task<MyStartDirectionDialog> showDirections()
         {
                 MyStartDirectionDialog m = new MyStartDirectionDialog();

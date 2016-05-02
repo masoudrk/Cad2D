@@ -264,33 +264,24 @@ namespace Cad2D
 
         private void PlcInfoReaderTimer_Elapsed()
         {
-            try
+            if (lsConnection.Connected)
             {
-                if (lsConnection.Connected)
+                plcInformation.getAllValues();
+            }
+            else
+            {
+                Thread.Sleep(2000);
+                if (!lsConnection.Connected)
                 {
-                    plcInformation.getAllValues();
-                }
-                else
-                {
-                    Thread.Sleep(2000);
-                    if (!lsConnection.Connected)
+                    bool ping = lsConnection.PingHost();
+                    if (ping)
                     {
-                        bool ping = lsConnection.PingHost();
-                        if (ping)
-                        {
-                            lsConnection.connect(ip, portNumber);
-                        }
+                        lsConnection.connect(ip, portNumber);
                     }
                 }
-                if(Thread.CurrentThread.IsAlive)
-                    Thread.Sleep(1000);
-                PlcInfoReaderTimer_Elapsed();
             }
-            catch (Exception ex)
-            {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
-                PlcInfoReaderTimer_Elapsed();
-            }
+            Thread.Sleep(1000);
+            PlcInfoReaderTimer_Elapsed();
         }
 
         private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
@@ -305,6 +296,20 @@ namespace Cad2D
             clockTimer.Close();
             clockTimer.Dispose();
         }
+
+        public void ShutDown()
+        {
+            alarmThread.Abort();
+            cameraCheckerTimer.Stop();
+            cameraCheckerTimer.Close();
+            cameraCheckerTimer.Dispose();
+            plcInfoReaderTimer.Abort();
+            lsConnection.Disconnect();
+            clockTimer.Stop();
+            clockTimer.Close();
+            clockTimer.Dispose();
+        }
+
         #region ls events
 
         private void checkCamera(object sender, EventArgs e)
@@ -1001,8 +1006,7 @@ namespace Cad2D
         #endregion
 
         #region Capture And Edit Mode
-
-
+        
         private void CameraNotConnected_Click(object sender, EventArgs e)
         {
            // btn_sendToPlc_back_Click(null, null);
@@ -1074,8 +1078,7 @@ namespace Cad2D
             guids.Clear();
             foreach (ConnectedLine c in connectedsList)
                 lineGeometryList.Add(new LineGeometry(c.line));
-
-            calculateInnerPoints(40);
+            LinkedList<System.Drawing.PointF> points = calculateInnerPoints();
             double[] array1;
             array1 = calCulateVerticalPoints();
             stoneVerticalEdge = calculateStoneVerticalPoints(array1);
@@ -1098,8 +1101,10 @@ namespace Cad2D
             }
         }
 
-        private void calculateInnerPoints(float offset)
+        private LinkedList<System.Drawing.PointF> calculateInnerPoints()
         {
+            PrimarySettings pri = Extentions.FromXmlPrimary();
+            float offset = (float)(704.0/3500.0)*pri.edgeOffset; 
             LinkedList<System.Drawing.PointF> points = new LinkedList<System.Drawing.PointF>();
             for (int i = 0 ; i < lineGeometryList.Count ; i++)
             {
@@ -1182,6 +1187,7 @@ namespace Cad2D
                 mainCanvas.Children.Add(newLine);
                 innerLines.Add(newLine);
             }
+            return points;
         }
 
         private bool checkIsInnerPoint(PointF point )

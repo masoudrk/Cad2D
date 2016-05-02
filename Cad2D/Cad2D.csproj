@@ -399,18 +399,6 @@
     <Resource Include="Resources\WaterOption\Water.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="NotTimer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="NotWater.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Timer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Water.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\power.png" />
   </ItemGroup>
   <ItemGroup>
