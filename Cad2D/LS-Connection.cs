@@ -106,7 +106,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n" , LogType.Error, ex);
                 Disconnect();
                 return false;
             }
@@ -126,7 +126,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {   //when the target machin is 127.0.0.1 it throw exception
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Thread.Sleep(1000);
                 Disconnect();
             }
@@ -157,7 +157,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Disconnect();
             }
         }
@@ -175,8 +175,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                writeToServerMutex.ReleaseMutex();
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Disconnect();
             }
         }
@@ -268,8 +267,8 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                readToServerMutex.ReleaseMutex();
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                //Object synchronization method was called from an unsynchronized block of code
+                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Disconnect();
             }
         }
@@ -352,6 +351,16 @@ namespace Cad2D
                 tcpClient = null;
             }
             Connected = false;
+
+            writeToServerMutex.Dispose();
+            readToServerMutex.Dispose();
+            readEventMutex.Dispose();
+            sendPacketMutex.Dispose();
+
+            writeToServerMutex = new Mutex();
+            readToServerMutex = new Mutex();
+            readEventMutex = new Mutex();
+            sendPacketMutex = new Mutex();
             return;
         }
 

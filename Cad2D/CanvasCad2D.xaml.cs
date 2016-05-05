@@ -68,6 +68,8 @@ namespace Cad2D
         public static int alarm;
         private int sensitiveAlarms;
 
+        private bool sendingInFirstTime = true;
+        private Packet<ushort> innerPointsLengthPacket;
         //@milad
         double widthOffsetLength;
         double heightOffsetLength;
@@ -90,12 +92,14 @@ namespace Cad2D
         //lsconnection
         
         public static LS_Connection lsConnection;
+        int stoneInnerPointsCounter = 0;
         int stoneScanPacketCounter = 0;
         int verticalBoundryCounter = 0;
         int horizonalBoundryCounter = 0;
         private int stoneScanPacketCount;
         private int verticalBoundryCount;
         private int horizonalBoundryCount;
+        private int stoneInnerPointsCount;
         Page_Tools pageToolsObject;
         Page_Settings pageSettingObject;
         public static HscXHelper hscXHelper;
@@ -108,6 +112,7 @@ namespace Cad2D
         int scanAriaSegment = 1000; // startin memory for sending array 
         int verticalBoundrySegment = 2000; // startin memory for sending array 
         int horizonalBoundrySegment = 3000; // startin memory for sending array 
+        int innerPointsSegment = 4000; // starting memory for inner points array 
 
         /// <summary>
         /// ////////shoud add to settingd
@@ -121,6 +126,7 @@ namespace Cad2D
         int[] stoneScan;
         ushort[] stoneHorizontalEdge;
         ushort[] stoneVerticalEdge;
+        ushort[] stoneInnerPoints;
         List<writingPacketInfo> writingPackets;
         string cameraIp;
         private Thread alarmThread;
@@ -198,6 +204,8 @@ namespace Cad2D
             verticalBoundryCount = 0;
             horizonalBoundryCount = 0;
             diskDiameter = new Packet<ushort>(232);
+            //TODO should change this address
+            innerPointsLengthPacket = new Packet<ushort>(500);
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
 
@@ -383,7 +391,14 @@ namespace Cad2D
         private void writeToPlcFinished()
         {
             setEnable(btn_sendToPlc_back, true);
-            progressDialog.Result.Close();
+            if (progressDialog != null)
+            {
+                progressDialog.Result.Close();
+                innerPointsLengthPacket.value = (ushort)stoneInnerPointsCount;
+                if (lsConnection.Connected)
+                    lsConnection.writeToPlc(innerPointsLengthPacket.dataType, innerPointsLengthPacket.value, innerPointsLengthPacket.valueAddress,
+                        ref innerPointsLengthPacket.writingPacket);
+            }
         }
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
@@ -691,7 +706,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error,ex);
+                Logger.LogError("_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
         private void btn_sendToPlc_back_Click(object sender, RoutedEventArgs e)
@@ -712,7 +727,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : CanvasCad2D" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
 
@@ -1079,6 +1094,7 @@ namespace Cad2D
             foreach (ConnectedLine c in connectedsList)
                 lineGeometryList.Add(new LineGeometry(c.line));
             LinkedList<System.Drawing.PointF> points = calculateInnerPoints();
+            stoneInnerPoints = calculateInnerPosition(points);
             double[] array1;
             array1 = calCulateVerticalPoints();
             stoneVerticalEdge = calculateStoneVerticalPoints(array1);
@@ -1094,11 +1110,45 @@ namespace Cad2D
             dataGrid.Items.Clear();
             for (int i = 0; i < StoneEdgeVerticalSlice; i++)
             {
-                if (i < stoneEdgeHorizontalSlice)
-                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(stoneVerticalEdge[i * 2]), val3 = setPericision(stoneVerticalEdge[i * 2 + 1]), val4 = setPericision(stoneHorizontalEdge[i * 2]), val5 = setPericision(stoneHorizontalEdge[i * 2 + 1]) });
-                else
-                    dataGrid.Items.Add(new GridItem() { val1 = i, val2 = setPericision(stoneVerticalEdge[i * 2]), val3 = setPericision(stoneVerticalEdge[i * 2 + 1]), val4 = 0, val5 = 0 });
+                dataGrid.Items.Add(i < stoneEdgeHorizontalSlice
+                    ? new GridItem()
+                    {
+                        val1 = i,
+                        val2 = setPericision(stoneVerticalEdge[i*2]),
+                        val3 = setPericision(stoneVerticalEdge[i*2 + 1]),
+                        val4 = setPericision(stoneHorizontalEdge[i*2]),
+                        val5 = setPericision(stoneHorizontalEdge[i*2 + 1])
+                    }
+                    : new GridItem()
+                    {
+                        val1 = i,
+                        val2 = setPericision(stoneVerticalEdge[i*2]),
+                        val3 = setPericision(stoneVerticalEdge[i*2 + 1]),
+                        val4 = 0,
+                        val5 = 0
+                    });
             }
+        }
+
+        private ushort[] calculateInnerPosition(LinkedList<PointF> points)
+        {
+            ushort[] innerPoints = new ushort[2*points.Count];
+
+            double zaribY = (maxVerticalSlice - minVerticalSlice) / (endPoint.Y - startPoint.Y);
+            double zaribx = (maxHorizontalSlice - minHorizontalSlice) / (endPoint.X - startPoint.X);
+
+            for(int i =0 ; i < points.Count ; i++)
+            {
+                PointF point = points.ElementAt(i);
+                innerPoints[i * 2] = (ushort)((zaribx * (point.X - startPoint.X) + minHorizontalSlice));
+                if (innerPoints[i * 2] >= maxHorizontalSlice)
+                    innerPoints[i * 2] = (ushort)(maxHorizontalSlice - 1);
+
+                innerPoints[i * 2 + 1] = (ushort)((zaribY * (point.Y - startPoint.Y) + minVerticalSlice));
+                if (innerPoints[i * 2 + 1] >= maxVerticalSlice)
+                    innerPoints[i * 2 + 1] = (ushort)(maxVerticalSlice - 1);
+            }
+            return innerPoints;
         }
 
         private LinkedList<System.Drawing.PointF> calculateInnerPoints()
@@ -1228,7 +1278,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : CanvasCad2D" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
         public double setPericision(double v)
@@ -1237,7 +1287,6 @@ namespace Cad2D
         }
 
         private Task<MyProgressDialog> progressDialog;
-        private Task<MyStartDirectionDialog> directionDialog;
 
         private void sendingStoneScanToPLC()
         {
@@ -1246,10 +1295,11 @@ namespace Cad2D
                 stoneScanPacketCount = stoneScan.Length;
                 verticalBoundryCount = stoneVerticalEdge.Length;
                 horizonalBoundryCount = stoneHorizontalEdge.Length;
+                stoneInnerPointsCount = stoneInnerPoints.Length;
                 stoneScanPacketCounter = 0;
                 horizonalBoundryCounter = 0;
                 verticalBoundryCounter = 0;
-                 
+                stoneInnerPointsCounter = 0;
                 if (lsConnection.Connected)
                     lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
                  
@@ -1615,9 +1665,6 @@ namespace Cad2D
 
         #endregion
         
-
-        private bool sendingInFirstTime = true;
-        private Packet<ushort> directionTypePacket;
         
         private void textBox__TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -1674,22 +1721,6 @@ namespace Cad2D
 
 
 
-        private void textBox_Timer_On_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                plcInformation.writeWaterTOn(Int32.Parse(textBox_Timer_On.Text));
-            }
-        }
-
-        private void textBox_Timer_Off_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                plcInformation.writeWaterTOff(Int32.Parse(textBox_Timer_Off.Text));
-            }
-        }
-
         private void button_edgeStart_MouseDown(object sender, MouseButtonEventArgs e)
         {
             int data = 0;
@@ -1728,6 +1759,16 @@ namespace Cad2D
                 if (textBox_horizontalSob.Value != null)
                     lsConnection.writeToPlc(plcInformation.horizontalSob.dataType, (int)textBox_horizontalSob.Value, plcInformation.horizontalSob.valueAddress, ref plcInformation.horizontalSob.writingPacket);
             }
+        }
+        
+        private void textBox_Timer_On_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (textBox_Timer_On.Value != null) plcInformation.writeWaterTOn((int)textBox_Timer_On.Value);
+        }
+
+        private void textBox_Timer_Off_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (textBox_Timer_Off.Value != null) plcInformation.writeWaterTOff((int)textBox_Timer_Off.Value);
         }
 
         private void textBox_verticalSob_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)

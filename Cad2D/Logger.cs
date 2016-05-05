@@ -27,7 +27,7 @@ namespace Cad2D
             {
                 file.WriteLine(l);
             }
-            file.WriteLine("\n_Time :"+ DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            file.WriteLine("_Time :"+ DateTime.Now.ToString(CultureInfo.InvariantCulture));
             if(ex != null)
             {
                 var st = new StackTrace(ex, true);
@@ -35,10 +35,10 @@ namespace Cad2D
                 if (stackFrames != null)
                     foreach (var frame in stackFrames)
                     {
-                        file.WriteLine("\n_Frame : " + frame.ToString());
+                        file.WriteLine("_Frame : " + frame.ToString());
                         // Get the line number from the stack frame
                         var line = frame.GetFileLineNumber();
-                        file.WriteLine("\n_Line : " + line.ToString());
+                        file.WriteLine("_Line : " + line.ToString());
                     }
             }
             file.WriteLine("---------------------------------------------------------END----------------------------------------------------------");

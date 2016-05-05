@@ -331,14 +331,14 @@ namespace Cad2D
                 if (plcInformation.waterTOff.readingPacket != null && plcInformation.waterTOff.readingPacket.order == p.order)
                 {
                     plcInformation.waterTOff.value = (ushort)p.value;
-                    OnGUIActions(() => textBox_Timer_Off.Text = plcInformation.waterTOff.value.ToString());
+                    OnGUIActions(() => textBox_Timer_Off.Value = plcInformation.waterTOff.value);
                     plcInformation.waterTOff.readingPacket = null;
                     return;
                 }
                 if (plcInformation.waterTOn.readingPacket != null && plcInformation.waterTOn.readingPacket.order == p.order)
                 {
                     plcInformation.waterTOn.value = (ushort)p.value;
-                    OnGUIActions(() => textBox_Timer_On.Text = plcInformation.waterTOn.value.ToString());
+                    OnGUIActions(() => textBox_Timer_On.Value = plcInformation.waterTOn.value);
                     plcInformation.waterTOn.readingPacket = null;
                     return;
                 }
@@ -378,7 +378,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error,ex);
+                Logger.LogError("_File : LsEvent" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
         
@@ -454,6 +454,12 @@ namespace Cad2D
                     shoutDownThePanelPC(4);
                     return;
                 }
+                
+                if (innerPointsLengthPacket.writingPacket != null && innerPointsLengthPacket.writingPacket.order == p.order)
+                {
+                    innerPointsLengthPacket.writingPacket = null;
+                    return;
+                }
                 if (positionxPacketInfo != null && positionxPacketInfo.order == p.order)
                 {
                     is_inSendingx = false;
@@ -473,7 +479,7 @@ namespace Cad2D
                         if (stoneScanPacketCounter < stoneScanPacketCount)
                         {
                             stoneScanPacketCounter++;
-                            OnGUIActions(() => MainWindow._window.setMValue(100 * stoneScanPacketCounter /(stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount)));
+                            OnGUIActions(setProgressValues);
                             break;
                         }
                         else
@@ -481,7 +487,7 @@ namespace Cad2D
                             if (horizonalBoundryCounter < horizonalBoundryCount)
                             {
                                 horizonalBoundryCounter++;
-                                OnGUIActions(() => MainWindow._window.setMValue(100 * (horizonalBoundryCounter + stoneScanPacketCount) / (stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount)));
+                                OnGUIActions(setProgressValues);
                                 break;
                             }
                             else
@@ -489,8 +495,17 @@ namespace Cad2D
                                 if (verticalBoundryCounter < verticalBoundryCount)
                                 {
                                     verticalBoundryCounter++;
-                                    OnGUIActions(() => MainWindow._window.setMValue(100*(verticalBoundryCounter + stoneScanPacketCount + horizonalBoundryCount) / (stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount)));
+                                    OnGUIActions(setProgressValues);
                                     break;
+                                }
+                                else
+                                {
+                                    if (stoneInnerPointsCounter < stoneInnerPointsCount)
+                                    {
+                                        stoneInnerPointsCounter++;
+                                        OnGUIActions(setProgressValues);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -509,7 +524,8 @@ namespace Cad2D
                     if (horizonalBoundryCounter < horizonalBoundryCount)
                     {
 
-                        lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
+                        if (lsConnection.Connected)
+                            lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
 
                     }
                     else
@@ -523,20 +539,38 @@ namespace Cad2D
                         }
                         else
                         {
-                            if (pagesStack.Count == 0)
+                            if (stoneInnerPointsCounter < stoneInnerPointsCount)
                             {
-                                OnGUIActions(() => writeToPlcFinished());
+                                if (lsConnection.Connected)
+                                    lsConnection.writeToPlc(DataType.WORD, stoneInnerPoints[stoneInnerPointsCounter], innerPointsSegment + stoneInnerPointsCounter, ref writingPackets);
                             }
-
+                            else {
+                                if (pagesStack.Count == 0)
+                                {
+                                    OnGUIActions(writeToPlcFinished);
+                                }
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error ,ex);
+                Logger.LogError("_File : LsEvent" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
+
+        private void setProgressValues()
+        {
+            int total = 100 *(verticalBoundryCounter + stoneScanPacketCounter + stoneInnerPointsCounter + horizonalBoundryCounter)
+                /(stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount + stoneInnerPointsCount);
+            int stoneScanPoints = 100 * (stoneScanPacketCounter)/(stoneScanPacketCount);
+            int horizontalPoints = 100 * (horizonalBoundryCounter) / (horizonalBoundryCount);
+            int verticalPoints = 100 * (verticalBoundryCounter) / (verticalBoundryCount);
+            int innerPoints = 100 * (stoneInnerPointsCounter) / (stoneInnerPointsCount);
+            MainWindow._window.setMValue(total, stoneScanPoints, horizontalPoints, verticalPoints, innerPoints);
+        }
+
         private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)
         {
             readingPacketCountinus repi = (readingPacketCountinus)sender;
@@ -731,17 +765,17 @@ namespace Cad2D
             textBox_Timer_Off.IsEnabled = false;
             textBox_Timer_On.IsEnabled = false;
             button_Water_Timer.IsEnabled = false;
-            button_Water_Timer.Opacity = 65;
-            img_water_timer.Opacity = 65;
+            button_Water_Timer.Opacity = 0.5;
             img_water.Source= new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/NotWater.png"));
+            img_water_timer.Opacity = 0.5;
         }
         void setWaterOn()
         {
             textBox_Timer_Off.IsEnabled = true;
             textBox_Timer_On.IsEnabled = true;
             button_Water_Timer.IsEnabled = true;
-            button_Water_Timer.Opacity = 100;
-            img_water_timer.Opacity = 100;
+            button_Water_Timer.Opacity = 1;
+            img_water_timer.Opacity = 1;
             img_water.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/Water.png"));
         }
         void setWaterTimerOn()

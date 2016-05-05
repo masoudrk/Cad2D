@@ -83,11 +83,11 @@
                         <Label Margin="0 0 0 0" Content="نقطه بالا چپ میز" HorizontalAlignment="Left" VerticalAlignment="Top" Width="180" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
 
                         <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="30 0 14 0" HorizontalAlignment="Right">
-                            <SiriusMicrotech:TouchNumericBox x:Name="textBox_topLeftX" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" IsEnabled="False"/>
+                            <Custom:NumericUpDown x:Name="textBox_topLeftX" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
                             <Label Margin="0 0 0 0" Content="X : " HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
                         </StackPanel>
                         <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="0 0 10 0" HorizontalAlignment="Right">
-                            <SiriusMicrotech:TouchNumericBox x:Name="textBox_topLeftY" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" IsEnabled="False"/>
+                            <Custom:NumericUpDown x:Name="textBox_topLeftY" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
                             <Label Margin="0 0 0 0" Content="Y : " HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
                         </StackPanel>
                     </StackPanel>
@@ -96,11 +96,11 @@
                         <Label Margin="0 0 0 0" Content="نقطه پایین راست میز" HorizontalAlignment="Left" VerticalAlignment="Top" Width="180" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
 
                         <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="30 0 14 0" HorizontalAlignment="Right">
-                            <SiriusMicrotech:TouchNumericBox x:Name="textBox_bottomRightX" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" IsEnabled="False"/>
+                            <Custom:NumericUpDown x:Name="textBox_bottomRightX" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
                             <Label Margin="0 0 0 0" Content="X : " HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
                         </StackPanel>
                         <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal" Margin="0 0 10 0" HorizontalAlignment="Right">
-                            <SiriusMicrotech:TouchNumericBox x:Name="textBox_bottomRightY" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="64" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" IsEnabled="False"/>
+                            <Custom:NumericUpDown x:Name="textBox_bottomRightY" HorizontalAlignment="Left" VerticalAlignment="Top" Width="110" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" />
                             <Label Margin="0 0 0 0" Content="Y : " HorizontalAlignment="Left" VerticalAlignment="Top" Width="31" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
                         </StackPanel>
                     </StackPanel>
@@ -157,6 +157,11 @@
                         <Label Margin="0 0 0 0" Content="FE Limit" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" HorizontalContentAlignment="Center"/>
                     </StackPanel>
                     <Label Margin="0,10,20,0" Content="تنظیمات پردازشی تصویر" VerticalAlignment="Top"  FontSize="21.333" FontFamily="Microsoft JhengHei" HorizontalAlignment="Right" Foreground="{DynamicResource MainColor}" FlowDirection="RightToLeft"/>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0,5,35,0" HorizontalAlignment="Right" >
+
+                        <Label Margin="0 0 0 0" Content="Edge offset" HorizontalAlignment="Left" VerticalAlignment="Top" Width="212" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft"/>
+                        <Custom:NumericUpDown  x:Name="btn_edgeOffset" HorizontalAlignment="Left" VerticalAlignment="Top" Width="207" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0 5 35 0" HorizontalAlignment="Right">
                         <SiriusMicrotech:TouchNumericBox x:Name="textBox_sv" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="{StaticResource textBoxWidth}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18.667" FontFamily="Microsoft JhengHei UI Light"/>
                         <Label Margin="0 0 0 0" Content="Stone Scan Vertical Slice" HorizontalAlignment="Left" VerticalAlignment="Center" Width="220" FontSize="16" FontFamily="Microsoft JhengHei UI Light" Foreground="#FF272727" FlowDirection="RightToLeft" HorizontalContentAlignment="Center"/>

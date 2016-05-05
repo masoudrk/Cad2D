@@ -59,11 +59,11 @@ namespace Cad2D.Pages
             textBox_cameraPort.Text = s.CameraPortNumber.ToString();
             textBox_plcPort.Text = s.PLCPortNumber.ToString();
 
-            textBox_topLeftX.Text = s.TopLeftOffsetX.ToString();
-            textBox_topLeftY.Text = s.TopLeftOffsetY.ToString();
+            textBox_topLeftX.Value = s.TopLeftOffsetX;
+            textBox_topLeftY.Value = s.TopLeftOffsetY;
 
-            textBox_bottomRightX.Text = s.BottomRightOffsetX.ToString();
-            textBox_bottomRightY.Text = s.BottomRightOffsetY.ToString();
+            textBox_bottomRightX.Value = s.BottomRightOffsetX;
+            textBox_bottomRightY.Value = s.BottomRightOffsetY;
             
             checkBox_showSpeedMenu.IsChecked = s.showSpeedMonitorInMainPanel;
             checkBox_showGuideCircles.IsChecked = s.showGuideCircles;
@@ -94,7 +94,8 @@ namespace Cad2D.Pages
             textBox_FELimit.Text =s.FELimit.ToString();
             textBox_ScaleFESize.Text = s.ScaleFESize.ToString();
             textBox_FocalLinPixels.Text = s.FocalLinPixels.ToString();
-            
+            btn_edgeOffset.Value = s.edgeOffset;
+
             registeredTextbox = new KeypadTextBox[28];
             registeredTextbox[0] = textBox_cameraIp;
             registeredTextbox[1] = textBox_plcIp;
@@ -274,10 +275,10 @@ namespace Cad2D.Pages
                 PLCPortNumber = plcPort,
                 CameraIpAdress = textBox_cameraIp.Text,
                 PLCIpAdress = textBox_plcIp.Text,
-                TopLeftOffsetX = int.Parse(textBox_topLeftX.Text.ToString()),
-                TopLeftOffsetY = int.Parse(textBox_topLeftY.Text.ToString()),
-                BottomRightOffsetX = int.Parse(textBox_bottomRightX.Text.ToString()),
-                BottomRightOffsetY = int.Parse(textBox_bottomRightY.Text.ToString()),
+                TopLeftOffsetX = (int)textBox_topLeftX.Value,
+                TopLeftOffsetY = (int)textBox_topLeftY.Value,
+                BottomRightOffsetX = (int)textBox_bottomRightX.Value,
+                BottomRightOffsetY = (int)textBox_bottomRightY.Value,
                 showSpeedMonitorInMainPanel = checkBox_showSpeedMenu.IsChecked.Value,
                 showGuideCircles = checkBox_showGuideCircles.IsChecked.Value,
                 captureModeWhenStart = checkBox_captureModeInStart.IsChecked.Value,
@@ -303,7 +304,7 @@ namespace Cad2D.Pages
             s.FELimit = int.Parse(textBox_FELimit.Text);
             s.ScaleFESize = double.Parse(textBox_ScaleFESize.Text);
             s.FocalLinPixels = int.Parse(textBox_FocalLinPixels.Text);
-
+            if (btn_edgeOffset.Value != null) s.edgeOffset = (int)btn_edgeOffset.Value;
             s.writeToXmlFile(Env.PrimarySettingsFile);
 
             ((MainWindow)Application.Current.MainWindow).showMsg("پیام", "تنظیمات با موفقیت ذخیره شدند!");
@@ -330,11 +331,11 @@ namespace Cad2D.Pages
 
         public void setOffsets(Point[] points)
         {
-            textBox_topLeftX.Text = points[0].X.ToString();
-            textBox_topLeftY.Text = points[0].Y.ToString();
+            textBox_topLeftX.Value = points[0].X;
+            textBox_topLeftY.Value = points[0].Y;
 
-            textBox_bottomRightX.Text = points[1].X.ToString();
-            textBox_bottomRightY.Text = points[1].Y.ToString();
+            textBox_bottomRightX.Value = points[1].X;
+            textBox_bottomRightY.Value = points[1].Y;
         }
         
 

@@ -63,13 +63,12 @@ namespace Cad2D
         public void MyHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception ex = (Exception)args.ExceptionObject;
-            Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+            Logger.LogError("_File : MainWindow" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
         }
 
         private void OnClosed(object sender, EventArgs eventArgs)
         {
             cc2d.ShutDown();
-
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -93,12 +92,9 @@ namespace Cad2D
             return m;
         }
 
-        public void setMValue(int i)
+        public void setMValue(int total , int stoneScan, int horizontalPoints, int verticalPoints, int innerPoints)
         {
-            if (m != null)
-            {
-                m.setProgressValue(i);
-            }    
+            m?.setProgressValues(total,stoneScan,horizontalPoints,verticalPoints, innerPoints);
         }
 
         public async Task<MyStartDirectionDialog> showDirections()
@@ -118,7 +114,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_Message : " + ex.Message + "\n\n_Source : " + ex.Source + "\n\n_TargetSite : " + ex.TargetSite + "\n\n _ALL : " + ex.ToString(), LogType.Error, ex);
+                Logger.LogError("_File : MainWindow" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
 

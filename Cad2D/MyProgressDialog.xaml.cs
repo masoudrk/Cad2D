@@ -26,9 +26,13 @@ namespace Cad2D
             InitializeComponent();
         }
 
-        public void setProgressValue(int value)
+        public void setProgressValues(int total, int stoneScan, int horizontalPoints, int verticalPoints , int innerPoints)
         {
-            progressBar.Value = value;
+            progressBar.Value = total;
+            this.stoneScan.Value = stoneScan;
+            this.horizontalPoints.Value = horizontalPoints;
+            this.verticalPoints.Value = verticalPoints;
+            this.innerPoints.Value = innerPoints;
         }
     }
 }
