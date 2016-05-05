@@ -205,7 +205,7 @@ namespace Cad2D
             horizonalBoundryCount = 0;
             diskDiameter = new Packet<ushort>(232);
             //TODO should change this address
-            innerPointsLengthPacket = new Packet<ushort>(500);
+            innerPointsLengthPacket = new Packet<ushort>(274);
             lsConnection.connect(ip, portNumber);
             writingPackets = new List<writingPacketInfo>();
 
@@ -394,7 +394,7 @@ namespace Cad2D
             if (progressDialog != null)
             {
                 progressDialog.Result.Close();
-                innerPointsLengthPacket.value = (ushort)stoneInnerPointsCount;
+                innerPointsLengthPacket.value = (ushort)(stoneInnerPointsCount / 2);
                 if (lsConnection.Connected)
                     lsConnection.writeToPlc(innerPointsLengthPacket.dataType, innerPointsLengthPacket.value, innerPointsLengthPacket.valueAddress,
                         ref innerPointsLengthPacket.writingPacket);

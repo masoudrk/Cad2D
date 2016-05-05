@@ -53,10 +53,10 @@ namespace Cad2D
 
     public class LS_Connection
     {
-        private Mutex writeToServerMutex = new Mutex();
-        private Mutex readToServerMutex = new Mutex();
-        private Mutex readEventMutex = new Mutex();
-        public static Mutex sendPacketMutex = new Mutex();
+        //private Mutex writeToServerMutex = new Mutex();
+        //private Mutex readToServerMutex = new Mutex();
+        //private Mutex readEventMutex = new Mutex();
+        //public static Mutex sendPacketMutex = new Mutex();
         public bool Connected
         {
             get { return connected; }
@@ -153,6 +153,7 @@ namespace Cad2D
                 //ba ham merg mishan ke in baes mishe yekish khonde beshe . vase hamin
                 //in sleeep ro gozashtam . shayad vase khode plc lazem nabashe
                 Thread.Sleep(10);
+                if (!Connected) return;
                 tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
             }
             catch (Exception ex)
@@ -167,11 +168,11 @@ namespace Cad2D
 
             try
             {
-                writeToServerMutex.WaitOne();
+                /*writeToServerMutex.WaitOne();*/
                 TcpClient tcpc;
                 tcpc = (TcpClient)ar.AsyncState;
                 tcpc.GetStream().EndWrite(ar);
-                writeToServerMutex.ReleaseMutex();
+                /*writeToServerMutex.ReleaseMutex();*/
             }
             catch (Exception ex)
             {
@@ -184,17 +185,23 @@ namespace Cad2D
         {
             try
             {
-                readToServerMutex.WaitOne();
+                /*readToServerMutex.WaitOne();*/
                 TcpClient tcpc;
                 int countBytes;
                 tcpc = (TcpClient)ar.AsyncState;
 
-                countBytes = tcpc.GetStream().EndRead(ar);
+                if (tcpc.Connected)
+                    countBytes = tcpc.GetStream().EndRead(ar);
+                else
+                {
+                    Disconnect();
+                    return;
+                }
 
                 if (countBytes == 0)
                 {
                     Disconnect();
-                    readToServerMutex.ReleaseMutex();
+                    /*readToServerMutex.ReleaseMutex();*/
                     return;
                 }
                 List<byte[]> rawPackets = new List<byte[]>();
@@ -262,8 +269,14 @@ namespace Cad2D
                 }
 
                 serverRec = new byte[2048];
-                readToServerMutex.ReleaseMutex();
-                tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
+                /*readToServerMutex.ReleaseMutex();*/
+                if(tcpc.Connected)
+                    tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
+                else
+                {
+                    Disconnect();
+                    return;
+                }
             }
             catch (Exception ex)
             {
@@ -337,42 +350,40 @@ namespace Cad2D
                     p.value = BitConverter.ToInt32(data, dataLength - 4);
                     break;
             }
-            readEventMutex.WaitOne();
-            if (OnReadedSuccessfully != null)
-                OnReadedSuccessfully(p, null);
-            readEventMutex.ReleaseMutex();
+            OnReadedSuccessfully?.Invoke(p, null);
         }
 
         public void Disconnect()
         {
             if (tcpClient != null)
             {
+                tcpClient.GetStream().Close();
                 tcpClient.Close();
                 tcpClient = null;
             }
             Connected = false;
 
-            writeToServerMutex.Dispose();
-            readToServerMutex.Dispose();
-            readEventMutex.Dispose();
-            sendPacketMutex.Dispose();
+            //writeToServerMutex.Dispose();
+            //readToServerMutex.Dispose();
+            //readEventMutex.Dispose();
+            //sendPacketMutex.Dispose();
 
-            writeToServerMutex = new Mutex();
-            readToServerMutex = new Mutex();
-            readEventMutex = new Mutex();
-            sendPacketMutex = new Mutex();
+            //writeToServerMutex = new Mutex();
+            //readToServerMutex = new Mutex();
+            //readEventMutex = new Mutex();
+            //sendPacketMutex = new Mutex();
             return;
         }
 
         public bool readFromPlc(DataType dt, int address, ref readingPacketInfo rpi)
         {
-            sendPacketMutex.WaitOne();
+            /*sendPacketMutex.WaitOne();*/
             if (dt == DataType.CONTINUOUS)
-            { sendPacketMutex.ReleaseMutex(); return false; }
+            { /*sendPacketMutex.ReleaseMutex(); */return false; }
             if (dt == DataType.BIT)
             {
                 if (address < 0 || address > 16 * maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.BIT, 0, address, 0);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -397,7 +408,7 @@ namespace Cad2D
             if (dt == DataType.BYTE)
             {
                 if (address < 0 || address > 2 * maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.BYTE, 0, address, 0);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -423,7 +434,7 @@ namespace Cad2D
             if (dt == DataType.WORD)
             {
                 if (address < 0 || address > maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.WORD, 0, address, 0);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -449,7 +460,7 @@ namespace Cad2D
             if (dt == DataType.DWORD)
             {
                 if (address < 0 || address > maxAddress / 2)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex();*/ return false; }
                 byte[] ins = makeInstruction(DataType.DWORD, 0, address, 0);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -470,18 +481,18 @@ namespace Cad2D
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
-            sendPacketMutex.ReleaseMutex();
+            //sendPacketMutex.ReleaseMutex();
             return true;
 
         }
 
         public bool readFromPlcContinoues(int address, int address_end, ref List<ushort> PackestId)
         {
-            sendPacketMutex.WaitOne();
+            /*sendPacketMutex.WaitOne();*/
             if (address < 0 || address > maxAddress * 2)
-            { sendPacketMutex.ReleaseMutex(); return false; }
+            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
             if (address > address_end)
-            { sendPacketMutex.ReleaseMutex(); return false; }
+            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
 
             byte[] ins = makeInstruction(DataType.CONTINUOUS, Math.Abs(address_end - address), address, 0);
             byte[] packetInfo = new byte[6];
@@ -503,18 +514,18 @@ namespace Cad2D
             readingPackeCountinusOrder.Add(order);
             sendMessage(rv);
 
-            sendPacketMutex.ReleaseMutex(); return true;
+            /*sendPacketMutex.ReleaseMutex(); */return true;
         }
 
         public bool writeToPlc(DataType dt, int value, int address, ref writingPacketInfo wpi)
         {
-            sendPacketMutex.WaitOne();
+            /*sendPacketMutex.WaitOne();*/
             if (dt == DataType.CONTINUOUS)
-            { sendPacketMutex.ReleaseMutex(); return false; }
+            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
             if (dt == DataType.BIT)
             {
                 if (value < 0 || value > 1 || address < 0 || address > 16 * maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                {/* sendPacketMutex.ReleaseMutex();*/ return false; }
                 byte[] ins = makeInstruction(DataType.BIT, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -540,7 +551,7 @@ namespace Cad2D
             if (dt == DataType.BYTE)
             {
                 if (value < 0 || value > 0xFF || address < 0 || address > 2 * maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.BYTE, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -566,7 +577,7 @@ namespace Cad2D
             if (dt == DataType.WORD)
             {
                 if (value < 0 || value > 0xFFFF || address < 0 || address > maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex();*/ return false; }
                 byte[] ins = makeInstruction(DataType.WORD, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -593,7 +604,7 @@ namespace Cad2D
             if (dt == DataType.DWORD)
             {
                 if (address < 0 || address > maxAddress / 2)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.DWORD, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -615,20 +626,20 @@ namespace Cad2D
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
             }
-            sendPacketMutex.ReleaseMutex(); return true;
+            /*sendPacketMutex.ReleaseMutex(); */return true;
         }
 
 
 
         public bool writeToPlc(DataType dt, int value, int address, ref List<writingPacketInfo> wpiList)
         {
-            sendPacketMutex.WaitOne();
+            /*sendPacketMutex.WaitOne();*/
             if (dt == DataType.CONTINUOUS)
-            { sendPacketMutex.ReleaseMutex(); return false; }
+            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
             if (dt == DataType.BIT)
             {
                 if (value < 0 || value > 1 || address < 0 || address > 16 * maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                {/* sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.BIT, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -655,7 +666,7 @@ namespace Cad2D
             if (dt == DataType.BYTE)
             {
                 if (value < 0 || value > 0xFF || address < 0 || address > 2 * maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.BYTE, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -682,7 +693,7 @@ namespace Cad2D
             if (dt == DataType.WORD)
             {
                 if (value < 0 || value > 0xFFFF || address < 0 || address > maxAddress)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex();*/ return false; }
                 byte[] ins = makeInstruction(DataType.WORD, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -710,7 +721,7 @@ namespace Cad2D
             if (dt == DataType.DWORD)
             {
                 if (address < 0 || address > maxAddress / 2)
-                { sendPacketMutex.ReleaseMutex(); return false; }
+                { /*sendPacketMutex.ReleaseMutex(); */return false; }
                 byte[] ins = makeInstruction(DataType.DWORD, value, address, 1);
                 byte[] packetInfo = new byte[6];
                 byte[] intByte = BitConverter.GetBytes(order);
@@ -733,7 +744,7 @@ namespace Cad2D
                 wpiList.Add(wpi);
                 sendMessage(rv);
             }
-            sendPacketMutex.ReleaseMutex(); return true;
+            /*sendPacketMutex.ReleaseMutex();*/ return true;
         }
         private byte calculateCheckSum(byte[] header)
         {
