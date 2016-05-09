@@ -28,8 +28,8 @@ namespace Cad2D
             positionX = new Packet<ushort>(22);
             positionY = new Packet<ushort>(23);
             alert = new Packet<ushort>(2);
-            manualOrAuto = new Packet<ushort>(3);
-            machinPhase = new Packet<ushort>(4);
+            depth = new Packet<ushort>(240);
+            //machinPhase = new Packet<ushort>(4);
             water = new Packet<ushort>(202);
             waterTOff = new Packet<ushort>(262);
             waterTOn = new Packet<ushort>(263);
@@ -48,12 +48,19 @@ namespace Cad2D
         public Packet<ushort> positionY;
         public Packet<ushort> alert ;
         public Packet<ushort> shutdown;
-        public Packet<ushort> manualOrAuto;
+        public Packet<ushort> depth;
         public Packet<ushort> water;
         public Packet<ushort> waterTOff;
         public Packet<ushort> waterTOn;
-        public Packet<ushort> machinPhase;
+        //public Packet<ushort> machinPhase;
 
+        public void writeDepth(int data)
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.writeToPlc(depth.dataType, data, depth.valueAddress, ref depth.writingPacket);
+            }
+        }
         public void writeWater(int data)
         {
             if (CanvasCad2D.lsConnection.Connected)
@@ -88,6 +95,8 @@ namespace Cad2D
         {
             if (CanvasCad2D.lsConnection.Connected)
             {
+                CanvasCad2D.lsConnection.readFromPlc(depth.dataType, depth.valueAddress,
+                          ref depth.readingPacket);
                 CanvasCad2D.lsConnection.readFromPlc(water.dataType, water.valueAddress,
                        ref water.readingPacket);
                 CanvasCad2D.lsConnection.readFromPlc(waterTOff.dataType, waterTOff.valueAddress,
@@ -116,10 +125,10 @@ namespace Cad2D
                     ref positionY.readingPacket);
                 CanvasCad2D.lsConnection.readFromPlc(alert.dataType, alert.valueAddress,
                     ref alert.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(manualOrAuto.dataType, manualOrAuto.valueAddress,
-                    ref manualOrAuto.readingPacket);
-                CanvasCad2D.lsConnection.readFromPlc(machinPhase.dataType, machinPhase.valueAddress,
-                    ref machinPhase.readingPacket);
+                //CanvasCad2D.lsConnection.readFromPlc(manualOrAuto.dataType, manualOrAuto.valueAddress,
+                //    ref manualOrAuto.readingPacket);
+                //CanvasCad2D.lsConnection.readFromPlc(machinPhase.dataType, machinPhase.valueAddress,
+                //    ref machinPhase.readingPacket);
 
                 CanvasCad2D.lsConnection.readFromPlc(verticalSobCount.dataType, verticalSobCount.valueAddress,
                     ref verticalSobCount.readingPacket);

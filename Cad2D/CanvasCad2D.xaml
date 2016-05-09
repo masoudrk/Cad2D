@@ -87,9 +87,6 @@
             <Border x:Name="border_WaterOption" FlowDirection="RightToLeft" CornerRadius="0 0 6 6"  Grid.Row="6" Grid.Column="1" Background="#FFD6DBE9"  BorderBrush="#FFD6DBE9" Margin="11,0,10,0" >
 
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="button_water" Click="button_water_Click" Style="{DynamicResource MetroCircleButtonStyle}" >
-                        <Image x:Name="img_water" Source="Resources/WaterOption/Water.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
-                    </Button>
                     <Button x:Name="button_Water_Timer" Style="{DynamicResource MetroCircleButtonStyle}" Click="button_Water_Timer_Click" >
                         <Image x:Name="img_water_timer" Source="Resources/WaterOption/NotTimer.png" RenderOptions.BitmapScalingMode="HighQuality" Margin="14" />
                     </Button>
@@ -143,11 +140,11 @@
             </Border>
             <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Width="220" Margin="0,10,0,0" >
                 <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                    <Image x:Name="image_AutoOrManual" Source="Resources/manual.png" RenderOptions.BitmapScalingMode="HighQuality" Width="75" Margin="5" />
-                    <Label x:Name="label_Phase" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Hold" FontSize="30" FontFamily="Microsoft YaHei" Height="78" RenderTransformOrigin="0.55,0.609"/>
+                    <Label x:Name="lbl_depth" Content="سانت زدن" Width="100" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
+                    <Custom:NumericUpDown x:Name="number_depth" ValueChanged="Number_depth_OnValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="98" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="1000" Minimum="0"/>
                 </StackPanel>
             </Border>
-            <Border Width="220" x:Name="border_monitors" RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Margin="0,10,0,0">
+            <Border Width="220" x:Name="border_monitors" Visibility="Collapsed" RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical" >
                     <StackPanel x:Name="panel_speeds" Orientation="Vertical" >
                         <Label Margin="0 5 1 0" HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="سرعت محور X :" FontSize="17.333" VerticalContentAlignment="Center"/>
@@ -161,7 +158,6 @@
                             <Label x:Name="label_y" Content="50x" Width="50" HorizontalContentAlignment="Center" FontSize="18.667"/>
                         </StackPanel>
                     </StackPanel>
-
                 </StackPanel>
             </Border>
             <Border RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 0 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" Margin="0,10,0,0"  Padding="5" >
@@ -172,7 +168,7 @@
                     <StackPanel Orientation="Vertical" >
                         <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
                             <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
-                            <Image MouseDown="button_edgeStart_MouseDown" x:Name="button_edgeStart" Source="Resources/func/stop.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
+                            <Image MouseDown="button_edgeStart_MouseDown" x:Name="button_edgeStart" Source="Resources/func/UnCheck.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
                             <Image x:Name="button_edgeStartFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
                         </StackPanel>
                         <Line Stretch="Fill" Stroke="Gray" X2="1" Margin="0 5 0 5"/>
@@ -194,11 +190,31 @@
                         <Line Stretch="Fill" Stroke="Gray" X2="1" Margin="0 5 0 5"/>
                         <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
                             <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
-                            <Image MouseDown="button_edgeEnd_MouseDown"  Source="Resources/func/stop.png" x:Name="button_edgeEnd" Width="60" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
+                            <Image MouseDown="button_edgeEnd_MouseDown"  Source="Resources/func/UnCheck.png" x:Name="button_edgeEnd" Width="60" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
                             <Image x:Name="button_edgeEndFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="25 5 0 5" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>
+            </Border>
+            <Border Width="220" RenderOptions.EdgeMode="Unspecified" CornerRadius="6 0 6 6" Background="#FFD6DBE9" BorderBrush="#FFD6DBE9" VerticalAlignment="Top" Margin="0,10,0,0">
+                <StackPanel Orientation="Vertical" >
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <Image Source="Resources/arrowUp.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                        <Custom:NumericUpDown x:Name="textBox_TopValue" ValueChanged="textBox_TopValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="146" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
+                    </StackPanel>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <Image Source="Resources/arrowDown.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                        <Custom:NumericUpDown x:Name="textBox_BottomValue" ValueChanged="textBox_BottomValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="146" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
+                    </StackPanel>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <Image Source="Resources/arrowright.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                        <Custom:NumericUpDown x:Name="textBox_RightValue" ValueChanged="textBox_RightValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="146" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
+                    </StackPanel>
+                    <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <Image Source="Resources/arrowLeft.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                        <Custom:NumericUpDown x:Name="textBox_LeftValue" ValueChanged="textBox_LeftValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Width="146" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
+                    </StackPanel>
+                </StackPanel>
             </Border>
         </StackPanel>
     </Grid>

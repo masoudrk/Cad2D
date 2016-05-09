@@ -484,14 +484,17 @@ namespace Cad2D.Pages
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            //TODO Commented for tehran ray stone
+            /*
             CanvasCad2D.pageHscX = new Page_Hsc_X();
-            ((TransitioningContentControl)Parent).Content = CanvasCad2D.pageHscX;
+            ((TransitioningContentControl)Parent).Content = CanvasCad2D.pageHscX;*/
         }
 
         private void button_Click_2(object sender, RoutedEventArgs e)
-        {
+        {//TODO Commented for tehran ray stone
+            /*
             CanvasCad2D.pageHscY = new Page_Hsc_Y();
-            ((TransitioningContentControl)Parent).Content = CanvasCad2D.pageHscY;
+            ((TransitioningContentControl)Parent).Content = CanvasCad2D.pageHscY;*/
         }
 
         private void text_Man_Spd_AXY_KeyUp(object sender, KeyEventArgs e)

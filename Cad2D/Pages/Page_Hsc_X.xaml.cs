@@ -34,7 +34,8 @@ namespace Cad2D.Pages
 
         private void load()
         {
-            
+            //TODO Commented for tehran ray stone
+            /*
             if (CanvasCad2D.lsConnection.Connected)
             {
                 CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.testModeAXX.dataType,
@@ -70,6 +71,7 @@ namespace Cad2D.Pages
                 CanvasCad2D.lsConnection.readFromPlc(CanvasCad2D.hscXHelper.decStopAXX.dataType,
                     CanvasCad2D.hscXHelper.decStopAXX.valueAddress, ref CanvasCad2D.hscXHelper.decStopAXX.readingPacket);
             }
+            */
         }
 
         private void textBoxSpdReq_KeyDown(object sender, KeyEventArgs e)

@@ -111,42 +111,56 @@ namespace Cad2D
                     plcInformation.alert.readingPacket = null;
                     return;
                 }
-                if (plcInformation.manualOrAuto.readingPacket != null && plcInformation.manualOrAuto.readingPacket.order == p.order)
-                {
-                    plcInformation.manualOrAuto.value = (ushort)p.value;
-                    OnGUIActions(() => setManualOrAuto());
-                    plcInformation.manualOrAuto.readingPacket = null;
-                    return;
-                }
-                if (plcInformation.machinPhase.readingPacket != null && plcInformation.machinPhase.readingPacket.order == p.order)
-                {
-                    plcInformation.machinPhase.value = (ushort)p.value;
-                    OnGUIActions(() => setMachinPhase());
-                    plcInformation.machinPhase.readingPacket = null;
-                    return;
-                }
+                //if (plcInformation.manualOrAuto.readingPacket != null && plcInformation.manualOrAuto.readingPacket.order == p.order)
+                //{
+                //    plcInformation.manualOrAuto.value = (ushort)p.value;
+                //    OnGUIActions(() => setManualOrAuto());
+                //    plcInformation.manualOrAuto.readingPacket = null;
+                //    return;
+                //}
+                //if (plcInformation.machinPhase.readingPacket != null && plcInformation.machinPhase.readingPacket.order == p.order)
+                //{
+                //    plcInformation.machinPhase.value = (ushort)p.value;
+                //    OnGUIActions(() => setMachinPhase());
+                //    plcInformation.machinPhase.readingPacket = null;
+                //    return;
+                //}
                 ///
                 if(plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_TopValue.Value = p.value);
+                    OnGUIActions(() => {
+                                           if (pageToolsObject != null) pageToolsObject.textBox_TopValue.Value = p.value;
+                                           textBox_TopValue.Value = p.value / 10;
+                    });
                     plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_LeftValue.Value = p.value);
+                    OnGUIActions(() => {
+                                           if (pageToolsObject != null) pageToolsObject.textBox_LeftValue.Value = p.value;
+                                           textBox_LeftValue.Value = p.value / 10;
+                    });
                     plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_BottomValue.Value = p.value);
+                    OnGUIActions(() => {
+                                           if (pageToolsObject != null)
+                                               pageToolsObject.textBox_BottomValue.Value = p.value;
+                                           textBox_BottomValue.Value = p.value / 10;
+                    });
                     plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_RightValue.Value = p.value);
+                    OnGUIActions(() => {
+                                           if (pageToolsObject != null)
+                                               pageToolsObject.textBox_RightValue.Value = p.value;
+                                           textBox_RightValue.Value = p.value / 10;
+                    });
                     plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket = null;
                     return;
                 }
@@ -174,7 +188,9 @@ namespace Cad2D
                     plcUtilitisAndOptions.HashyeEdge.readingPacket = null;
                     return;
                 }
-                //////
+                //TODO commented for tehran ray stone
+                ////// start hsc
+                /*
                 if (hscXHelper.testModeAXX.readingPacket != null && hscXHelper.testModeAXX.readingPacket.order == p.order)
                 {
                     OnGUIActions(() => pageHscX.checkBox.IsChecked = (p.value == 1) ? true : false);
@@ -258,8 +274,8 @@ namespace Cad2D
                     OnGUIActions(() => pageHscX.textBoxDecStop.Text = p.value.ToString());
                     hscXHelper.decStopAXX.readingPacket = null;
                     return;
-                }
-
+                }*/
+                ///////end hsc //////
                 ////////////////////
                 if (plcUtilitisAndOptions.DiskDiameter.readingPacket != null && plcUtilitisAndOptions.DiskDiameter.readingPacket.order == p.order)
                 {
@@ -328,6 +344,13 @@ namespace Cad2D
                     plcInformation.water.readingPacket = null;
                     return;
                 }
+                if (plcInformation.depth.readingPacket != null && plcInformation.depth.readingPacket.order == p.order)
+                {
+                    plcInformation.depth.value = (ushort)(p.value /10) ;
+                    OnGUIActions(setDepthSetting);
+                    plcInformation.depth.readingPacket = null;
+                    return;
+                }
                 if (plcInformation.waterTOff.readingPacket != null && plcInformation.waterTOff.readingPacket.order == p.order)
                 {
                     plcInformation.waterTOff.value = (ushort)p.value;
@@ -387,6 +410,38 @@ namespace Cad2D
             writingPacketInfo p = (writingPacketInfo)sender;
             try
             {
+                if (plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket != null &&
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket != null &&
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket != null &&
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket = null;
+                    return;
+                }
+                if (plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket != null &&
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket.order == p.order)
+                {
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket = null;
+                    return;
+                }
+
+                if (plcInformation.depth.writingPacket != null && plcInformation.depth.writingPacket.order == p.order)
+                {
+                    plcInformation.depth.writingPacket = null;
+                    plcInformation.depth.value = (ushort)(p.value/10);
+                    OnGUIActions(setDepthSetting);
+                    return;
+                }
                 if (plcInformation.water.writingPacket != null && plcInformation.water.writingPacket.order == p.order)
                 {
                     plcInformation.water.writingPacket = null;
@@ -618,8 +673,8 @@ namespace Cad2D
         {
             bool[] array = Convert.ToString(plcInformation.edgeEndStart.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
             bool[] boolArray = createBoolArray(array);
-            button_edgeStart.Source = boolArray[0] ? new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/stop.png")) : new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/play.png"));
-            button_edgeEnd.Source = boolArray[1] ? new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/stop.png")) : new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/play.png"));
+            button_edgeStart.Source = boolArray[0] ? new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/check.png")) : new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/UnCheck.png"));
+            button_edgeEnd.Source = boolArray[1] ? new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/check.png")): new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/func/UnCheck.png"));
         }
 
         void setAlarm()
@@ -667,60 +722,72 @@ namespace Cad2D
             }
         }
 
-        void setMachinPhase()
+        //void setMachinPhase()
+        //{
+        //    if (plcInformation.machinPhase.value == 1)
+        //    {
+        //        label_Phase.Content = "READY";
+        //        label_Phase.Foreground = Brushes.Green;
+        //        return;
+        //    }
+        //    else if (plcInformation.machinPhase.value == 2)
+        //    {
+        //        label_Phase.Content = "RUN";
+        //        label_Phase.Foreground = Brushes.DodgerBlue;
+        //        return;
+        //    }
+        //    else if (plcInformation.machinPhase.value == 4)
+        //    {
+        //        label_Phase.Content = "PARK";
+        //        label_Phase.Foreground = Brushes.OrangeRed;
+        //        return;
+        //    }
+        //    else if (plcInformation.machinPhase.value == 8)
+        //    {
+        //        label_Phase.Content = "HOLD";
+        //        label_Phase.Foreground = Brushes.Yellow;
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        label_Phase.Content = "STOP";
+        //        label_Phase.Foreground = Brushes.Black;
+        //        return;
+        //    }
+        //}
+        //void setManualOrAuto()
+        //{
+        //    if (plcInformation.manualOrAuto.value == 1)
+        //    {
+        //        image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/power.png"));
+        //        return;
+        //    }
+        //    else if (plcInformation.manualOrAuto.value == 2)
+        //    {
+        //        image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/manual.png"));
+        //        return;
+        //    }
+        //    else if (plcInformation.manualOrAuto.value == 4)
+        //    {
+        //        image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/auto.png"));
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/power.png"));
+        //        return;
+        //    }
+        //}
+
+        private void setWaterSetting()
         {
-            if (plcInformation.machinPhase.value == 1)
-            {
-                label_Phase.Content = "READY";
-                label_Phase.Foreground = Brushes.Green;
-                return;
-            }
-            else if (plcInformation.machinPhase.value == 2)
-            {
-                label_Phase.Content = "RUN";
-                label_Phase.Foreground = Brushes.DodgerBlue;
-                return;
-            }
-            else if (plcInformation.machinPhase.value == 4)
-            {
-                label_Phase.Content = "PARK";
-                label_Phase.Foreground = Brushes.OrangeRed;
-                return;
-            }
-            else if (plcInformation.machinPhase.value == 8)
-            {
-                label_Phase.Content = "HOLD";
-                label_Phase.Foreground = Brushes.Yellow;
-                return;
-            }
+            bool[] array = Convert.ToString(plcInformation.water.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
+            bool[] boolArray = createBoolArray(array);
+            if (boolArray[1])
+                setWaterTimerOn();
             else
             {
-                label_Phase.Content = "STOP";
-                label_Phase.Foreground = Brushes.Black;
-                return;
-            }
-        }
-        void setManualOrAuto()
-        {
-            if (plcInformation.manualOrAuto.value == 1)
-            {
-                image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/power.png"));
-                return;
-            }
-            else if (plcInformation.manualOrAuto.value == 2)
-            {
-                image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/manual.png"));
-                return;
-            }
-            else if (plcInformation.manualOrAuto.value == 4)
-            {
-                image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/auto.png"));
-                return;
-            }
-            else
-            {
-                image_AutoOrManual.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/power.png"));
-                return;
+                setWaterTimerOff();
             }
         }
 
@@ -740,55 +807,93 @@ namespace Cad2D
 
             Canvas.SetTop(mainCanvas.Children[headPosition], yPos);
         }
-        private void setWaterSetting()
+        private void setDepthSetting()
         {
-            bool[] array = Convert.ToString(plcInformation.water.value, 2 /*for binary*/).Select(s => s.Equals('1')).ToArray();
-            bool[] boolArray = createBoolArray(array);
-            if (boolArray[0])
-                setWaterOn();
-            else
-            {
-                setWaterOff();
-                return;
-            }
-            if (boolArray[1])
-                setWaterTimerOn();
-            else
-            {
-                setWaterTimerOff();
-                return;
-            }
+            number_depth.Value = plcInformation.depth.value;
         }
 
-        void setWaterOff()
-        {
-            textBox_Timer_Off.IsEnabled = false;
-            textBox_Timer_On.IsEnabled = false;
-            button_Water_Timer.IsEnabled = false;
-            button_Water_Timer.Opacity = 0.5;
-            img_water.Source= new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/NotWater.png"));
-            img_water_timer.Opacity = 0.5;
-        }
-        void setWaterOn()
-        {
-            textBox_Timer_Off.IsEnabled = true;
-            textBox_Timer_On.IsEnabled = true;
-            button_Water_Timer.IsEnabled = true;
-            button_Water_Timer.Opacity = 1;
-            img_water_timer.Opacity = 1;
-            img_water.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/Water.png"));
-        }
+//        void setWaterOff()
+//        {
+//            textBox_Timer_Off.IsEnabled = false;
+//            textBox_Timer_On.IsEnabled = false;
+//            button_Water_Timer.IsEnabled = false;
+//            button_Water_Timer.Opacity = 0.5;
+////            img_water.Source= new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/NotWater.png"));
+//            img_water_timer.Opacity = 0.5;
+//        }
+//        void setWaterOn()
+//        {
+//            textBox_Timer_Off.IsEnabled = true;
+//            textBox_Timer_On.IsEnabled = true;
+//            button_Water_Timer.IsEnabled = true;
+//            button_Water_Timer.Opacity = 1;
+//            img_water_timer.Opacity = 1;
+//  //          img_water.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/Water.png"));
+//        }
         void setWaterTimerOn()
         {
-            textBox_Timer_Off.IsEnabled = true;
-            textBox_Timer_On.IsEnabled = true;
             img_water_timer.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/Timer.png"));
         }
         void setWaterTimerOff()
         {
-            textBox_Timer_Off.IsEnabled = false;
-            textBox_Timer_On.IsEnabled = false;
             img_water_timer.Source = new BitmapImage(new Uri("pack://application:,,,/Cad2D;component/Resources/WaterOption/NotTimer.png"));
+        }
+
+        private void Number_depth_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (number_depth.Value != null) plcInformation?.writeDepth((ushort)number_depth.Value *10);
+        }
+
+        private void textBox_TopValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (lsConnection == null || plcUtilitisAndOptions == null) return;
+            if (lsConnection.Connected)
+            {
+                if (textBox_TopValue.Value != null)
+                    lsConnection.writeToPlc(plcUtilitisAndOptions.DiskOutOfStnFstAXY.dataType, (int)textBox_TopValue.Value *10,
+                        plcUtilitisAndOptions.DiskOutOfStnFstAXY.valueAddress,
+                        ref plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket);
+            }
+        }
+
+
+        private void textBox_RightValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (lsConnection == null || plcUtilitisAndOptions == null) return;
+            if (lsConnection.Connected)
+            {
+                if (textBox_RightValue.Value != null)
+                    lsConnection.writeToPlc(plcUtilitisAndOptions.DiskOutOfStnEndAXX.dataType, (int)textBox_RightValue.Value * 10,
+                        plcUtilitisAndOptions.DiskOutOfStnEndAXX.valueAddress,
+                        ref plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket);
+            }
+        }
+
+
+        private void textBox_BottomValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if (lsConnection == null || plcUtilitisAndOptions == null) return;
+            if (lsConnection.Connected)
+            {
+                if (textBox_BottomValue.Value != null)
+                    lsConnection.writeToPlc(plcUtilitisAndOptions.DiskOutOfStnEndAXY.dataType, (int)textBox_BottomValue.Value * 10,
+                        plcUtilitisAndOptions.DiskOutOfStnEndAXY.valueAddress,
+                        ref plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket);
+            }
+        }
+
+
+
+        private void textBox_LeftValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+            if(lsConnection==null || plcUtilitisAndOptions==null) return;
+            if (lsConnection.Connected)
+            {
+                if (textBox_LeftValue.Value != null)
+                    lsConnection.writeToPlc(plcUtilitisAndOptions.DiskOutOfStnFstAXX.dataType, (int)textBox_LeftValue.Value * 10,
+                        plcUtilitisAndOptions.DiskOutOfStnFstAXX.valueAddress,
+                        ref plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket);
+            }
         }
     }
 }

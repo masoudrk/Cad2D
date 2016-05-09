@@ -81,6 +81,21 @@ namespace Cad2D
                     ref ClampAmount.readingPacket);
             }
         }
+
+        public void getFirstValues()
+        {
+            if (CanvasCad2D.lsConnection.Connected)
+            {
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnFstAXY.dataType, DiskOutOfStnFstAXY.valueAddress,
+                    ref DiskOutOfStnFstAXY.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnEndAXY.dataType, DiskOutOfStnEndAXY.valueAddress,
+                    ref DiskOutOfStnEndAXY.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnFstAXX.dataType, DiskOutOfStnFstAXX.valueAddress,
+                    ref DiskOutOfStnFstAXX.readingPacket);
+                CanvasCad2D.lsConnection.readFromPlc(DiskOutOfStnEndAXX.dataType, DiskOutOfStnEndAXX.valueAddress,
+                    ref DiskOutOfStnEndAXX.readingPacket);
+            }
+        }
         public class _Encoder
         {
             public _Encoder(ushort address1 , ushort address2)

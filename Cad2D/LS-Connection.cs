@@ -152,9 +152,11 @@ namespace Cad2D
                 //sorate ersal vaghti bala bashee lsdsim nemitone sari pars kone vase hamin chandta packet 
                 //ba ham merg mishan ke in baes mishe yekish khonde beshe . vase hamin
                 //in sleeep ro gozashtam . shayad vase khode plc lazem nabashe
-                Thread.Sleep(10);
-                if (!Connected) return;
-                tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
+                Thread.Sleep(25);
+                if (tcpClient.Connected && Thread.CurrentThread.ThreadState != ThreadState.Aborted)
+                    tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
+                else
+                    Disconnect();
             }
             catch (Exception ex)
             {
@@ -217,8 +219,7 @@ namespace Cad2D
                             {
                                 if (serverRec[30 + i] == 0x2)
                                 {
-                                    byte[] _array;
-                                    _array = new byte[34];
+                                    var _array = new byte[34];
                                     Buffer.BlockCopy(serverRec, i, _array, 0, _array.Length);
                                     rawPackets.Add(_array);
                                     i += _array.Length;
@@ -275,7 +276,6 @@ namespace Cad2D
                 else
                 {
                     Disconnect();
-                    return;
                 }
             }
             catch (Exception ex)
@@ -304,8 +304,7 @@ namespace Cad2D
                     int index = readingPackeCountinusOrder.FindIndex(x => x == _serverRec[14]);
                     if (index >= 0)
                     {
-                        byte[] _array;
-                        _array = new byte[_serverRec[30]];
+                        var _array = new byte[_serverRec[30]];
                         Buffer.BlockCopy(_serverRec, 32, _array, 0, _array.Length);
                         readingPacketCountinus rpc = new readingPacketCountinus(_array,
                             readingPackeCountinusOrder.ElementAt(index));
@@ -357,7 +356,6 @@ namespace Cad2D
         {
             if (tcpClient != null)
             {
-                tcpClient.GetStream().Close();
                 tcpClient.Close();
                 tcpClient = null;
             }
@@ -372,7 +370,6 @@ namespace Cad2D
             //readToServerMutex = new Mutex();
             //readEventMutex = new Mutex();
             //sendPacketMutex = new Mutex();
-            return;
         }
 
         public bool readFromPlc(DataType dt, int address, ref readingPacketInfo rpi)
@@ -389,7 +386,6 @@ namespace Cad2D
                 byte[] intByte = BitConverter.GetBytes(order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
-                intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
@@ -422,9 +418,9 @@ namespace Cad2D
                 packetInfo[5] = calculateCheckSum(packetInfo);
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
                 rpi = new readingPacketInfo(dt, address, (byte)order);
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);

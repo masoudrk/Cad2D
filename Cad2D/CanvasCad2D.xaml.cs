@@ -102,10 +102,11 @@ namespace Cad2D
         private int stoneInnerPointsCount;
         Page_Tools pageToolsObject;
         Page_Settings pageSettingObject;
-        public static HscXHelper hscXHelper;
-        public static HscYHelper hscYHelper;
-        public static Page_Hsc_X pageHscX;
-        public static Page_Hsc_Y pageHscY;
+        // TODO hsc commented for tehran ray ston
+        //public static HscXHelper hscXHelper;
+        //public static HscYHelper hscYHelper;
+        //public static Page_Hsc_X pageHscX;
+        //public static Page_Hsc_Y pageHscY;
         IPAddress ip;
         int portNumber;
         int maxAddress = 8000;
@@ -166,8 +167,8 @@ namespace Cad2D
                     UriKind.Absolute));
 
             plcInformation = new PlcInformation();
-            hscXHelper =new HscXHelper();
-            hscYHelper = new HscYHelper();
+            //hscXHelper =new HscXHelper();
+            //hscYHelper = new HscYHelper();
             PrimarySettings ps = checkPrimarySettings();
             getSensitiveAlarms();
 
@@ -409,6 +410,7 @@ namespace Cad2D
                 lsConnection.readFromPlc(diskDiameter.dataType, diskDiameter.valueAddress, ref diskDiameter.readingPacket);
             }
             plcInformation.getFirstValues();
+            plcUtilitisAndOptions.getFirstValues();
         }
         private void Ls_connection_OnDisconnceted(object sender, EventArgs e)
         {
@@ -1680,20 +1682,6 @@ namespace Cad2D
             if (x <0)
                 t.Text = "0";
 
-        }
-
-        private void button_water_Click(object sender, RoutedEventArgs e)
-        {
-            bool x = (plcInformation.water.value & (1 << 1 - 1)) != 0;
-            if (x)
-            {
-                plcInformation.water.value = (ushort)(plcInformation.water.value & 65534);
-            }
-            else
-            {
-                plcInformation.water.value = (ushort)(plcInformation.water.value | 1);
-            }
-            plcInformation.writeWater(plcInformation.water.value);
         }
 
         private void button_Water_Timer_Click(object sender, RoutedEventArgs e)
