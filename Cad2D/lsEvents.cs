@@ -129,7 +129,6 @@ namespace Cad2D
                 if(plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket.order == p.order)
                 {
                     OnGUIActions(() => {
-                                           if (pageToolsObject != null) pageToolsObject.textBox_TopValue.Value = p.value;
                                            textBox_TopValue.Value = p.value / 10;
                     });
                     plcUtilitisAndOptions.DiskOutOfStnFstAXY.readingPacket = null;
@@ -138,7 +137,6 @@ namespace Cad2D
                 if (plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket.order == p.order)
                 {
                     OnGUIActions(() => {
-                                           if (pageToolsObject != null) pageToolsObject.textBox_LeftValue.Value = p.value;
                                            textBox_LeftValue.Value = p.value / 10;
                     });
                     plcUtilitisAndOptions.DiskOutOfStnFstAXX.readingPacket = null;
@@ -147,8 +145,6 @@ namespace Cad2D
                 if (plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket.order == p.order)
                 {
                     OnGUIActions(() => {
-                                           if (pageToolsObject != null)
-                                               pageToolsObject.textBox_BottomValue.Value = p.value;
                                            textBox_BottomValue.Value = p.value / 10;
                     });
                     plcUtilitisAndOptions.DiskOutOfStnEndAXY.readingPacket = null;
@@ -157,8 +153,6 @@ namespace Cad2D
                 if (plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket != null && plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket.order == p.order)
                 {
                     OnGUIActions(() => {
-                                           if (pageToolsObject != null)
-                                               pageToolsObject.textBox_RightValue.Value = p.value;
                                            textBox_RightValue.Value = p.value / 10;
                     });
                     plcUtilitisAndOptions.DiskOutOfStnEndAXX.readingPacket = null;
@@ -166,25 +160,29 @@ namespace Cad2D
                 }
                 if (plcUtilitisAndOptions.ClampAmount.readingPacket != null && plcUtilitisAndOptions.ClampAmount.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_ClampAmount.Value = p.value);
+                    OnGUIActions(() => pageToolsObject.textBox_ClampAmount.Value = p.value/10);
+                    plcUtilitisAndOptions.ClampAmount.value = (ushort)(p.value /10);
                     plcUtilitisAndOptions.ClampAmount.readingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.HashyeFront.readingPacket != null && plcUtilitisAndOptions.HashyeFront.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_ClampTopLeft.Value = p.value);
+                    OnGUIActions(() => pageToolsObject.textBox_ClampTopLeft.Value = p.value /10);
+                    plcUtilitisAndOptions.HashyeFront.value = (ushort)(p.value / 10);
                     plcUtilitisAndOptions.HashyeFront.readingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.HashyeBack.readingPacket != null && plcUtilitisAndOptions.HashyeBack.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_ClampTopRight.Value = p.value);
+                    OnGUIActions(() => pageToolsObject.textBox_ClampTopRight.Value = p.value /10);
+                    plcUtilitisAndOptions.HashyeBack.value = (ushort)(p.value / 10);
                     plcUtilitisAndOptions.HashyeBack.readingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.HashyeEdge.readingPacket != null && plcUtilitisAndOptions.HashyeEdge.readingPacket.order == p.order)
                 {
-                    OnGUIActions(() => pageToolsObject.textBox_ClampBottomRight.Value = p.value);
+                    OnGUIActions(() => pageToolsObject.textBox_ClampBottomRight.Value = p.value/10);
+                    plcUtilitisAndOptions.HashyeEdge.value = (ushort)(p.value / 10);
                     plcUtilitisAndOptions.HashyeEdge.readingPacket = null;
                     return;
                 }
@@ -413,24 +411,28 @@ namespace Cad2D
                 if (plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket != null &&
                     plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket.order == p.order)
                 {
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXY.value = (ushort)p.value;
                     plcUtilitisAndOptions.DiskOutOfStnEndAXY.writingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket != null &&
                     plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket.order == p.order)
                 {
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXY.value = (ushort)p.value;
                     plcUtilitisAndOptions.DiskOutOfStnFstAXY.writingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket != null &&
                     plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket.order == p.order)
                 {
+                    plcUtilitisAndOptions.DiskOutOfStnEndAXX.value = (ushort)p.value;
                     plcUtilitisAndOptions.DiskOutOfStnEndAXX.writingPacket = null;
                     return;
                 }
                 if (plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket != null &&
                     plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket.order == p.order)
                 {
+                    plcUtilitisAndOptions.DiskOutOfStnFstAXX.value = (ushort)p.value;
                     plcUtilitisAndOptions.DiskOutOfStnFstAXX.writingPacket = null;
                     return;
                 }
