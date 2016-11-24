@@ -82,7 +82,7 @@ namespace Cad2D
         int stoneEdgeHorizontalSlice = 400;
         /// </summary>
         Point startPoint = new Point(0, 0);
-        Point endPoint = new Point(704, 576);
+        Point endPoint = new Point(800, 450);
         public List<LineGeometry> lineGeometryList;
         private List<Circle> guids;
         private List<Line> innerLines;
@@ -124,10 +124,6 @@ namespace Cad2D
         /// </summary>
         /// 
 
-        int[] stoneScan;
-        ushort[] stoneHorizontalEdge;
-        ushort[] stoneVerticalEdge;
-        ushort[] stoneInnerPoints;
         List<writingPacketInfo> writingPackets;
         string cameraIp;
         private Thread alarmThread;
@@ -138,6 +134,10 @@ namespace Cad2D
         private Window_DisplaySendData _windowDisplaySendData;
 
         private Packet<ushort> diskDiameter;
+
+        public WritingPackets WritingPacketArrays { set; get; }
+    
+
         public CanvasCad2D()
         {
             InitializeComponent();
@@ -200,6 +200,7 @@ namespace Cad2D
             lsConnection.OnWritedSuccessfully += Ls_connection_OnWritedSuccessfully;
             lsConnection.OnReadedSuccessfully += Ls_connection_OnReadedSuccessfully;
             lsConnection.OnReadedContinuous += Ls_connection_OnReadedContinuous;
+            lsConnection.OnWritedContinuous += LsConnection_OnWritedContinuous;
             lsConnection.Connected = false;
             stoneScanPacketCount = 0;
             verticalBoundryCount = 0;
@@ -208,8 +209,11 @@ namespace Cad2D
             //TODO should change this address
             innerPointsLengthPacket = new Packet<ushort>(274);
             lsConnection.connect(ip, portNumber);
+           
+            //lsConnection.writeContinouesToPlc(new byte[] {20,30,50,60,70,55,66,33,22}, 1,ref PcketID);
             writingPackets = new List<writingPacketInfo>();
 
+            WritingPacketArrays = new WritingPackets(scanAriaSegment,verticalBoundrySegment,horizonalBoundrySegment,innerPointsSegment);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
             plcInfoReaderTimer.Start();
 
@@ -219,6 +223,7 @@ namespace Cad2D
             initDataGrid(dataGrid);
 
         }
+
 
         //private void OnContextMenuClosing(object sender, ContextMenuEventArgs contextMenuEventArgs)
         //{
@@ -392,14 +397,11 @@ namespace Cad2D
         private void writeToPlcFinished()
         {
             setEnable(btn_sendToPlc_back, true);
-            if (progressDialog != null)
-            {
-                progressDialog.Result.Close();
-                innerPointsLengthPacket.value = (ushort)(stoneInnerPointsCount / 2);
+                innerPointsLengthPacket.value = (ushort)(stoneInnerPointsCount);
                 if (lsConnection.Connected)
                     lsConnection.writeToPlc(innerPointsLengthPacket.dataType, innerPointsLengthPacket.value, innerPointsLengthPacket.valueAddress,
                         ref innerPointsLengthPacket.writingPacket);
-            }
+            MessageBox.Show("مقادیر بر رو روی دستگاه ریخته شد");
         }
         private void Ls_connection_OnConnect(object sender, EventArgs e)
         {
@@ -653,11 +655,12 @@ namespace Cad2D
                         BitmapSource bs = (BitmapSource)i.Source;
                         if (bs != null)
                         {
-                            PrimarySettings s = Extentions.FromXmlPrimary();
-                            Analyzer a = new Analyzer(s.FELimit,s.ScaleFESize);
-                            bSrc = Utils.BitmapFromSource(bs);
-                            Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
-                            mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                            //PrimarySettings s = Extentions.FromXmlPrimary();
+                            //Analyzer a = new Analyzer(s.FELimit,s.ScaleFESize);
+                            //bSrc = Utils.BitmapFromSource(bs);
+                            //Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
+                            //mainImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                            mainImage.Source = i.Source;
                         }
                         clearPath();
                         EditMode();
@@ -670,11 +673,12 @@ namespace Cad2D
                         BitmapSource bs = (BitmapSource)i.Source;
                         if (bs != null)
                         {
-                            PrimarySettings s = Extentions.FromXmlPrimary();
-                            Analyzer a = new Analyzer(s.FELimit, s.ScaleFESize);
-                            bSrc = Utils.BitmapFromSource(bs);
-                            Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
-                            pso.offsetImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                            //PrimarySettings s = Extentions.FromXmlPrimary();
+                            //Analyzer a = new Analyzer(s.FELimit, s.ScaleFESize);
+                            //bSrc = Utils.BitmapFromSource(bs);
+                            //Bitmap b1 = a.RemoveFisheye(ref bSrc, s.FocalLinPixels);
+                            //pso.offsetImage.Source = Utils.ConvertBitmapToBitmapSource(b1);
+                            pso.offsetImage.Source = i.Source;
                         }
                         contentControl.Content = pso;
                     }
@@ -713,6 +717,7 @@ namespace Cad2D
         }
         private void btn_sendToPlc_back_Click(object sender, RoutedEventArgs e)
         {
+
             try
             {
                 if (contentControl.Content.GetType() == typeof(CameraPage) || sender == null)
@@ -723,6 +728,7 @@ namespace Cad2D
                 {
                     if (!connectedsList.loop)
                         endDrawVertex();
+
                     _sendDataToPlc();
                     setEnable(btn_sendToPlc_back, false);
                 }
@@ -1096,18 +1102,42 @@ namespace Cad2D
             foreach (ConnectedLine c in connectedsList)
                 lineGeometryList.Add(new LineGeometry(c.line));
             LinkedList<System.Drawing.PointF> points = calculateInnerPoints();
-            stoneInnerPoints = calculateInnerPosition(points);
+            ushort[] stoneInnerPointsU;
+            stoneInnerPointsU = calculateInnerPosition(points);
+            WritingPacketArrays.stoneInnerPoints = new byte[stoneInnerPointsU.Length*2];
+            for (int i = 0; i < stoneInnerPointsU.Length; i++)
+            {
+                byte[] intByte = BitConverter.GetBytes(stoneInnerPointsU[i]);
+                WritingPacketArrays.stoneInnerPoints[i * 2] = intByte[0];
+                WritingPacketArrays.stoneInnerPoints[i * 2 + 1] = intByte[1];
+            }
             double[] array1;
             array1 = calCulateVerticalPoints();
-            stoneVerticalEdge = calculateStoneVerticalPoints(array1);
+            ushort[] stoneVerticalEdgeU;
+            stoneVerticalEdgeU = calculateStoneVerticalPoints(array1);
+            WritingPacketArrays.stoneVerticalEdge = new byte[stoneVerticalEdgeU.Length * 2];
+            for (int i = 0; i < stoneVerticalEdgeU.Length; i++)
+            {
+                byte[] intByte = BitConverter.GetBytes(stoneVerticalEdgeU[i]);
+                WritingPacketArrays.stoneVerticalEdge[i * 2] = intByte[0];
+                WritingPacketArrays.stoneVerticalEdge[i * 2+1] = intByte[1];
+            }
             // y + (2 * horizontal slice) = z
             double[] array2;
             array2 = calCulateHorizontalPoints();
-            stoneHorizontalEdge = calculateStoneHorizontalPoints(array2);
+            ushort[] stoneHorizontalEdgeU;
+            stoneHorizontalEdgeU = calculateStoneHorizontalPoints(array2);
+            WritingPacketArrays.stoneHorizontalEdge = new byte[stoneHorizontalEdgeU.Length * 2];
+            for (int i = 0; i < stoneHorizontalEdgeU.Length; i++)
+            {
+                byte[] intByte = BitConverter.GetBytes(stoneHorizontalEdgeU[i]);
+                WritingPacketArrays.stoneHorizontalEdge[i * 2] = intByte[0];
+                WritingPacketArrays.stoneHorizontalEdge[i * 2 + 1] = intByte[1];
+            }
             // z 
             bool[,] array3;
             array3 = calCulateTheArray();
-            stoneScan = calculateStoneScan(array3);
+            WritingPacketArrays.stoneScan = calculateStoneScan(array3);
 
             dataGrid.Items.Clear();
             for (int i = 0; i < StoneEdgeVerticalSlice; i++)
@@ -1116,16 +1146,16 @@ namespace Cad2D
                     ? new GridItem()
                     {
                         val1 = i,
-                        val2 = setPericision(stoneVerticalEdge[i*2]),
-                        val3 = setPericision(stoneVerticalEdge[i*2 + 1]),
-                        val4 = setPericision(stoneHorizontalEdge[i*2]),
-                        val5 = setPericision(stoneHorizontalEdge[i*2 + 1])
+                        val2 = setPericision(stoneVerticalEdgeU[i*2]),
+                        val3 = setPericision(stoneVerticalEdgeU[i*2 + 1]),
+                        val4 = setPericision(stoneHorizontalEdgeU[i*2]),
+                        val5 = setPericision(stoneHorizontalEdgeU[i*2 + 1])
                     }
                     : new GridItem()
                     {
                         val1 = i,
-                        val2 = setPericision(stoneVerticalEdge[i*2]),
-                        val3 = setPericision(stoneVerticalEdge[i*2 + 1]),
+                        val2 = setPericision(stoneVerticalEdgeU[i*2]),
+                        val3 = setPericision(stoneVerticalEdgeU[i*2 + 1]),
                         val4 = 0,
                         val5 = 0
                     });
@@ -1156,7 +1186,7 @@ namespace Cad2D
         private LinkedList<System.Drawing.PointF> calculateInnerPoints()
         {
             PrimarySettings pri = Extentions.FromXmlPrimary();
-            float offset = (float)(704.0/3500.0)*pri.edgeOffset; 
+            float offset = (float)(endPoint.X/3500.0)*pri.edgeOffset; 
             LinkedList<System.Drawing.PointF> points = new LinkedList<System.Drawing.PointF>();
             for (int i = 0 ; i < lineGeometryList.Count ; i++)
             {
@@ -1270,11 +1300,12 @@ namespace Cad2D
         //    //directionDialog = MainWindow._window.showDirections();
         //}
 
+        //private Task<MyProgressDialog> progressDialog;
         private void _sendDataToPlc()
         {
             try
             {
-                Dispatcher.Invoke(() => progressDialog = MainWindow._window.showProgress());
+                //Dispatcher.Invoke(() => progressDialog = MainWindow._window.showProgress());
                 Thread t = new Thread(sendingStoneScanToPLC);
                 t.Start();
             }
@@ -1288,23 +1319,13 @@ namespace Cad2D
             return Math.Truncate(v * 1000f) / 1000f;
         }
 
-        private Task<MyProgressDialog> progressDialog;
 
         private void sendingStoneScanToPLC()
         {
             if (lsConnection.Connected)
             {
-                stoneScanPacketCount = stoneScan.Length;
-                verticalBoundryCount = stoneVerticalEdge.Length;
-                horizonalBoundryCount = stoneHorizontalEdge.Length;
-                stoneInnerPointsCount = stoneInnerPoints.Length;
-                stoneScanPacketCounter = 0;
-                horizonalBoundryCounter = 0;
-                verticalBoundryCounter = 0;
-                stoneInnerPointsCounter = 0;
-                if (lsConnection.Connected)
-                    lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
-                 
+                stoneInnerPointsCount = WritingPacketArrays.stoneInnerPoints.Length/4;
+                WritingPacketArrays.sendAllData();
             }
             else
             {
@@ -1513,19 +1534,19 @@ namespace Cad2D
             return array;
         }
 
-        private int[] calculateStoneScan(bool[,] array)
+        private byte[] calculateStoneScan(bool[,] array)
         {
-            int[] stoneScan = new int[(stoneScanHorizontalSlice / 16) * StoneScanVerticalSlice];
+            byte[] stoneScan = new byte[(stoneScanHorizontalSlice / 8) * StoneScanVerticalSlice];
 
             for (int i = 0; i < StoneScanVerticalSlice; i++)
             {
-                for (int k = 0; k < (stoneScanHorizontalSlice / 16); k++)
+                for (int k = 0; k < (stoneScanHorizontalSlice / 8); k++)
                 {
-                    for (int j = 15; j >=0 ; j--)
+                    for (int j = 7; j >=0 ; j--)
                     {
-                        stoneScan[((stoneScanHorizontalSlice / 16) * i) + k] *= 2;
-                        if (array[(16 * k) + j, i])
-                            stoneScan[((stoneScanHorizontalSlice / 16) * i) + k]++;
+                        stoneScan[((stoneScanHorizontalSlice / 8) * i) + k] *= 2;
+                        if (array[(8 * k) + j, i])
+                            stoneScan[((stoneScanHorizontalSlice / 8) * i) + k]++;
                     }
                 }
             }

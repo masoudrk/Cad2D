@@ -92,9 +92,9 @@ namespace Cad2D
             return m;
         }
 
-        public void setMValue(int total , int stoneScan, int horizontalPoints, int verticalPoints, int innerPoints)
+        public void setMValue(int total)
         {
-            m?.setProgressValues(total,stoneScan,horizontalPoints,verticalPoints, innerPoints);
+            m?.setProgressValues(total);
         }
 
         public async Task<MyStartDirectionDialog> showDirections()

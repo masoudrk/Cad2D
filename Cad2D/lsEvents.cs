@@ -26,6 +26,29 @@ namespace Cad2D
 {
     public partial class CanvasCad2D : UserControl
     {
+
+        private void LsConnection_OnWritedContinuous(object sender, EventArgs e)
+        {
+            writingPacketCountinus wpc = (writingPacketCountinus) sender;
+            int index = WritingPacketArrays.packetID.FindIndex(x => x == wpc.order);
+            Logger.LogError("lsEvents file reached", LogType.Info, null);
+            if ( index >= 0 )
+            {
+                Logger.LogError("packet finded", LogType.Info, null);
+                WritingPacketArrays.packetID.RemoveAt(index);
+                //OnGUIActions(setProgressValues);
+                if(WritingPacketArrays.packetID.Count == 0)
+                    OnGUIActions(writeToPlcFinished);
+                else
+                    OnGUIActions(showPacketsCounter);
+            }
+            
+        }
+
+        public void showPacketsCounter()
+        {
+            MessageBox.Show("packet number " + (7 - WritingPacketArrays.packetID.Count) + " writed");
+        }
         private void Ls_connection_OnReadedSuccessfully(object sender, EventArgs e)
         {
             readingPacketInfo p = (readingPacketInfo)sender;
@@ -528,88 +551,88 @@ namespace Cad2D
                     return;
                 }
 
-                foreach (writingPacketInfo packet in writingPackets)
-                {
-                    if (p.order == packet.order)
-                    {
-                        writingPackets.Remove(packet);
-                        if (stoneScanPacketCounter < stoneScanPacketCount)
-                        {
-                            stoneScanPacketCounter++;
-                            OnGUIActions(setProgressValues);
-                            break;
-                        }
-                        else
-                        {
-                            if (horizonalBoundryCounter < horizonalBoundryCount)
-                            {
-                                horizonalBoundryCounter++;
-                                OnGUIActions(setProgressValues);
-                                break;
-                            }
-                            else
-                            {
-                                if (verticalBoundryCounter < verticalBoundryCount)
-                                {
-                                    verticalBoundryCounter++;
-                                    OnGUIActions(setProgressValues);
-                                    break;
-                                }
-                                else
-                                {
-                                    if (stoneInnerPointsCounter < stoneInnerPointsCount)
-                                    {
-                                        stoneInnerPointsCounter++;
-                                        OnGUIActions(setProgressValues);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                //foreach (writingPacketInfo packet in writingPackets)
+                //{
+                //    if (p.order == packet.order)
+                //    {
+                //        writingPackets.Remove(packet);
+                //        if (stoneScanPacketCounter < stoneScanPacketCount)
+                //        {
+                //            stoneScanPacketCounter++;
+                //            OnGUIActions(setProgressValues);
+                //            break;
+                //        }
+                //        else
+                //        {
+                //            if (horizonalBoundryCounter < horizonalBoundryCount)
+                //            {
+                //                horizonalBoundryCounter++;
+                //                OnGUIActions(setProgressValues);
+                //                break;
+                //            }
+                //            else
+                //            {
+                //                if (verticalBoundryCounter < verticalBoundryCount)
+                //                {
+                //                    verticalBoundryCounter++;
+                //                    OnGUIActions(setProgressValues);
+                //                    break;
+                //                }
+                //                else
+                //                {
+                //                    if (stoneInnerPointsCounter < stoneInnerPointsCount)
+                //                    {
+                //                        stoneInnerPointsCounter++;
+                //                        OnGUIActions(setProgressValues);
+                //                        break;
+                //                    }
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
 
-                if (stoneScanPacketCounter < stoneScanPacketCount)
-                {
+                //if (stoneScanPacketCounter < stoneScanPacketCount)
+                //{
 
-                    if (lsConnection.Connected)
-                        lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
+                //    if (lsConnection.Connected)
+                //        lsConnection.writeToPlc(DataType.WORD, stoneScan[stoneScanPacketCounter], scanAriaSegment + stoneScanPacketCounter, ref writingPackets);
 
-                }
-                else
-                {
-                    if (horizonalBoundryCounter < horizonalBoundryCount)
-                    {
+                //}
+                //else
+                //{
+                //    if (horizonalBoundryCounter < horizonalBoundryCount)
+                //    {
 
-                        if (lsConnection.Connected)
-                            lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
+                //        if (lsConnection.Connected)
+                //            lsConnection.writeToPlc(DataType.WORD, stoneHorizontalEdge[horizonalBoundryCounter], horizonalBoundrySegment + horizonalBoundryCounter, ref writingPackets);
 
-                    }
-                    else
-                    {
-                        if (verticalBoundryCounter < verticalBoundryCount)
-                        {
+                //    }
+                //    else
+                //    {
+                //        if (verticalBoundryCounter < verticalBoundryCount)
+                //        {
 
-                            if (lsConnection.Connected)
-                                lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
+                //            if (lsConnection.Connected)
+                //                lsConnection.writeToPlc(DataType.WORD, stoneVerticalEdge[verticalBoundryCounter], verticalBoundrySegment + verticalBoundryCounter, ref writingPackets);
 
-                        }
-                        else
-                        {
-                            if (stoneInnerPointsCounter < stoneInnerPointsCount)
-                            {
-                                if (lsConnection.Connected)
-                                    lsConnection.writeToPlc(DataType.WORD, stoneInnerPoints[stoneInnerPointsCounter], innerPointsSegment + stoneInnerPointsCounter, ref writingPackets);
-                            }
-                            else {
-                                if (pagesStack.Count == 0)
-                                {
-                                    OnGUIActions(writeToPlcFinished);
-                                }
-                            }
-                        }
-                    }
-                }
+                //        }
+                //        else
+                //        {
+                //            if (stoneInnerPointsCounter < stoneInnerPointsCount)
+                //            {
+                //                if (lsConnection.Connected)
+                //                    lsConnection.writeToPlc(DataType.WORD, stoneInnerPoints[stoneInnerPointsCounter], innerPointsSegment + stoneInnerPointsCounter, ref writingPackets);
+                //            }
+                //            else {
+                //                if (pagesStack.Count == 0)
+                //                {
+                //                    OnGUIActions(writeToPlcFinished);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -619,13 +642,9 @@ namespace Cad2D
 
         private void setProgressValues()
         {
-            int total = 100 *(verticalBoundryCounter + stoneScanPacketCounter + stoneInnerPointsCounter + horizonalBoundryCounter)
-                /(stoneScanPacketCount + horizonalBoundryCount + verticalBoundryCount + stoneInnerPointsCount);
-            int stoneScanPoints = 100 * (stoneScanPacketCounter)/(stoneScanPacketCount);
-            int horizontalPoints = 100 * (horizonalBoundryCounter) / (horizonalBoundryCount);
-            int verticalPoints = 100 * (verticalBoundryCounter) / (verticalBoundryCount);
-            int innerPoints = 100 * (stoneInnerPointsCounter) / (stoneInnerPointsCount);
-            MainWindow._window.setMValue(total, stoneScanPoints, horizontalPoints, verticalPoints, innerPoints);
+            int total = 100 * (WritingPacketArrays.packetID.Count-7) / 7;
+
+            MainWindow._window.setMValue(total);
         }
 
         private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)

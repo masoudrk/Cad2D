@@ -171,6 +171,7 @@
     <Compile Include="Window_DisplaySendData.xaml.cs">
       <DependentUpon>Window_DisplaySendData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WritingPackets.cs" />
     <Page Include="CameraPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

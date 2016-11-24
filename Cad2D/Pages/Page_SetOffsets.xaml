@@ -13,13 +13,13 @@
 				RenderOptions.BitmapScalingMode="HighQuality" 
 				x:Name="mainCanvas" 
 				MouseDown="mainCanvas_MouseDown" 
-                Width="704"
-                Height="576" >
+                Width="800"
+                Height="450" >
                 <Image x:Name="offsetImage" 
                                 Margin="0"
                                 Stretch="Uniform" 
-                                Width="704"
-                                Height="576"/>
+                                Width="800"
+                                Height="450"/>
             </Canvas>
         </Border>
     </Grid>

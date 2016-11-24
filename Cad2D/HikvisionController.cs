@@ -57,7 +57,10 @@ namespace Hikvision
             this.ip = IPAddress.Parse(ipAddress);
             
             portNumber = port;
-            cameraUrl = "http://"+ip.ToString()+":"+port+"/Streaming/channels/1/picture?snapShotImageType=JPEG";
+            //hikvision camera 
+            //cameraUrl = "http://"+ip.ToString()+":"+port+"/Streaming/channels/1/picture?snapShotImageType=JPEG";
+            // samsung camera cgi-bin/video.cgi?msubmenu=jpg
+            cameraUrl = "http://" + ip.ToString() + ":" + port + "/cgi-bin/video.cgi?msubmenu=jpg";
             PingHost(ip);
         }
 
@@ -77,13 +80,14 @@ namespace Hikvision
             else
             { Capturing = false;
                 request.Abort();
-                return true; }
+                return true;
+            }
         }
         WebRequest request;
         public void requestFrame()
         {
             request = System.Net.HttpWebRequest.Create(cameraUrl);
-            request.Credentials = new NetworkCredential("admin", "12345");
+            request.Credentials = new NetworkCredential("admin", "Xx@bonakdar");
             request.Proxy = null;
             request.BeginGetResponse(OnfinishRequestFrame, request);
             

@@ -51,6 +51,15 @@ namespace Cad2D
         public ushort order { set; get; }
     }
 
+    public class writingPacketCountinus
+    {
+        public writingPacketCountinus( ushort or)
+        {
+            order = or;
+        }
+        public ushort order { set; get; }
+    }
+
     public class LS_Connection
     {
         //private Mutex writeToServerMutex = new Mutex();
@@ -74,11 +83,17 @@ namespace Cad2D
         public event EventHandler OnWritedSuccessfully;
         public event EventHandler OnReadedSuccessfully;
         public event EventHandler OnReadedContinuous;
+        public event EventHandler OnWritedContinuous;
 
+        private Queue<PLCRequest> requestQueue;
+        private PLCRequest curentRequest = null;
+        private Thread sendMesssageThread;
+        private ushort answeredPacket;
         bool connected = true;
         List<writingPacketInfo> writingPacketInfoList;
         List<readingPacketInfo> readingPacketInfoList;
         List<ushort> readingPackeCountinusOrder;
+        List<ushort> writingPackeCountinusOrder;
         int portNumber;
         IPAddress Ip;
         TcpClient tcpClient;
@@ -92,6 +107,8 @@ namespace Cad2D
             writingPacketInfoList = new List<writingPacketInfo>();
             readingPacketInfoList = new List<readingPacketInfo>();
             readingPackeCountinusOrder = new List<ushort>();
+            writingPackeCountinusOrder  =new List<ushort>();
+            requestQueue = new Queue<PLCRequest>();
         }
 
         public bool connect(IPAddress ip, int port)
@@ -122,6 +139,8 @@ namespace Cad2D
                 tcpc.EndConnect(iar);
                 Connected = true;
                 serverRec = new byte[2048];
+                sendMesssageThread = new Thread(sendingMessageLoop);
+                sendMesssageThread.Start();
                 tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
             }
             catch (Exception ex)
@@ -129,6 +148,56 @@ namespace Cad2D
                 Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Thread.Sleep(1000);
                 Disconnect();
+            }
+        }
+
+        private void sendingMessageLoop()
+        {
+            int timeCounter = 0;
+            while (true)
+            {
+                if (requestQueue.Count > 0 && curentRequest == null)
+                {
+                    curentRequest = requestQueue.Dequeue();
+                    switch (curentRequest.requestType)
+                    {
+                        case PLCRequest._RequestType.READ_CONTINUOUS:
+                            _readFromPlcContinoues(curentRequest.address, curentRequest.address_end,
+                                ref curentRequest.PackestId , curentRequest.orderID);
+                            break;
+                        case PLCRequest._RequestType.WRITE_CONTINUOUS:
+                            _writeContinouesToPlc(curentRequest.arrayValue, curentRequest.address,ref curentRequest.PackestId, curentRequest.orderID)
+                            ;
+                            break;
+                        case PLCRequest._RequestType.READ:
+                            _readFromPlc(curentRequest.dataType, curentRequest.address, ref curentRequest.rpi, curentRequest.orderID);
+                            break;
+                        case PLCRequest._RequestType.WRITE_ONE_PACKET:;
+                            _writeToPlc(curentRequest.dataType, curentRequest.value, curentRequest.address, ref curentRequest.wpi, curentRequest.orderID)
+                            ;
+                            break;
+                        case PLCRequest._RequestType.WRITE_LIST_PACKET:
+                            _writeToPlc(curentRequest.dataType, curentRequest.value, curentRequest.address, ref curentRequest.wpi, curentRequest.orderID)
+                            ;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                if (curentRequest != null && answeredPacket == curentRequest.orderID)
+                {
+                    curentRequest = null;
+                    timeCounter = 0;
+                }
+                if (timeCounter >= 10)
+                {
+                    if(curentRequest != null)
+                        requestQueue.Enqueue(curentRequest);
+                    timeCounter = 0;
+                    curentRequest = null;
+                }
+                Thread.Sleep(10);
+                timeCounter++;
             }
         }
 
@@ -145,14 +214,11 @@ namespace Cad2D
 
             try
             {
-                if (order < 0xFF)
-                    order++;
-                else
-                    order = 0;
+                
                 //sorate ersal vaghti bala bashee lsdsim nemitone sari pars kone vase hamin chandta packet 
                 //ba ham merg mishan ke in baes mishe yekish khonde beshe . vase hamin
                 //in sleeep ro gozashtam . shayad vase khode plc lazem nabashe
-                Thread.Sleep(25);
+                //Thread.Sleep(500);
                 if (tcpClient.Connected && Thread.CurrentThread.ThreadState != ThreadState.Aborted)
                     tcpClient.GetStream().BeginWrite(data, 0, data.Length, onCompleteWriteToServer, tcpClient);
                 else
@@ -167,12 +233,11 @@ namespace Cad2D
 
         private void onCompleteWriteToServer(IAsyncResult ar)
         {
-
             try
             {
                 /*writeToServerMutex.WaitOne();*/
                 TcpClient tcpc;
-                tcpc = (TcpClient)ar.AsyncState;
+                tcpc = (TcpClient) ar.AsyncState;
                 tcpc.GetStream().EndWrite(ar);
                 /*writeToServerMutex.ReleaseMutex();*/
             }
@@ -190,7 +255,7 @@ namespace Cad2D
                 /*readToServerMutex.WaitOne();*/
                 TcpClient tcpc;
                 int countBytes;
-                tcpc = (TcpClient)ar.AsyncState;
+                tcpc = (TcpClient) ar.AsyncState;
 
                 if (tcpc.Connected)
                     countBytes = tcpc.GetStream().EndRead(ar);
@@ -271,7 +336,7 @@ namespace Cad2D
 
                 serverRec = new byte[2048];
                 /*readToServerMutex.ReleaseMutex();*/
-                if(tcpc.Connected)
+                if (tcpc.Connected)
                     tcpc.GetStream().BeginRead(serverRec, 0, serverRec.Length, onCompleteReadFromServer, tcpClient);
                 else
                 {
@@ -288,6 +353,7 @@ namespace Cad2D
 
         private void managePacket(int countBytes, byte[] _serverRec)
         {
+            answeredPacket = _serverRec[14];
             if (_serverRec[20] == 0x55)
             {
                 if (_serverRec[22] != 0x14)
@@ -306,8 +372,7 @@ namespace Cad2D
                     {
                         var _array = new byte[_serverRec[30]];
                         Buffer.BlockCopy(_serverRec, 32, _array, 0, _array.Length);
-                        readingPacketCountinus rpc = new readingPacketCountinus(_array,
-                            readingPackeCountinusOrder.ElementAt(index));
+                        readingPacketCountinus rpc = new readingPacketCountinus(_array, readingPackeCountinusOrder.ElementAt(index));
                         readingPackeCountinusOrder.RemoveAt(index);
                         if (OnReadedContinuous != null)
                             OnReadedContinuous(rpc, null);
@@ -316,14 +381,29 @@ namespace Cad2D
             }
             if (_serverRec[20] == 0x59)
             {
-                if (_serverRec[countBytes - 2] == 1)
+                Logger.LogError("writed packet callback line 384", LogType.Info, null);
+                if (_serverRec[22] != 0x14)
                 {
-                    int i = writingPacketInfoList.FindIndex(x => x.order == _serverRec[14]);
-                    if (i >= 0)
+                    if (_serverRec[countBytes - 2] == 1)
                     {
-                        if (OnWritedSuccessfully != null)
-                            OnWritedSuccessfully(writingPacketInfoList.ElementAt(i), null);
-                        writingPacketInfoList.RemoveAt(i);
+                        int i = writingPacketInfoList.FindIndex(x => x.order == _serverRec[14]);
+                        if (i >= 0)
+                        {
+                            if (OnWritedSuccessfully != null)
+                                OnWritedSuccessfully(writingPacketInfoList.ElementAt(i), null);
+                            writingPacketInfoList.RemoveAt(i);
+                        }
+                    }
+                }
+                else
+                {
+                    int index = writingPackeCountinusOrder.FindIndex(x => x == _serverRec[14]);
+                    if (index >= 0)
+                    {
+                        writingPacketCountinus wpc = new writingPacketCountinus(writingPackeCountinusOrder.ElementAt(index));
+                        writingPackeCountinusOrder.RemoveAt(index);
+                        if (OnWritedContinuous != null)
+                            OnWritedContinuous(wpc, null);
                     }
                 }
             }
@@ -354,6 +434,18 @@ namespace Cad2D
 
         public void Disconnect()
         {
+            try
+            {
+                sendMesssageThread?.Abort();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError("cannot abort sendMesssageThread", LogType.Error, e);
+            }
+            finally
+            {
+                sendMesssageThread?.Abort();
+            }
             if (tcpClient != null)
             {
                 tcpClient.Close();
@@ -374,383 +466,543 @@ namespace Cad2D
 
         public bool readFromPlc(DataType dt, int address, ref readingPacketInfo rpi)
         {
+            rpi = new readingPacketInfo(dt, address, (byte)order);
             /*sendPacketMutex.WaitOne();*/
             if (dt == DataType.CONTINUOUS)
-            { /*sendPacketMutex.ReleaseMutex(); */return false; }
+            {
+                /*sendPacketMutex.ReleaseMutex(); */
+                return false;
+            }
             if (dt == DataType.BIT)
             {
                 if (address < 0 || address > 16 * maxAddress)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            else if (dt == DataType.BYTE)
+            {
+                if (address < 0 || address > 2 * maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            else if (dt == DataType.WORD)
+            {
+                if (address < 0 || address > maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            else if (dt == DataType.DWORD)
+            {
+                if (address < 0 || address > maxAddress / 2)
+                {
+                    /*sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
+            }
+            requestQueue.Enqueue(new PLCRequest(dt , address, ref rpi));
+            if (order < 0xFF)
+                order++;
+            else
+                order = 0;
+            return true;
+        }
+
+        public bool readFromPlcContinoues(int address, int address_end, ref List<ushort> PacketsId)
+        {
+            PacketsId.Add(order);
+            /*sendPacketMutex.WaitOne();*/
+            if (address < 0 || address > maxAddress * 2)
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
+            if (address > address_end)
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
+            requestQueue.Enqueue(new PLCRequest(address , address_end , ref PacketsId));
+            /*sendPacketMutex.ReleaseMutex(); */
+            if (order < 0xFF)
+                order++;
+            else
+                order = 0;
+            return true;
+        }
+
+        public bool writeToPlc(DataType dt, int value, int address, ref writingPacketInfo wpi)
+        {
+            wpi = new writingPacketInfo(dt, value, address, (byte)order);
+            /*sendPacketMutex.WaitOne();*/
+            if (dt == DataType.CONTINUOUS)
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
+            if (dt == DataType.BIT)
+            {
+                if (value < 0 || value > 1 || address < 0 || address > 16 * maxAddress)
+                {
+                    /* sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
+            }
+            else if (dt == DataType.BYTE)
+            {
+                if (value < 0 || value > 0xFF || address < 0 || address > 2 * maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            else if (dt == DataType.WORD)
+            {
+                if (value < 0 || value > 0xFFFF || address < 0 || address > maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
+            }
+            else if (dt == DataType.DWORD)
+            {
+                if (address < 0 || address > maxAddress / 2)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            requestQueue.Enqueue( new PLCRequest(dt , value , address , ref wpi));
+            /*sendPacketMutex.ReleaseMutex(); */
+            if (order < 0xFF)
+                order++;
+            else
+                order = 0;
+            return true;
+        }
+
+        public bool writeToPlc(DataType dt, int value, int address, ref List<writingPacketInfo> wpiList)
+        {
+
+            Logger.LogError("writeToPlc line 591", LogType.Info, null);
+            writingPacketInfo wpi = new writingPacketInfo(dt, value, address, (byte)order);
+            wpiList.Add(wpi);
+            /*sendPacketMutex.WaitOne();*/
+            if (dt == DataType.CONTINUOUS)
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
+            if (dt == DataType.BIT)
+            {
+                if (value < 0 || value > 1 || address < 0 || address > 16 * maxAddress)
+                {
+                    /* sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            else if (dt == DataType.BYTE)
+            {
+                if (value < 0 || value > 0xFF || address < 0 || address > 2 * maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            else if (dt == DataType.WORD)
+            {
+                if (value < 0 || value > 0xFFFF || address < 0 || address > maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
+            }
+            else if (dt == DataType.DWORD)
+            {
+                if (address < 0 || address > maxAddress / 2)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
+            }
+            /*sendPacketMutex.ReleaseMutex();*/
+
+            requestQueue.Enqueue(new PLCRequest(dt, value, address, ref wpi));
+            if (order < 0xFF)
+                order++;
+            else
+                order = 0;
+            return true;
+        }
+
+        public bool writeContinouesToPlc(byte[] value, int address, ref List<ushort> PackestId)
+        {
+            Logger.LogError("writeContinouesToPlc line 644", LogType.Info, null);
+            PackestId.Add((ushort)order);
+            if (value.Length > 1400 || value.Length == 0 || address < 0 || address > 16 * maxAddress)
+            {
+                /* sendPacketMutex.ReleaseMutex(); */
+                return false;
+            }
+            requestQueue.Enqueue(new PLCRequest(value , address , ref PackestId));
+            if (order < 0xFF)
+                order++;
+            else
+                order = 0;
+            return true;
+        }
+        private bool _readFromPlc(DataType dt, int address, ref readingPacketInfo rpi, ushort _order)
+        {
+            /*sendPacketMutex.WaitOne();*/
+            if (dt == DataType.CONTINUOUS)
+            {
+                /*sendPacketMutex.ReleaseMutex(); */
+                return false;
+            }
+            if (dt == DataType.BIT)
+            {
+                if (address < 0 || address > 16 * maxAddress)
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.BIT, 0, address, 0);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                rpi = new readingPacketInfo(dt, address, (byte)order);
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
-            else
-            if (dt == DataType.BYTE)
+            else if (dt == DataType.BYTE)
             {
                 if (address < 0 || address > 2 * maxAddress)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.BYTE, 0, address, 0);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                rpi = new readingPacketInfo(dt, address, (byte)order);
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
-
             }
-            else
-            if (dt == DataType.WORD)
+            else if (dt == DataType.WORD)
             {
                 if (address < 0 || address > maxAddress)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.WORD, 0, address, 0);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                rpi = new readingPacketInfo(dt, address, (byte)order);
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
-
             }
-            else
-            if (dt == DataType.DWORD)
+            else if (dt == DataType.DWORD)
             {
                 if (address < 0 || address > maxAddress / 2)
-                { /*sendPacketMutex.ReleaseMutex();*/ return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.DWORD, 0, address, 0);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                rpi = new readingPacketInfo(dt, address, (byte)order);
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
             //sendPacketMutex.ReleaseMutex();
             return true;
-
         }
 
-        public bool readFromPlcContinoues(int address, int address_end, ref List<ushort> PackestId)
+        private bool _readFromPlcContinoues(int address, int address_end, ref List<ushort> PacketsId, ushort _order)
         {
             /*sendPacketMutex.WaitOne();*/
             if (address < 0 || address > maxAddress * 2)
-            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
             if (address > address_end)
-            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
 
             byte[] ins = makeInstruction(DataType.CONTINUOUS, Math.Abs(address_end - address), address, 0);
             byte[] packetInfo = new byte[6];
-            byte[] intByte = BitConverter.GetBytes(order);
+            byte[] intByte = BitConverter.GetBytes(_order);
             packetInfo[0] = intByte[0];
             packetInfo[1] = intByte[1];
             intByte = null;
             intByte = BitConverter.GetBytes((ushort)ins.Length);
             packetInfo[2] = intByte[0];
             packetInfo[3] = intByte[1];
-            packetInfo[4] = 0x00;
-            packetInfo[5] = calculateCheckSum(packetInfo);
+            int checkSum = calculateCheckSum(packetInfo);
+            intByte = null;
+            intByte = BitConverter.GetBytes(checkSum);
+            packetInfo[4] = intByte[0];
+            packetInfo[5] = intByte[1];
 
             byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
             System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
             System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
             System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-            PackestId.Add(order);
-            readingPackeCountinusOrder.Add(order);
+            readingPackeCountinusOrder.Add(_order);
             sendMessage(rv);
 
-            /*sendPacketMutex.ReleaseMutex(); */return true;
+            /*sendPacketMutex.ReleaseMutex(); */
+            return true;
         }
 
-        public bool writeToPlc(DataType dt, int value, int address, ref writingPacketInfo wpi)
+        private bool _writeToPlc(DataType dt, int value, int address, ref writingPacketInfo wpi, ushort _order)
         {
+            Logger.LogError("_writeToPlc line 825", LogType.Info, null);
             /*sendPacketMutex.WaitOne();*/
             if (dt == DataType.CONTINUOUS)
-            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
+            {
+                /*sendPacketMutex.ReleaseMutex();*/
+                return false;
+            }
             if (dt == DataType.BIT)
             {
                 if (value < 0 || value > 1 || address < 0 || address > 16 * maxAddress)
-                {/* sendPacketMutex.ReleaseMutex();*/ return false; }
+                {
+                    /* sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.BIT, value, address, 1);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
                 //packet info for sending packet
-                wpi = new writingPacketInfo(dt, value, address, (byte)order);
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
             }
-            else
-            if (dt == DataType.BYTE)
+            else if (dt == DataType.BYTE)
             {
                 if (value < 0 || value > 0xFF || address < 0 || address > 2 * maxAddress)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.BYTE, value, address, 1);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
                 //packet info for sending packet
-                wpi = new writingPacketInfo(dt, value, address, (byte)order);
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
             }
-            else
-            if (dt == DataType.WORD)
+            else if (dt == DataType.WORD)
             {
                 if (value < 0 || value > 0xFFFF || address < 0 || address > maxAddress)
-                { /*sendPacketMutex.ReleaseMutex();*/ return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex();*/
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.WORD, value, address, 1);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
                 //packet info for sending packet
-                wpi = new writingPacketInfo(dt, value, address, (byte)order);
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
-
             }
-            else
-            if (dt == DataType.DWORD)
+            else if (dt == DataType.DWORD)
             {
                 if (address < 0 || address > maxAddress / 2)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
+                {
+                    /*sendPacketMutex.ReleaseMutex(); */
+                    return false;
+                }
                 byte[] ins = makeInstruction(DataType.DWORD, value, address, 1);
                 byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
+                byte[] intByte = BitConverter.GetBytes(_order);
                 packetInfo[0] = intByte[0];
                 packetInfo[1] = intByte[1];
                 intByte = null;
                 intByte = BitConverter.GetBytes((ushort)ins.Length);
                 packetInfo[2] = intByte[0];
                 packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+                int checkSum = calculateCheckSum(packetInfo);
+                intByte = null;
+                intByte = BitConverter.GetBytes(checkSum);
+                packetInfo[4] = intByte[0];
+                packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
                 Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
                 System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
                 System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
                 //packet info for sending packet
-                wpi = new writingPacketInfo(dt, value, address, (byte)order);
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
             }
-            /*sendPacketMutex.ReleaseMutex(); */return true;
+            /*sendPacketMutex.ReleaseMutex(); */
+            return true;
         }
-
-
-
-        public bool writeToPlc(DataType dt, int value, int address, ref List<writingPacketInfo> wpiList)
+        
+        private bool _writeContinouesToPlc(byte[] value, int address, ref List<ushort> PackestId, ushort _order)
         {
-            /*sendPacketMutex.WaitOne();*/
-            if (dt == DataType.CONTINUOUS)
-            { /*sendPacketMutex.ReleaseMutex();*/ return false; }
-            if (dt == DataType.BIT)
+            Logger.LogError("_writeContinouesToPlc line 958", LogType.Info, null);
+            if (value.Length > 1400 || value.Length == 0 || address < 0 || address > 16 * maxAddress)
             {
-                if (value < 0 || value > 1 || address < 0 || address > 16 * maxAddress)
-                {/* sendPacketMutex.ReleaseMutex(); */return false; }
-                byte[] ins = makeInstruction(DataType.BIT, value, address, 1);
-                byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
-                packetInfo[0] = intByte[0];
-                packetInfo[1] = intByte[1];
-                intByte = null;
-                intByte = BitConverter.GetBytes((ushort)ins.Length);
-                packetInfo[2] = intByte[0];
-                packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
-
-                byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                //packet info for sending packet
-                writingPacketInfo wpi = new writingPacketInfo(dt, value, address, (byte)order);
-                writingPacketInfoList.Add(wpi);
-                wpiList.Add(wpi);
-                sendMessage(rv);
+                /* sendPacketMutex.ReleaseMutex(); */
+                return false;
             }
-            else
-            if (dt == DataType.BYTE)
-            {
-                if (value < 0 || value > 0xFF || address < 0 || address > 2 * maxAddress)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
-                byte[] ins = makeInstruction(DataType.BYTE, value, address, 1);
-                byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
-                packetInfo[0] = intByte[0];
-                packetInfo[1] = intByte[1];
-                intByte = null;
-                intByte = BitConverter.GetBytes((ushort)ins.Length);
-                packetInfo[2] = intByte[0];
-                packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+            byte[] ins = makeInstruction(DataType.CONTINUOUS, value.Length, address, 1);
+            byte[] ins2 = new byte[value.Length + ins.Length];
+            System.Buffer.BlockCopy(ins, 0, ins2, 0, ins.Length);
+            System.Buffer.BlockCopy(value, 0, ins2, ins.Length, value.Length);
+            byte[] packetInfo = new byte[6];
+            byte[] intByte = BitConverter.GetBytes(_order);
+            packetInfo[0] = intByte[0];
+            packetInfo[1] = intByte[1];
+            intByte = null;
+            intByte = BitConverter.GetBytes((ushort)ins2.Length);
+            packetInfo[2] = intByte[0];
+            packetInfo[3] = intByte[1];
+            int checkSum = calculateCheckSum(packetInfo);
+            intByte = null;
+            intByte = BitConverter.GetBytes(checkSum);
+            packetInfo[4] = intByte[0];
+            packetInfo[5] = intByte[1];
 
-                byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                //packet info for sending packet
-                writingPacketInfo wpi = new writingPacketInfo(dt, value, address, (byte)order);
-                writingPacketInfoList.Add(wpi);
-                wpiList.Add(wpi);
-                sendMessage(rv);
-            }
-            else
-            if (dt == DataType.WORD)
-            {
-                if (value < 0 || value > 0xFFFF || address < 0 || address > maxAddress)
-                { /*sendPacketMutex.ReleaseMutex();*/ return false; }
-                byte[] ins = makeInstruction(DataType.WORD, value, address, 1);
-                byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
-                packetInfo[0] = intByte[0];
-                packetInfo[1] = intByte[1];
-                intByte = null;
-                intByte = BitConverter.GetBytes((ushort)ins.Length);
-                packetInfo[2] = intByte[0];
-                packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
+            byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins2.Length];
+            System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+            System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+            System.Buffer.BlockCopy(ins2, 0, rv, packetHeader.Length + packetInfo.Length, ins2.Length);
+            //packet info for sending packet
+            writingPackeCountinusOrder.Add(_order);
+            sendMessage(rv);
 
-                byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                //packet info for sending packet
-                writingPacketInfo wpi = new writingPacketInfo(dt, value, address, (byte)order);
-                writingPacketInfoList.Add(wpi);
-                wpiList.Add(wpi);
-                sendMessage(rv);
-
-            }
-            else
-            if (dt == DataType.DWORD)
-            {
-                if (address < 0 || address > maxAddress / 2)
-                { /*sendPacketMutex.ReleaseMutex(); */return false; }
-                byte[] ins = makeInstruction(DataType.DWORD, value, address, 1);
-                byte[] packetInfo = new byte[6];
-                byte[] intByte = BitConverter.GetBytes(order);
-                packetInfo[0] = intByte[0];
-                packetInfo[1] = intByte[1];
-                intByte = null;
-                intByte = BitConverter.GetBytes((ushort)ins.Length);
-                packetInfo[2] = intByte[0];
-                packetInfo[3] = intByte[1];
-                packetInfo[4] = 0x00;
-                packetInfo[5] = calculateCheckSum(packetInfo);
-
-                byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
-                //packet info for sending packet
-                writingPacketInfo wpi = new writingPacketInfo(dt, value, address, (byte)order);
-                writingPacketInfoList.Add(wpi);
-                wpiList.Add(wpi);
-                sendMessage(rv);
-            }
-            /*sendPacketMutex.ReleaseMutex();*/ return true;
+            return true;
         }
-        private byte calculateCheckSum(byte[] header)
+
+        private int calculateCheckSum(byte[] header)
         {
             int sum = 0;
             for (int i = 0; i < 5; i++)
                 sum += header[i];
             sum += 760;
-            byte[] intByte = BitConverter.GetBytes(sum);
-            return intByte[0];
+            return sum;
         }
+
+
 
         private byte[] makeInstruction(DataType dt, int value, int address, int _instruction)
         {
@@ -804,15 +1056,14 @@ namespace Cad2D
             ins_Head[6] = 0x01;
             ins_Head[7] = 0x00;
             add += address.ToString();
-            ins_Head[8] = (byte)add.Length;
+            ins_Head[8] = (byte) add.Length;
             ins_Head[9] = 0x00;
             byte[] addre = Encoding.ASCII.GetBytes(add);
             byte[] value_Byte;
             if (dt == DataType.CONTINUOUS)
             {
-
                 value_Byte = new byte[2];
-                ushort val = (ushort)value;
+                ushort val = (ushort) value;
                 byte[] intByt = BitConverter.GetBytes(val);
                 value_Byte[0] = intByt[0];
                 value_Byte[1] = intByt[1];
@@ -825,21 +1076,21 @@ namespace Cad2D
                         value_Byte = new byte[3];
                         value_Byte[0] = 0x01;
                         value_Byte[1] = 0x00;
-                        value_Byte[2] = (byte)value;
+                        value_Byte[2] = (byte) value;
                         break;
 
                     case DataType.BYTE:
                         value_Byte = new byte[3];
                         value_Byte[0] = 0x01;
                         value_Byte[1] = 0x00;
-                        value_Byte[2] = (byte)value;
+                        value_Byte[2] = (byte) value;
                         break;
 
                     case DataType.WORD:
                         value_Byte = new byte[4];
                         value_Byte[0] = 0x02;
                         value_Byte[1] = 0x00;
-                        ushort vavl = (ushort)value;
+                        ushort vavl = (ushort) value;
                         byte[] intBytes = BitConverter.GetBytes(vavl);
                         value_Byte[2] = intBytes[0];
                         value_Byte[3] = intBytes[1];
@@ -883,7 +1134,6 @@ namespace Cad2D
             this.portNumber = _portNumber;
         }
 
-
         #region ping region
 
         public bool PingHost()
@@ -907,27 +1157,110 @@ namespace Cad2D
             }
             return pingable;
         }
+
         #endregion
+    }
+
+    public class PLCRequest
+    {
+        public enum _RequestType
+        {
+            READ_CONTINUOUS,
+            WRITE_CONTINUOUS,
+            READ,
+            WRITE_ONE_PACKET,
+            WRITE_LIST_PACKET
+        };
+
+        public _RequestType requestType { set; get; }
+        public DataType dataType { set; get; }
+        public static long requestID = 0;
+        public byte[] arrayValue { set; get; }
+        public int value { set; get; }
+        public int address { set; get; }
+        public int address_end { set; get; }
+        public List<ushort> PackestId;
+        public List<writingPacketInfo> wpiList;
+        public writingPacketInfo wpi;
+        public readingPacketInfo rpi;
+        public ushort orderID = 0;
+
+        public PLCRequest(_RequestType rt)
+        {
+            requestType = rt;
+            requestID++;
+        }
+
+        public PLCRequest(byte[] _arrayValue, int _address, ref List<ushort> _PackestId)
+        {
+            requestType = _RequestType.WRITE_CONTINUOUS;
+            requestID++;
+            arrayValue = _arrayValue;
+            address = _address;
+            PackestId = _PackestId;
+            orderID = LS_Connection.order;
+        }
+
+        public PLCRequest(int _address, int _address_end, ref List<ushort> _PacketsId)
+        {
+            requestType = _RequestType.READ_CONTINUOUS;
+            requestID++;
+            address_end = _address_end;
+            address = _address;
+            PackestId = _PacketsId;
+            orderID = LS_Connection.order;
+        }
+
+        public PLCRequest(DataType _dt, int _address, ref readingPacketInfo _rpi)
+        {
+            requestType = _RequestType.READ;
+            requestID++;
+            dataType = _dt;
+            address = _address;
+            rpi = _rpi;
+            orderID = LS_Connection.order;
+        }
+
+        public PLCRequest(DataType _dt, int _value, int _address, ref writingPacketInfo _wpi)
+        {
+            requestType = _RequestType.WRITE_ONE_PACKET;
+            requestID++;
+            value = _value;
+            address = _address;
+            dataType = _dt;
+            wpi = _wpi;
+            orderID = LS_Connection.order;
+        }
+
+        public PLCRequest(DataType _dt, int _value, int _address, ref List<writingPacketInfo> _wpiList)
+        {
+            requestType = _RequestType.WRITE_ONE_PACKET;
+            requestID++;
+            value = _value;
+            address = _address;
+            dataType = _dt;
+            wpiList = _wpiList;
+            orderID = LS_Connection.order;
+        }
     }
 
     public class Packet<T>
     {
         public Packet()
         {
-
-            if (typeof(T) == typeof(bool))
+            if (typeof (T) == typeof (bool))
             {
                 dataType = DataType.BIT;
             }
-            else if (typeof(T) == typeof(byte))
+            else if (typeof (T) == typeof (byte))
             {
                 dataType = DataType.BYTE;
             }
-            else if (typeof(T) == typeof(ushort))
+            else if (typeof (T) == typeof (ushort))
             {
                 dataType = DataType.WORD;
             }
-            else if (typeof(T) == typeof(uint))
+            else if (typeof (T) == typeof (uint))
             {
                 dataType = DataType.DWORD;
             }
@@ -936,22 +1269,22 @@ namespace Cad2D
                 dataType = DataType.WORD;
             }
         }
+
         public Packet(int _address)
         {
-
-            if (typeof(T) == typeof(bool))
+            if (typeof (T) == typeof (bool))
             {
                 dataType = DataType.BIT;
             }
-            else if (typeof(T) == typeof(byte))
+            else if (typeof (T) == typeof (byte))
             {
                 dataType = DataType.BYTE;
             }
-            else if (typeof(T) == typeof(ushort))
+            else if (typeof (T) == typeof (ushort))
             {
                 dataType = DataType.WORD;
             }
-            else if (typeof(T) == typeof(uint))
+            else if (typeof (T) == typeof (uint))
             {
                 dataType = DataType.DWORD;
             }
@@ -962,22 +1295,22 @@ namespace Cad2D
 
             valueAddress = _address;
         }
+
         public Packet(int _address, T _value)
         {
-
-            if (typeof(T) == typeof(bool))
+            if (typeof (T) == typeof (bool))
             {
                 dataType = DataType.BIT;
             }
-            else if (typeof(T) == typeof(byte))
+            else if (typeof (T) == typeof (byte))
             {
                 dataType = DataType.BYTE;
             }
-            else if (typeof(T) == typeof(ushort))
+            else if (typeof (T) == typeof (ushort))
             {
                 dataType = DataType.WORD;
             }
-            else if (typeof(T) == typeof(uint))
+            else if (typeof (T) == typeof (uint))
             {
                 dataType = DataType.DWORD;
             }
@@ -988,6 +1321,7 @@ namespace Cad2D
             value = _value;
             valueAddress = _address;
         }
+
         public writingPacketInfo writingPacket;
         public readingPacketInfo readingPacket;
         public T value { set; get; }
