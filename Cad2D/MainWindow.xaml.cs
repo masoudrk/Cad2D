@@ -63,7 +63,7 @@ namespace Cad2D
         public void MyHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception ex = (Exception)args.ExceptionObject;
-            Logger.LogError("_File : MainWindow" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+            Logger.LogError("_File : MainWindow1" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
         }
 
         private void OnClosed(object sender, EventArgs eventArgs)
@@ -114,7 +114,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_File : MainWindow" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                Logger.LogError("_File : MainWindow2" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
         }
 

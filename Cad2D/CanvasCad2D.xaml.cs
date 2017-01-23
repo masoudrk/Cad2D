@@ -43,6 +43,7 @@ namespace Cad2D
         {
             public Line line { set; get; }
             public Circle circle { set; get; }
+            public int number { set; get; }
         }
 
         public class Path : LinkedList<ConnectedLine>
@@ -70,6 +71,7 @@ namespace Cad2D
 
         private bool sendingInFirstTime = true;
         private Packet<ushort> innerPointsLengthPacket;
+        private Packet<ushort> PointsLengthPacket;
         //@milad
         double widthOffsetLength;
         double heightOffsetLength;
@@ -82,7 +84,7 @@ namespace Cad2D
         int stoneEdgeHorizontalSlice = 400;
         /// </summary>
         Point startPoint = new Point(0, 0);
-        Point endPoint = new Point(800, 450);
+        Point endPoint = new Point(907, 510);
         public List<LineGeometry> lineGeometryList;
         private List<Circle> guids;
         private List<Line> innerLines;
@@ -114,6 +116,7 @@ namespace Cad2D
         int verticalBoundrySegment = 2000; // startin memory for sending array 
         int horizonalBoundrySegment = 3000; // startin memory for sending array 
         int innerPointsSegment = 4000; // starting memory for inner points array 
+        int pointsSegment = 4100; // starting memory for inner points array 
 
         /// <summary>
         /// ////////shoud add to settingd
@@ -207,13 +210,13 @@ namespace Cad2D
             horizonalBoundryCount = 0;
             diskDiameter = new Packet<ushort>(232);
             //TODO should change this address
-            innerPointsLengthPacket = new Packet<ushort>(274);
+            innerPointsLengthPacket = new Packet<ushort>(40);
             lsConnection.connect(ip, portNumber);
            
             //lsConnection.writeContinouesToPlc(new byte[] {20,30,50,60,70,55,66,33,22}, 1,ref PcketID);
             writingPackets = new List<writingPacketInfo>();
 
-            WritingPacketArrays = new WritingPackets(scanAriaSegment,verticalBoundrySegment,horizonalBoundrySegment,innerPointsSegment);
+            WritingPacketArrays = new WritingPackets(scanAriaSegment,verticalBoundrySegment,horizonalBoundrySegment,innerPointsSegment, pointsSegment);
             plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
             plcInfoReaderTimer.Start();
 
@@ -487,7 +490,7 @@ namespace Cad2D
 
             mainCanvas.Children.Insert(2, l);
             mainCanvas.Children.Add(c);
-            ConnectedLine cl = new ConnectedLine() { line = l, circle = c };
+            ConnectedLine cl = new ConnectedLine() { line = l, circle = c ,number = connectedsList.Count };
             c.cl = cl;
             connectedsList.AddLast(cl);
         }
@@ -1100,7 +1103,7 @@ namespace Cad2D
             }
             guids.Clear();
             foreach (ConnectedLine c in connectedsList)
-                lineGeometryList.Add(new LineGeometry(c.line));
+                lineGeometryList.Add(new LineGeometry(c.line,c.number));
             LinkedList<System.Drawing.PointF> points = calculateInnerPoints();
             ushort[] stoneInnerPointsU;
             stoneInnerPointsU = calculateInnerPosition(points);
@@ -1111,6 +1114,23 @@ namespace Cad2D
                 WritingPacketArrays.stoneInnerPoints[i * 2] = intByte[0];
                 WritingPacketArrays.stoneInnerPoints[i * 2 + 1] = intByte[1];
             }
+
+            LinkedList<System.Drawing.PointF> pointsOut = new LinkedList<PointF>();
+            foreach (ConnectedLine c in connectedsList)
+            {
+                pointsOut.AddLast(new LinkedListNode<PointF>(new PointF((float)c.circle.X, (float)c.circle.Y)));
+            }
+
+            ushort[] stonePointsU;
+            stonePointsU = calculateInnerPosition(pointsOut);
+            WritingPacketArrays.stonePoints = new byte[stonePointsU.Length * 2];
+            for (int i = 0; i < stonePointsU.Length; i++)
+            {
+                byte[] intByte = BitConverter.GetBytes(stonePointsU[i]);
+                WritingPacketArrays.stonePoints[i * 2] = intByte[0];
+                WritingPacketArrays.stonePoints[i * 2 + 1] = intByte[1];
+            }
+
             double[] array1;
             array1 = calCulateVerticalPoints();
             ushort[] stoneVerticalEdgeU;

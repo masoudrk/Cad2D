@@ -31,23 +31,16 @@ namespace Cad2D
         {
             writingPacketCountinus wpc = (writingPacketCountinus) sender;
             int index = WritingPacketArrays.packetID.FindIndex(x => x == wpc.order);
-            Logger.LogError("lsEvents file reached", LogType.Info, null);
+            //Logger.LogError("lsEvents file reached", LogType.Info, null);
             if ( index >= 0 )
             {
-                Logger.LogError("packet finded", LogType.Info, null);
+                //Logger.LogError("packet finded", LogType.Info, null);
                 WritingPacketArrays.packetID.RemoveAt(index);
                 //OnGUIActions(setProgressValues);
                 if(WritingPacketArrays.packetID.Count == 0)
                     OnGUIActions(writeToPlcFinished);
-                else
-                    OnGUIActions(showPacketsCounter);
             }
             
-        }
-
-        public void showPacketsCounter()
-        {
-            MessageBox.Show("packet number " + (7 - WritingPacketArrays.packetID.Count) + " writed");
         }
         private void Ls_connection_OnReadedSuccessfully(object sender, EventArgs e)
         {
@@ -638,13 +631,6 @@ namespace Cad2D
             {
                 Logger.LogError("_File : LsEvent" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
             }
-        }
-
-        private void setProgressValues()
-        {
-            int total = 100 * (WritingPacketArrays.packetID.Count-7) / 7;
-
-            MainWindow._window.setMValue(total);
         }
 
         private void Ls_connection_OnReadedContinuous(object sender, EventArgs e)

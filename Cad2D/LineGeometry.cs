@@ -13,10 +13,12 @@ namespace Cad2D
         private double Tilt, arzAzMabda;
         private PointF center;
         public double X1, X2, Y1, Y2;
+        public int number { set; get; }
         public bool HorizonalStright { set; get; }
         public bool verticalStright { set; get; }
-        public LineGeometry(Line l)
+        public LineGeometry(Line l,int number)
         {
+            this.number = number;
             minX = (l.X1 < l.X2) ? l.X1 : l.X2;
             minY = (l.Y1 < l.Y2) ? l.Y1 : l.Y2;
             maxX = (l.X1 > l.X2) ? l.X1 : l.X2;

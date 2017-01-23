@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using Cad2D;
 
 namespace Hikvision
 {
@@ -171,6 +172,11 @@ namespace Hikvision
                     Buffer.BlockCopy(readBuffer, 0, buffer, 0, totalBytesRead);
                 }
                 return buffer;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_File : HickvisionController1" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                return new byte[0];
             }
             finally
             {

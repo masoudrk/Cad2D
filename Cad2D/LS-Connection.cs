@@ -113,6 +113,12 @@ namespace Cad2D
 
         public bool connect(IPAddress ip, int port)
         {
+            writingPacketInfoList = new List<writingPacketInfo>();
+            readingPacketInfoList = new List<readingPacketInfo>();
+            readingPackeCountinusOrder = new List<ushort>();
+            writingPackeCountinusOrder = new List<ushort>();
+            requestQueue = new Queue<PLCRequest>();
+            order = 0;
             Ip = ip;
             portNumber = port;
             if (!PingHost()) return false;
@@ -123,7 +129,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n" , LogType.Error, ex);
+                Logger.LogError("_File : LsConnection1" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n" , LogType.Error, ex);
                 Disconnect();
                 return false;
             }
@@ -145,7 +151,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {   //when the target machin is 127.0.0.1 it throw exception
-                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                Logger.LogError("_File : LsConnection2" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Thread.Sleep(1000);
                 Disconnect();
             }
@@ -159,6 +165,7 @@ namespace Cad2D
                 if (requestQueue.Count > 0 && curentRequest == null)
                 {
                     curentRequest = requestQueue.Dequeue();
+                    if(curentRequest != null)
                     switch (curentRequest.requestType)
                     {
                         case PLCRequest._RequestType.READ_CONTINUOUS:
@@ -226,7 +233,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                Logger.LogError("_File : LsConnection3" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Disconnect();
             }
         }
@@ -243,7 +250,7 @@ namespace Cad2D
             }
             catch (Exception ex)
             {
-                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                Logger.LogError("_File : LsConnection4" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Disconnect();
             }
         }
@@ -346,7 +353,7 @@ namespace Cad2D
             catch (Exception ex)
             {
                 //Object synchronization method was called from an unsynchronized block of code
-                Logger.LogError("_File : LsConnection" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                Logger.LogError("_File : LsConnection5" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
                 Disconnect();
             }
         }
@@ -358,6 +365,12 @@ namespace Cad2D
             {
                 if (_serverRec[22] != 0x14)
                 {
+                    if (readingPacketInfoList == null)
+                    {
+                        Disconnect();
+                        return;
+                    }
+
                     int i = readingPacketInfoList.FindIndex(x => x.order == _serverRec[14]);
                     if (i >= 0)
                     {
@@ -367,25 +380,43 @@ namespace Cad2D
                 }
                 else
                 {
+                    if (readingPackeCountinusOrder == null)
+                    {
+                        Disconnect();
+                        return;
+                    }
                     int index = readingPackeCountinusOrder.FindIndex(x => x == _serverRec[14]);
                     if (index >= 0)
                     {
                         var _array = new byte[_serverRec[30]];
-                        Buffer.BlockCopy(_serverRec, 32, _array, 0, _array.Length);
-                        readingPacketCountinus rpc = new readingPacketCountinus(_array, readingPackeCountinusOrder.ElementAt(index));
-                        readingPackeCountinusOrder.RemoveAt(index);
-                        if (OnReadedContinuous != null)
-                            OnReadedContinuous(rpc, null);
+                        try
+                        {
+                            Buffer.BlockCopy(_serverRec, 32, _array, 0, _array.Length);
+
+                            readingPacketCountinus rpc = new readingPacketCountinus(_array, readingPackeCountinusOrder.ElementAt(index));
+                            readingPackeCountinusOrder.RemoveAt(index);
+                            OnReadedContinuous?.Invoke(rpc, null);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogError("_File : LsConnection6" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                            
+                        }
                     }
                 }
             }
             if (_serverRec[20] == 0x59)
             {
-                Logger.LogError("writed packet callback line 384", LogType.Info, null);
+                //Logger.LogError("writed packet callback line 384", LogType.Info, null);
                 if (_serverRec[22] != 0x14)
                 {
                     if (_serverRec[countBytes - 2] == 1)
                     {
+                        if (writingPacketInfoList == null)
+                        {
+                            Disconnect();
+                            return;
+                        }
                         int i = writingPacketInfoList.FindIndex(x => x.order == _serverRec[14]);
                         if (i >= 0)
                         {
@@ -397,6 +428,11 @@ namespace Cad2D
                 }
                 else
                 {
+                    if (writingPackeCountinusOrder == null)
+                    {
+                        Disconnect();
+                        return;
+                    }
                     int index = writingPackeCountinusOrder.FindIndex(x => x == _serverRec[14]);
                     if (index >= 0)
                     {
@@ -589,7 +625,7 @@ namespace Cad2D
         public bool writeToPlc(DataType dt, int value, int address, ref List<writingPacketInfo> wpiList)
         {
 
-            Logger.LogError("writeToPlc line 591", LogType.Info, null);
+            //Logger.LogError("writeToPlc line 591", LogType.Info, null);
             writingPacketInfo wpi = new writingPacketInfo(dt, value, address, (byte)order);
             wpiList.Add(wpi);
             /*sendPacketMutex.WaitOne();*/
@@ -642,7 +678,7 @@ namespace Cad2D
 
         public bool writeContinouesToPlc(byte[] value, int address, ref List<ushort> PackestId)
         {
-            Logger.LogError("writeContinouesToPlc line 644", LogType.Info, null);
+            //Logger.LogError("writeContinouesToPlc line 644", LogType.Info, null);
             PackestId.Add((ushort)order);
             if (value.Length > 1400 || value.Length == 0 || address < 0 || address > 16 * maxAddress)
             {
@@ -686,9 +722,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection19" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
@@ -715,9 +760,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection18" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
@@ -744,9 +798,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection17" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
@@ -773,9 +836,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection16" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 readingPacketInfoList.Add(rpi);
                 sendMessage(rv);
             }
@@ -813,9 +885,19 @@ namespace Cad2D
             packetInfo[5] = intByte[1];
 
             byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-            System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-            System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-            System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+            try
+            {
+                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_File : LsConnection15" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                
+
+            }
             readingPackeCountinusOrder.Add(_order);
             sendMessage(rv);
 
@@ -825,7 +907,7 @@ namespace Cad2D
 
         private bool _writeToPlc(DataType dt, int value, int address, ref writingPacketInfo wpi, ushort _order)
         {
-            Logger.LogError("_writeToPlc line 825", LogType.Info, null);
+            //Logger.LogError("_writeToPlc line 825", LogType.Info, null);
             /*sendPacketMutex.WaitOne();*/
             if (dt == DataType.CONTINUOUS)
             {
@@ -855,9 +937,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection14" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 //packet info for sending packet
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
@@ -885,9 +976,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection13" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 //packet info for sending packet
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
@@ -915,9 +1015,18 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection12" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 //packet info for sending packet
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
@@ -945,9 +1054,17 @@ namespace Cad2D
                 packetInfo[5] = intByte[1];
 
                 byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins.Length];
-                Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-                System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                try
+                {
+                    Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                    System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                    System.Buffer.BlockCopy(ins, 0, rv, packetHeader.Length + packetInfo.Length, ins.Length);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection11" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 //packet info for sending packet
                 writingPacketInfoList.Add(wpi);
                 sendMessage(rv);
@@ -958,7 +1075,7 @@ namespace Cad2D
         
         private bool _writeContinouesToPlc(byte[] value, int address, ref List<ushort> PackestId, ushort _order)
         {
-            Logger.LogError("_writeContinouesToPlc line 958", LogType.Info, null);
+            //Logger.LogError("_writeContinouesToPlc line 958", LogType.Info, null);
             if (value.Length > 1400 || value.Length == 0 || address < 0 || address > 16 * maxAddress)
             {
                 /* sendPacketMutex.ReleaseMutex(); */
@@ -966,8 +1083,16 @@ namespace Cad2D
             }
             byte[] ins = makeInstruction(DataType.CONTINUOUS, value.Length, address, 1);
             byte[] ins2 = new byte[value.Length + ins.Length];
-            System.Buffer.BlockCopy(ins, 0, ins2, 0, ins.Length);
-            System.Buffer.BlockCopy(value, 0, ins2, ins.Length, value.Length);
+            try
+            {
+                System.Buffer.BlockCopy(ins, 0, ins2, 0, ins.Length);
+                System.Buffer.BlockCopy(value, 0, ins2, ins.Length, value.Length);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_File : LsConnection10" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                
+            }
             byte[] packetInfo = new byte[6];
             byte[] intByte = BitConverter.GetBytes(_order);
             packetInfo[0] = intByte[0];
@@ -983,9 +1108,18 @@ namespace Cad2D
             packetInfo[5] = intByte[1];
 
             byte[] rv = new byte[packetHeader.Length + packetInfo.Length + ins2.Length];
-            System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
-            System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
-            System.Buffer.BlockCopy(ins2, 0, rv, packetHeader.Length + packetInfo.Length, ins2.Length);
+            try
+            {
+                System.Buffer.BlockCopy(packetHeader, 0, rv, 0, packetHeader.Length);
+                System.Buffer.BlockCopy(packetInfo, 0, rv, packetHeader.Length, packetInfo.Length);
+                System.Buffer.BlockCopy(ins2, 0, rv, packetHeader.Length + packetInfo.Length, ins2.Length);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_File : LsConnection9" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                
+            }
             //packet info for sending packet
             writingPackeCountinusOrder.Add(_order);
             sendMessage(rv);
@@ -1116,15 +1250,32 @@ namespace Cad2D
             else
             {
                 byte[] rv1 = new byte[ins_Head.Length + addre.Length];
-                System.Buffer.BlockCopy(ins_Head, 0, rv1, 0, ins_Head.Length);
-                System.Buffer.BlockCopy(addre, 0, rv1, ins_Head.Length, addre.Length);
+                try
+                {
+                    System.Buffer.BlockCopy(ins_Head, 0, rv1, 0, ins_Head.Length);
+                    System.Buffer.BlockCopy(addre, 0, rv1, ins_Head.Length, addre.Length);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("_File : LsConnection7" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                    
+                }
                 return rv1;
             }
 
             byte[] rv = new byte[ins_Head.Length + addre.Length + value_Byte.Length];
-            System.Buffer.BlockCopy(ins_Head, 0, rv, 0, ins_Head.Length);
-            System.Buffer.BlockCopy(addre, 0, rv, ins_Head.Length, addre.Length);
-            System.Buffer.BlockCopy(value_Byte, 0, rv, ins_Head.Length + addre.Length, value_Byte.Length);
+            try
+            {
+
+                System.Buffer.BlockCopy(ins_Head, 0, rv, 0, ins_Head.Length);
+                System.Buffer.BlockCopy(addre, 0, rv, ins_Head.Length, addre.Length);
+                System.Buffer.BlockCopy(value_Byte, 0, rv, ins_Head.Length + addre.Length, value_Byte.Length);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("_File : LsConnection8" + "\n_Message : " + ex.Message + "\n_Source : " + ex.Source + "\n_TargetSite : " + ex.TargetSite + "\n", LogType.Error, ex);
+                
+            }
             return rv;
         }
 

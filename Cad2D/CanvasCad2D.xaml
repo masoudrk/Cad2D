@@ -34,7 +34,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
-                <RowDefinition Height="180"/>
+                <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
 
             <Border Name="border_tools1" RenderOptions.EdgeMode="Unspecified" CornerRadius="0 6 6 0" Grid.Row="1" Grid.Column="2" Background="#FFD6DBE9"  Margin="0,0,0,0" BorderBrush="#FFD6DBE9" >
@@ -70,15 +70,15 @@
 							RenderOptions.BitmapScalingMode="HighQuality" 
 							x:Name="mainCanvas" 
 							MouseDown="mainCanvas_MouseDown" 
-                            Width="800"
-                            Height="450" 
+                            Width="907"
+                            Height="510" 
                             >
                             <Image x:Name="mainImage" 
                                 Margin="0"
                                 Stretch="Uniform"
                                 RenderOptions.BitmapScalingMode="HighQuality"
-                                Width="800"
-                                Height="450"/>
+                                Width="907"
+                                Height="510"/>
                         </Canvas>
                     </Border>
                     <!--</ScrollViewer>-->
@@ -120,55 +120,53 @@
                     </StackPanel>
                     <Line Stretch="Fill" Stroke="Gray" X2="1" Margin="0 0 0 0"/>
                     <StackPanel Orientation="Horizontal" Height="60">
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 10 0 " >
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 6 0 " >
                             <Image Source="Resources/arrowUp.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_TopValue" ValueChanged="textBox_TopValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35"  FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
                         </StackPanel>
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 10 0 " >
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 6 0 " >
                             <Image Source="Resources/arrowDown.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_BottomValue" ValueChanged="textBox_BottomValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35"  FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
                         </StackPanel>
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 10 0 ">
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 6 0 ">
                             <Image Source="Resources/arrowright.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_RightValue" ValueChanged="textBox_RightValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35" FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
                         </StackPanel>
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 10 0 ">
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 6 0 ">
                             <Image Source="Resources/arrowLeft.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_LeftValue" ValueChanged="textBox_LeftValue_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35"  FontSize="18.667" TextAlignment="Center" Value="0" Maximum="15" Minimum="-50"/>
                         </StackPanel>
 
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="25 0 0 0">
-                            <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="دور سنگ ابتدا:" FontSize="17.333" VerticalContentAlignment="Center"/>
-                            <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
-                            <Image MouseDown="button_edgeStart_MouseDown" x:Name="button_edgeStart" Source="Resources/func/UnCheck.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" />
-                            <Image x:Name="button_edgeStartFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" />
-                        </StackPanel>
-                    </StackPanel>
-                    <Line Stretch="Fill" Stroke="Gray" X2="1" Margin="0 0 0 0"/>
-                    <StackPanel Orientation="Horizontal" Height="60">
-
-
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 15 0">
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="0 0 6 0">
                             <Image Source="Resources/1-4.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_verticalSob" ValueChanged="textBox_verticalSob_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="10" Minimum="0"/>
                             <Label x:Name="lbl_veticalSubDone" Content="1" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
                         </StackPanel>
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 15 0" >
+                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 6 0" >
                             <Image Source="Resources/1-2.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_horizontalSob" ValueChanged="textBox_horizontalSob_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="10" Minimum="0"/>
                             <Label x:Name="lbl_horizontalSubDone" Content="1" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
                         </StackPanel>
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 15 0" >
+                        
+                    </StackPanel>
+                    <Line Visibility="Collapsed" Stretch="Fill" Stroke="Gray" X2="1" Margin="0 0 0 0"/>
+                    <StackPanel Visibility="Collapsed" Orientation="Horizontal" Height="60">
+                        <StackPanel Visibility="Collapsed" FlowDirection="RightToLeft" Orientation="Horizontal"  Margin="0 0 15 0" >
                             <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Custom:NumericUpDown x:Name="textBox_edgeSob" ValueChanged="textBox_edgeSob_ValueChanged" HorizontalAlignment="Right" Margin="5,5,0,5" VerticalAlignment="Stretch" Height="35" FontSize="18.667" TextAlignment="Center" Value="5" Maximum="10" Minimum="0"/>
                             <Label x:Name="lbl_edgeSubDone" Content="1" Width="50" HorizontalContentAlignment="Center" FontSize="18.667" VerticalContentAlignment="Center"/>
                         </StackPanel>
-
-                        <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal"  >
+                        <StackPanel Visibility="Collapsed" FlowDirection="RightToLeft" Orientation="Horizontal"  >
                             <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="دور سنگ انتها:" FontSize="17.333" VerticalContentAlignment="Center"/>
                             <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
                             <Image MouseDown="button_edgeEnd_MouseDown"  Source="Resources/func/UnCheck.png" x:Name="button_edgeEnd" Width="60" RenderOptions.BitmapScalingMode="HighQuality" />
                             <Image x:Name="button_edgeEndFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </StackPanel>
+                        <StackPanel Visibility="Collapsed" FlowDirection="RightToLeft" Orientation="Horizontal" Margin="25 0 0 0">
+                            <Label HorizontalAlignment="Right" FlowDirection="RightToLeft" Content="دور سنگ ابتدا:" FontSize="17.333" VerticalContentAlignment="Center"/>
+                            <Image Source="Resources/Edges.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" Margin="5" />
+                            <Image MouseDown="button_edgeStart_MouseDown" x:Name="button_edgeStart" Source="Resources/func/UnCheck.png" Width="60" RenderOptions.BitmapScalingMode="HighQuality" />
+                            <Image x:Name="button_edgeStartFinished" Visibility="Visible" Source="Resources/func/check.png" Width="40" RenderOptions.BitmapScalingMode="HighQuality" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
