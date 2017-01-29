@@ -104,6 +104,7 @@ namespace Cad2D
         private int stoneInnerPointsCount;
         Page_Tools pageToolsObject;
         Page_Settings pageSettingObject;
+
         // TODO hsc commented for tehran ray ston
         //public static HscXHelper hscXHelper;
         //public static HscYHelper hscYHelper;
@@ -1192,13 +1193,23 @@ namespace Cad2D
             for(int i =0 ; i < points.Count ; i++)
             {
                 PointF point = points.ElementAt(i);
-                innerPoints[i * 2] = (ushort)((zaribx * (point.X - startPoint.X) + minHorizontalSlice));
-                if (innerPoints[i * 2] >= maxHorizontalSlice)
-                    innerPoints[i * 2] = (ushort)(maxHorizontalSlice - 1);
+                if (point.X >= startPoint.X)
+                {
+                    innerPoints[i * 2] = (ushort)((zaribx * (point.X - startPoint.X) + minHorizontalSlice));
+                    if (innerPoints[i * 2] >= maxHorizontalSlice)
+                        innerPoints[i * 2] = (ushort)(maxHorizontalSlice - 1);
+                }
+                else
+                    innerPoints[i * 2] = (ushort)(minHorizontalSlice + 1);
 
-                innerPoints[i * 2 + 1] = (ushort)((zaribY * (point.Y - startPoint.Y) + minVerticalSlice));
-                if (innerPoints[i * 2 + 1] >= maxVerticalSlice)
-                    innerPoints[i * 2 + 1] = (ushort)(maxVerticalSlice - 1);
+                if (point.Y >= startPoint.Y)
+                {
+                    innerPoints[i * 2 + 1] = (ushort)((zaribY * (point.Y - startPoint.Y) + minVerticalSlice));
+                    if (innerPoints[i * 2 + 1] >= maxVerticalSlice)
+                        innerPoints[i * 2 + 1] = (ushort)(maxVerticalSlice - 1);
+                }
+                else
+                    innerPoints[i * 2 + 1] = (ushort)(minVerticalSlice - 1);
             }
             return innerPoints;
         }
