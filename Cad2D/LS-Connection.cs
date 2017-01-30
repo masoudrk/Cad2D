@@ -88,7 +88,7 @@ namespace Cad2D
         private Queue<PLCRequest> requestQueue;
         private PLCRequest curentRequest = null;
         private Thread sendMesssageThread;
-        private ushort answeredPacket;
+        public ushort answeredPacket;
         bool connected = true;
         List<writingPacketInfo> writingPacketInfoList;
         List<readingPacketInfo> readingPacketInfoList;

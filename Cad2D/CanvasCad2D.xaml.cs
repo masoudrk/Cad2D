@@ -88,7 +88,7 @@ namespace Cad2D
         public List<LineGeometry> lineGeometryList;
         private List<Circle> guids;
         private List<Line> innerLines;
-        Thread plcInfoReaderTimer;
+        private System.Timers.Timer plcInfoReaderTimer;
         Circle head = cloneCircle();
         ////////////////
         //lsconnection
@@ -105,11 +105,9 @@ namespace Cad2D
         Page_Tools pageToolsObject;
         Page_Settings pageSettingObject;
 
-        // TODO hsc commented for tehran ray ston
-        //public static HscXHelper hscXHelper;
-        //public static HscYHelper hscYHelper;
-        //public static Page_Hsc_X pageHscX;
-        //public static Page_Hsc_Y pageHscY;
+        private ushort packetCount = 0;
+        private ushort threashhold = 25;
+        private ushort lastPacket = 0;
         IPAddress ip;
         int portNumber;
         int maxAddress = 8000;
@@ -218,10 +216,14 @@ namespace Cad2D
             writingPackets = new List<writingPacketInfo>();
 
             WritingPacketArrays = new WritingPackets(scanAriaSegment,verticalBoundrySegment,horizonalBoundrySegment,innerPointsSegment, pointsSegment);
-            plcInfoReaderTimer = new Thread(PlcInfoReaderTimer_Elapsed);
+            plcInfoReaderTimer = new System.Timers.Timer()
+            {
+                Interval = 1000
+            };
+            plcInfoReaderTimer.Elapsed += PlcInfoReaderTimer_Elapsed;
             plcInfoReaderTimer.Start();
 
-            if(ps.captureModeWhenStart)
+            if (ps.captureModeWhenStart)
                 CaptureMode();
             //this.ContextMenuClosing +=OnContextMenuClosing;
             initDataGrid(dataGrid);
@@ -280,15 +282,28 @@ namespace Cad2D
             public double val5 { set; get; }
         }
 
-        private void PlcInfoReaderTimer_Elapsed()
+        private void PlcInfoReaderTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (lsConnection.Connected)
             {
-                plcInformation.getAllValues();
+                if (lastPacket == lsConnection.answeredPacket)
+                    packetCount++;
+                if (packetCount < threashhold)
+                {
+                    lastPacket = lsConnection.answeredPacket;
+                    plcInformation.getAllValues();
+                }
+                else
+                {
+                    packetCount = 0;
+                    lsConnection.Disconnect();
+                }
             }
             else
             {
-                Thread.Sleep(2000);
+                plcInfoReaderTimer.Enabled = false;
+                Thread.Sleep(3000);
+                plcInfoReaderTimer.Enabled = true;
                 if (!lsConnection.Connected)
                 {
                     bool ping = lsConnection.PingHost();
@@ -298,8 +313,6 @@ namespace Cad2D
                     }
                 }
             }
-            Thread.Sleep(1000);
-            PlcInfoReaderTimer_Elapsed();
         }
 
         private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
@@ -308,7 +321,11 @@ namespace Cad2D
             cameraCheckerTimer.Stop();
             cameraCheckerTimer.Close();
             cameraCheckerTimer.Dispose();
-            plcInfoReaderTimer.Abort();
+
+            plcInfoReaderTimer.Stop();
+            plcInfoReaderTimer.Close();
+            plcInfoReaderTimer.Dispose();
+
             lsConnection.Disconnect();
             clockTimer.Stop();
             clockTimer.Close();
@@ -321,7 +338,9 @@ namespace Cad2D
             cameraCheckerTimer.Stop();
             cameraCheckerTimer.Close();
             cameraCheckerTimer.Dispose();
-            plcInfoReaderTimer.Abort();
+            plcInfoReaderTimer.Stop();
+            plcInfoReaderTimer.Close();
+            plcInfoReaderTimer.Dispose();
             lsConnection.Disconnect();
             clockTimer.Stop();
             clockTimer.Close();
